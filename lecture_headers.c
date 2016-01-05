@@ -207,7 +207,7 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 	}
 	else
 	{
-		printf("  Start of program headers: \t\t0(no programme header table)\n");
+		printf("  Start of program headers: \t\t0 (no program header table)\n");
 	}
 
 	headers.e_phoff=lec_Cour;
@@ -220,7 +220,7 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 	}
 	else
 	{
-		printf("  Start of program section headers: \t0(no programme header table)\n");
+		printf("  Start of program section headers: \t0 (no program header table)\n");
 	}
 
 	headers.e_shoff=lec_Cour;
