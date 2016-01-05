@@ -143,7 +143,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	}
 
 	fseek(f, elfHeader.e_shoff, 0);
-	for(i=0; i<elfHeader.e_shnum; i++) { 
+	for(i=0; i<elfHeader.e_shnum; i++) {
 		shTable[i].sh_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
 		shTable[i].sh_type = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
 		shTable[i].sh_flags = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
