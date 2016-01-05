@@ -2,12 +2,15 @@
 Cree le 5 janvier 2016 par Astor
 Affichage d'une section specifique
 */
-#include <stdio.h>
-#include <stdlib.h>
+#include "afficher_section.h"
+#include "lectureSH.h"
+
+//char** getSectionsNames(FILE* f, int sectionHeaderCount, uint32_t tableSize, Elf32_Off tableOffset);
 
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
 int index_Shdr(char str[], FILE *f, int ShdrCount, int ShdrStrIndex){
 	int i,num_sh;
+	char **names;
 	if(str[0]!='\0'){
 		if(str[0]>=48 && str[0]<=57){
 			num_sh = str[i]-48;
@@ -16,6 +19,7 @@ int index_Shdr(char str[], FILE *f, int ShdrCount, int ShdrStrIndex){
 			}
 		}
 		else{
+			names=getSectionsNames
 			//while(num_sh<ShdrCount && strcmp(str,tabSH[num_sh].name)
 		}
 		if(num_sh<0 || num_sh>=ShdrCount) return -1;
