@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
 	if(argc != 2)
 	{
-		printf("Erreur : il faut transmettre en argument un nom de fichier");
+		printf("Erreur : il faut transmettre en argument un nom de fichier\n");
 		exit(1);
 	}
 
