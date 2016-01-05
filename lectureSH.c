@@ -144,7 +144,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 
 	fseek(f, elfHeader.e_shoff, 0);
 // --DEBUG
-	printf("Endianness: %c, SHOFF: %d, fpos=%d", elfHeader.e_ident[EI_DATA], elfHeader.e_shoff, ftell(f)); 
+	printf("Endianness: %c, SHOFF: %d, fpos=%l", elfHeader.e_ident[EI_DATA], elfHeader.e_shoff, ftell(f)); 
 // DEBUG--
 	for(i=0; i<elfHeader.e_shnum; i++) {
 		shTable[i].sh_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
@@ -171,7 +171,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 
 	fseek(f, elfHeader.e_shoff, 0);
 // --DEBUG
-	printf("fpos=%d", ftell(f)); 
+	printf("fpos=%l", ftell(f)); 
 // DEBUG--
 	for(i=0; i<elfHeader.e_shnum; i++) {
 		shTable[i].sh_name = lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
