@@ -64,6 +64,37 @@ char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 			section[i]='\0';
 			fclose(f);
 		}
-		return section;
 	}
+	return section;
+}
+
+// Affiche le contenu de la section numero num_sh. Renvoie ce contenu, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
+char *afficher_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int num_sh){
+	FILE *f;
+	int i;
+	char c;
+	char *section;
+
+	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
+		printf("Section absente : %d\n", num_sh);
+		return NULL;
+	}
+	else{
+		f=fopen(nom_f,"r");
+		printf("Section %d\n",num_sh);
+		// On se place
+		fseek(f,tabSH[num_sh].sh_offset,0);
+		section=malloc(sizeof(char)*(tabSH[num_sh].sh_size+1));
+		if(section != NULL){
+			// On affiche le contenu de la section
+			for(i=0;i<tabSH[num_sh].sh_size;i++){
+				c=fgetc(f);
+				printf("%x",c);
+				section[i]=c;
+			}
+			section[i]='\0';
+			fclose(f);
+		}
+	}
+	return section;
 }
