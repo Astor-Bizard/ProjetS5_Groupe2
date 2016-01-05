@@ -5,8 +5,7 @@ Lecture de la table des symboles
 #include <stdlib.h>
 #include <stdio.h>
 #include <elf.h>
-#include "lecture_header.h"
-#include "afficher_section.h"
+#include "lecture_headers.h"
 #include "lectureSH.h"
 #include "lectureST.h"
 
@@ -119,13 +118,13 @@ char* bindSymbole(unsigned char bind)
 	return bindSymbole;
 }
 
-void initSymbolTabUsefullInfo(Elf32_Shdr sectionHeader, int *size, int *offset)
+void initSymbolTabUsefullInfo(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHeader, int *size, int *offset)
 {
 	int i=0;
+	char** names;
+	names = getSectionsNames(f, elfHeader, sectionHeader);
 
-	//ICI C'EST FAUX !!!! 
-	while(sectionHeader[i].sh_name != ".symtab")
-	{}
+	while(names[sectionHeader[i].sh_name] != ".symtab"){}
 
 	size = sectionHeader[i].sh_size;
 	offset = sectionHeader[i].sh_offset;

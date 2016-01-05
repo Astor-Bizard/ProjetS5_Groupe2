@@ -2,12 +2,8 @@
 Creer le 5 janvier 2016 par Thai Binh
 Lecture de la table des symboles
 */
-
-
 #ifndef _LECTURESTH
 #define _LECTURESTH
-
-
 
 /*
 Fonction qui retourne un tableau de symboles
@@ -28,5 +24,5 @@ char* bindSymbole(unsigned char bind)
 /*
 Fonction qui initialise les donnée nessessaires au bon fonctionnement de la lecture
 */
-void initSymbolTabUsefullInfo(Elf32_Shdr sectionHeader, int *size, int *offset)
+void initSymbolTabUsefullInfo(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHeader, int *size, int *offset)
 #endif
