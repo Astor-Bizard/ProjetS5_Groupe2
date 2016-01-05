@@ -135,13 +135,13 @@ void type_relocation(int info)
 }
 
 //affiche une section de relocation_A
-void afficher_sectionRA(char *f,Elf32_Shdr *table_section,Elf32_Ehdr header,int numS)
+void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS)
 {
     afficher_sectionR(f,table_section,header,numS);
 }
 
 //affiche une section de relocation
-void afficher_sectionR(char *f,Elf32_Shdr *table_section,Elf32_Ehdr header,int numS)
+void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS)
 {
 	int i;
 	char* section=afficher_section(f,header,table_section, numS);
@@ -150,12 +150,12 @@ void afficher_sectionR(char *f,Elf32_Shdr *table_section,Elf32_Ehdr header,int n
         char *nom_section;
         
 	printf("Section de relocalisation '%s' à l'adresse de décalage contient %i entrées:\n",
-			table_section[i], table_section.sh_size);
+			table_section[i], table_section[i].sh_size);
 	printf("  Décalage \t  Info \t  Type\t  Val.-sym\t Noms-symboles\n")
 	for(i=0; i<table_section.sh_size/8; i++)
 	{
-		addr = lire_octets_charT(section,header.e_idata,i*8,4);
-		info = lire_octets_charT(section,header.e_idata,i*8 + 4,4);
+		addr = lire_octets_charT(section,headers.e_ident[EI_DATA],i*8,4);
+		info = lire_octets_charT(section,headers.e_ident[EI_DATA],i*8 + 4,4);
 		printf("%xllu\t%xllu\t",addr,info);
                 type_relocation(info);
                 printf("Type\t Valeur_Symbol\t");
