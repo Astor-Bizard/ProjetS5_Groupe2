@@ -13,11 +13,13 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 {
 	int sectionSymbolTabSize;
 	int sectionSymbolTabOffset;
-	initSymbolTabUsefullInfo(f, elfHeader, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset);
-
-
 	char** names;
 	names = getSectionsNames(f, elfHeader, sectionHeader);
+
+	initSymbolTabUsefullInfo(names, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset);
+
+
+
 
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
