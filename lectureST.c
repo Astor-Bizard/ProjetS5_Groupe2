@@ -13,11 +13,11 @@ Elf32_Sym *lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHea
 {
 	int sectionSymbolTabSize;
 	int sectionSymbolTabOffset;
-	initSymbolTabUsefullInfo(sectionHeader, *sectionSymbolTabSize, *sectionSymbolTabOffset);
+	initSymbolTabUsefullInfo(f, elfHeader, sectionHeader, sectionSymbolTabSize, sectionSymbolTabOffset);
 
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
-	Elf32_Sym *symbolTab = (Elf32_Sym) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16);
+	Elf32_Sym *symbolTab = (Elf32_Sym) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16));
 	if(symbolTab == NULL)
 	{
 		printf("Erreur d'allocation\n");
@@ -56,7 +56,11 @@ Elf32_Sym *lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHea
 
 char *typeSymbole(unsigned char info)
 {
-	char typeSymbole[128];
+	char* typeSymbole =  (char*) malloc(sizeof(char)*10);
+	if (typeSymbole==NULL) {
+		printf("Erreur lors de l'allocation d'une chaine de type.");
+		return NULL;
+	}
 
 	switch(info)
 	{
@@ -90,7 +94,11 @@ char *typeSymbole(unsigned char info)
 
 char* bindSymbole(unsigned char bind)
 {
-	char bindSymbole[128];
+	char* bindSymbole =  (char*) malloc(sizeof(char)*10);
+	if (bindSymbole==NULL) {
+		printf("Erreur lors de l'allocation d'une chaine de type.");
+		return NULL;
+	}
 
 	switch(bind)
 	{
@@ -124,8 +132,8 @@ void initSymbolTabUsefullInfo(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionH
 
 	while(names[sectionHeader[i].sh_name] != ".symtab"){}
 
-	size = sectionHeader[i].sh_size;
-	offset = sectionHeader[i].sh_offset;
+	&size = sectionHeader[i].sh_size;
+	&offset = sectionHeader[i].sh_offset;
 
 	return;
 }
