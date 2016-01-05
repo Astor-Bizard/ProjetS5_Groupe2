@@ -6,31 +6,31 @@ Affichage d'une section specifique
 #include "lectureSH.h"
 
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
-int index_Shdr(char str[], FILE *f, int ShdrCount, int ShdrStrSize, int ShdrTabOffset){
+int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	int i,num_sh;
 	char **names;
 	if(str[0]!='\0'){
 		// Cas nombre : on traduit le nombre (string) en int
 		if(str[0]>=48 && str[0]<=57){
-			num_sh = str[i]-48;
+			num_sh = str[0]-48;
 			for(i=1;str[i]!='\0';i++){
 				if(str[i]>=48 && str[i]<=57) num_sh = num_sh*10 + str[i]-48;
 			}
 		}
 		// Cas nom : on le cherche dans la table str
-		else{index_Shr
-			names=getSectionsNames(f,ShdrCount,ShdrStrSize,ShdrTabOffset);
+		else{
+			names=getSectionsNames(f,elfHeader,tabSH);
 			num_sh=0;
-			while(num_sh<ShdrCount && strcmp(str,names[num_sh]))num_sh++;
+			while(num_sh<elfHeader.e_shnum && strcmp(str,names[num_sh]))num_sh++;
 		}
-		if(num_sh<0 || num_sh>=ShdrCount) return -1;
+		if(num_sh<0 || num_sh>=elfHeader.e_shnum) return -1;
 		else return num_sh;
 	}
 	else return -1;
 }
 
 // Affiche le contenu d'une section désignée par nom ou numéro. Renvoie ce contenu, NULL si la section n'existe pas.
-char *afficher_section(char *nom_f, Elf32_Shdr *tabSH, int ShdrCount, int ShdrStrIndex){
+char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	FILE *f;
 	char str[42];
 	int num_sh=0,i;
@@ -42,10 +42,10 @@ char *afficher_section(char *nom_f, Elf32_Shdr *tabSH, int ShdrCount, int ShdrSt
 
 	f=fopen(nom_f,"r");
 	// On traduit la demande (string) en index dans la table
-	num_sh=index_Shdr(str,f,tabSH[ShdrStrIndex].sh_size,tabSH[ShdrStrIndex].sh_offset);
+	num_sh=index_Shdr(str,f,elfHeader,tabSH);
 	fclose(f);
 
-	if(num_sh<0 || num_sh>=ShdrCount){
+	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
 		printf("Section absente : %d", num_sh);
 		return NULL;
 	}

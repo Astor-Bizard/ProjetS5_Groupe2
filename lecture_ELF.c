@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 	section_headers = lectureSectionHeader(f,elfHeaders,0);
 	fclose(f);
 
-	afficher_section(argv[1], section_headers,elfHeaders.e_shnum, elfHeaders.e_shstrndx);
+	afficher_section(argv[1], elfHeaders, section_headers);
 
 	return 0;
 
