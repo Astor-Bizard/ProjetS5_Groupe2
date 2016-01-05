@@ -72,7 +72,7 @@ char* sectionTypeString(uint32_t sh_type) {
 	return typeString;
 }
 
-char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
+/*char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	int sLength, i, j; // Taille courante du tampon
 	char c; // Caractère lu
 	
@@ -124,6 +124,43 @@ char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	free(tampon);
 	printf("taille names: %d\n", i);
 	return names;
+} */
+
+char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
+	int i;
+
+	char** names = (char**) malloc(sizeof(char*)*sh_size);
+	if (names==NULL) {
+		printf("Erreur lors de l'allocation initiale de la table des noms.");
+		return NULL;
+	}
+
+	fseek(f, shTable[elfHeader.e_shstrndx].sh_offset, 0);
+	for(i=0; i<sh_size; i++)
+		names[i] = fgetc(f);
+	
+	return names;
+}
+
+char* getSectionName(char* names, uint32_t nameIndex) {
+	int i = 1;
+
+	while(names[nameIndex+i] != '\0')
+		i++;
+
+	char* sectionName = (char*) malloc(sizeof(char)*i);
+	if (names==NULL) {
+		printf("Erreur lors de l'allocation initiale d'un nom de section.");
+		return NULL;
+	}
+
+	i = 0;
+	while(names[nameIndex+i] != '\0') {
+		sectionName[i] = names[nameIndex+i];
+		i++;
+	}
+
+	return &sectionName;
 }
 
 Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
@@ -156,14 +193,13 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 		shTable[i].sh_entsize = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
 	}
 
-	//char** names = getSectionsNames(f, elfHeader, shTable);
+	char* names = fetchSectionNames(f, elfHeader, shTable);
 
 	if (!silent) {
 		for(i=0; i<elfHeader.e_shnum; i++) {
-			printf("id: %d\n", shTable[i].sh_name);
 			type = sectionTypeString(shTable[i].sh_type);
 
-			printf("  [%2d] %18s %15s %8x %6x %6x %02x %08d %2d %3d %2d\n", i, "bidule", type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, shTable[i].sh_flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+			printf("  [%2d] %18s %15s %8x %6x %6x %02x %08d %2d %3d %2d\n", i, getSectionName(names, shTable[i].sh_name), type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, shTable[i].sh_flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
 		}
 	}
 
