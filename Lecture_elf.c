@@ -8,6 +8,7 @@ Lecture d'un fichier elf et affichage du Header
 */
 #include <stdlib.h>
 #include <stdio.h>
+#include <elf.h>
 
 #define BIG_ENDIAN 2
 #define LITTLE_ENDIAN 1
