@@ -5,7 +5,7 @@ Etape 4 : Thai Binh (lectureST)
 Etape 5 : Gabriel (affichage_relocation)  
 
 
-Question : 
--Utilité du numero de la machine et des flags ?
--.o de taille différente .
+Questions :   
+-Utilité du numero de la machine et des flags ?  
+-.o de tailles différentes .
 
