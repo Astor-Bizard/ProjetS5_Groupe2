@@ -15,6 +15,10 @@ Elf32_Sym *lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 	int sectionSymbolTabOffset;
 	initSymbolTabUsefullInfo(f, elfHeader, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset);
 
+
+	char** names;
+	names = getSectionsNames(f, elfHeader, sectionHeader);
+
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
 	Elf32_Sym *symbolTab = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16));
@@ -45,7 +49,7 @@ Elf32_Sym *lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 
 		if (!silent)
 		{
-			printf("%2d %8x %d %s %s %d %x %s\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
+			printf("%2d %8x %d %s %s %d %x %x\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
 				symbolTab[j].st_other, symbolTab[j].st_shndx, symbolTab[j].st_name);
 		}
 
@@ -124,11 +128,9 @@ char* bindSymbole(unsigned char bind)
 	return bindSymbole;
 }
 
-void initSymbolTabUsefullInfo(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHeader, int *size, int *offset)
+void initSymbolTabUsefullInfo(char** names, Elf32_Shdr *sectionHeader, int *size, int *offset)
 {
 	int i=0;
-	char** names;
-	names = getSectionsNames(f, elfHeader, sectionHeader);
 
 	while(names[sectionHeader[i].sh_name] != ".symtab"){}
 
