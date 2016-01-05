@@ -6,7 +6,9 @@ Lecture d'un fichier elf et affichage du Header
 
 #include "lecture_headers.h"
 
-long long int lire_octets(int mode, FILE *f, int nb_octet)
+
+
+long long int lire_octets(char mode, FILE *f, int nb_octet)
 {
 	int i;
 	long long int retour = 0;
@@ -18,11 +20,11 @@ long long int lire_octets(int mode, FILE *f, int nb_octet)
 
 	for(i=0 ; i<nb_octet;i++)
 	{
-		if(mode == BIG_ENDIAN) 
+		if(mode == B_ENDIAN) 
 		{
 			retour = retour * 256 + fgetc(f);
 		}
-		else if (mode == LITTLE_ENDIAN)
+		else if (mode == L_ENDIAN)
 		{
 			retour = retour / 256 + fgetc(f) * k;
 		}
@@ -38,11 +40,11 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 
 	long long int lec_Cour = 0;
 	int octet_cour = 0;
-	int mode = BIG_ENDIAN;
 	Elf32_Ehdr headers;
+	headers.e_ident[EI_DATA]=(char) B_ENDIAN;
 
 	printf("ELF Header: \n");
-	lec_Cour = lire_octets(BIG_ENDIAN,f,4);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
 	octet_cour += 4;
 
 	if (lec_Cour != 0x7f454c46)
@@ -52,7 +54,7 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 		exit(1);
 	}
 
-	lec_Cour = lire_octets(BIG_ENDIAN,f,1);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,1);
 	octet_cour++;
 
 	if (lec_Cour != 1 && lec_Cour != 2)
@@ -70,7 +72,7 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 	headers.e_ident[EI_MAG3]='F';
 	headers.e_ident[EI_CLASS]= 32*lec_Cour;
 
-	lec_Cour = lire_octets(BIG_ENDIAN,f,1);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,1);
 	octet_cour++;
 
 	if (lec_Cour != 1 && lec_Cour != 2)
@@ -83,16 +85,17 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 	if (lec_Cour == 0x01)
 	{
 		printf("  Data: \t\t\t\tLITTLE ENDIAN\n");
-		mode = LITTLE_ENDIAN;
+		headers.e_ident[EI_DATA] = (char) L_ENDIAN;
 	}
 	else
 	{
 		printf("  Data: \t\t\t\tBIG ENDIAN\n");
+		headers.e_ident[EI_DATA] = (char) B_ENDIAN;
 	}
 
-	headers.e_ident[EI_DATA]=mode;
+	
 
-	lec_Cour = lire_octets(mode,f,1);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,1);
 	octet_cour++;
 	if(! (lec_Cour))
 	{
@@ -107,10 +110,10 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 
 	headers.e_ident[EI_VERSION]=lec_Cour;
 
-	lire_octets(mode,f,9);
+	lire_octets(headers.e_ident[EI_DATA],f,9);
 	octet_cour +=9;
 
-	lec_Cour = lire_octets(mode,f,2);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
 	octet_cour+=2;
 	printf("  Type: \t\t\t\t");
 	switch(lec_Cour)
@@ -143,7 +146,7 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 
 	headers.e_type=lec_Cour;
 
-	lec_Cour = lire_octets(mode,f,2);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
 	octet_cour+=2;
 	printf("  Machine: \t\t\t\t");
 	switch(lec_Cour)
@@ -179,7 +182,7 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 
 	headers.e_machine=lec_Cour;
 
-	lec_Cour = lire_octets(mode,f,4);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
 	octet_cour+=4;
 	if(! (lec_Cour))
 	{
@@ -193,13 +196,13 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 	}
 	headers.e_version=lec_Cour;
 
-	lec_Cour = lire_octets(mode,f,4);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
 	octet_cour+=4;
 	printf("  Entry point address: \t\t\t%llx\n",lec_Cour);
 
 	headers.e_entry=lec_Cour;
 
-	lec_Cour = lire_octets(mode,f,4);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
 	octet_cour+=4;
 	if(lec_Cour)
 	{	
@@ -212,7 +215,7 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 
 	headers.e_phoff=lec_Cour;
 
-	lec_Cour = lire_octets(mode,f,4);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
 	octet_cour+=4;
 	if(lec_Cour)
 	{	
@@ -226,43 +229,43 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 	headers.e_shoff=lec_Cour;
 
 	
-	lec_Cour = lire_octets(mode,f,4);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
 	octet_cour+=4;
 
 	headers.e_flags=lec_Cour;
 	printf("  Flags: \t\t\t\t%llx\n",lec_Cour);
 
-	lec_Cour = lire_octets(mode,f,2);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
 	octet_cour+=2;
 
 	headers.e_ehsize=lec_Cour;
 	printf("  Size of this header: \t\t\t%llu (bytes)\n", lec_Cour);
 
-	lec_Cour = lire_octets(mode,f,2);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
 	octet_cour+=2;
 
 	headers.e_phentsize=lec_Cour;
 	printf("  Size of this program header: \t\t%llu (bytes)\n", lec_Cour);
 
-	lec_Cour = lire_octets(mode,f,2);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
 	octet_cour+=2;
 
 	headers.e_phnum=lec_Cour;
 	printf("  Number of program headers: \t\t%llu\n", lec_Cour);
 	
-	lec_Cour = lire_octets(mode,f,2);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
 	octet_cour+=2;
 	
 	headers.e_shentsize=lec_Cour;
 	printf("  Size of section headers: \t\t%llu (bytes)\n", lec_Cour);
 
-	lec_Cour = lire_octets(mode,f,2);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
 	octet_cour+=2;
 	
 	headers.e_shnum=lec_Cour;
 	printf("  Number of section headers: \t\t%llu\n", lec_Cour);
 
-	lec_Cour = lire_octets(mode,f,2);
+	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
 	octet_cour+=2;
 	
 	if(!lec_Cour)
