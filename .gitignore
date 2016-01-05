@@ -1,0 +1,6 @@
+#ignorer les fichiers .o et .a
+*.o
+*.a
+*.log
+*.status
+*~
