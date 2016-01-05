@@ -5,7 +5,7 @@ Lecture de la table des sections
 #ifndef _LECTURESH
 #define _LECTURESH
 
-void sectionTypeString(uint32_t sh_type);
+char* sectionTypeString(uint32_t sh_type);
 
 char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* sectionsHeaders);
 
