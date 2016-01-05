@@ -2,16 +2,14 @@
 Creer le 5 janvier 2016 par Thai Binh
 Lecture de la table des symboles
 */
-
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <elf.h>
-#include "Lecture_elf.h"
+#include "lecture_header.h"
 #include "lectureSH.h"
 
 
-Elf32_Sym* lectureSymbolTab(FILE *f, int sectionSymbolTabOffset, int sectionSymbolTabSize)
+Elf32_Sym* lectureSymbolTab(FILE *f, int sectionSymbolTabOffset, int sectionSymbolTabSize, int silent)
 {
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
@@ -23,8 +21,11 @@ Elf32_Sym* lectureSymbolTab(FILE *f, int sectionSymbolTabOffset, int sectionSymb
 		return;
 	}
 
-	printf("Symbol Table: \n");
-	printf("Num:      Value    Size Type     Other Name\n");
+	if (!silent)
+	{
+		printf("Symbol Table: \n");
+		printf("Num:      Value    Size Type     Other Name\n");
+	}
 
 	int j = 0;
 
@@ -37,8 +38,11 @@ Elf32_Sym* lectureSymbolTab(FILE *f, int sectionSymbolTabOffset, int sectionSymb
 		symbolTab[j].st_other = (unsigned char) lire_octets(BIG_ENDIAN,f,1);
 		symbolTab[j].st_shndx = (uint16_t) lire_octets(BIG_ENDIAN,f,2);
 
-		printf("%2d %8x %d %s %d %x %s\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(symbolTab[j].st_info), 
-			symbolTab[j].st_other, symbolTab[j].st_shndx, symbolTab[j].st_name);
+		if (!silent)
+		{
+			printf("%2d %8x %d %s %d %x %s\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(symbolTab[j].st_info), 
+				symbolTab[j].st_other, symbolTab[j].st_shndx, symbolTab[j].st_name);
+		}
 
 	}
 
@@ -72,6 +76,9 @@ char* typeSymbole(unsigned char info)
 				break;
 			case 15:
 				typeSymbole = "HIRPOC";
+				break;
+			default:
+				typeSymbole = "UNDEFINED";
 				break;
 		}
 	return typeSymbole;
