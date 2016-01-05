@@ -7,7 +7,7 @@ Lecture de la table des sections
 
 void sectionTypeString(uint32_t sh_type, char* typeString);
 
-char** getSectionsNames(FILE* f, uint16_t sectionHeaderCount, uint32_t tableSize, Elf32_Off tableOffset);
+char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* sectionsHeaders);
 
 Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent);
 
