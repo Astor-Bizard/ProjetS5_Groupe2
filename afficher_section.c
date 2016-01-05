@@ -18,7 +18,7 @@ int index_Shdr(char str[], FILE *f, int ShdrCount, int ShdrStrSize, int ShdrTabO
 			}
 		}
 		// Cas nom : on le cherche dans la table str
-		else{
+		else{index_Shr
 			names=getSectionsNames(f,ShdrCount,ShdrStrSize,ShdrTabOffset);
 			num_sh=0;
 			while(num_sh<ShdrCount && strcmp(str,names[num_sh]))num_sh++;
@@ -35,33 +35,36 @@ char *afficher_section(char *nom_f, Elf32_Shdr *tabSH, int ShdrCount, int ShdrSt
 	char str[42];
 	int num_sh=0,i;
 	char c;
+	char *section;
 
 	printf("Section à afficher : ");
 	scanf("%s",str);
 
 	f=fopen(nom_f,"r");
 	// On traduit la demande (string) en index dans la table
-	num_sh=index_Shrd(str,f,tabSH[ShdrStrIndex].size,tabSH[ShdrStrIndex].offset);
+	num_sh=index_Shdr(str,f,tabSH[ShdrStrIndex].sh_size,tabSH[ShdrStrIndex].sh_offset);
 	fclose(f);
 
 	if(num_sh<0 || num_sh>=ShdrCount){
-		printf("Section absente : %d", sum_sh);
+		printf("Section absente : %d", num_sh);
 		return NULL;
 	}
 	else{
 		f=fopen(nom_f,"r");
 		printf("Section %s\n",str);
 		// On se place
-		fseek(f,tabSH[num_sh].offset);
-		char section[tabSH[num_sh].size+1];
-		// On affiche le contenu de la section
-		for(i=0;i<tabSH[num_sh].size;i++){
-			c=fgetc(f)
-			printf("%x",c);
-			section[i]=c;
+		fseek(f,tabSH[num_sh].sh_offset,0);
+		section=malloc(sizeof(char)*(tabSH[num_sh].sh_size+1));
+		if(section != NULL){
+			// On affiche le contenu de la section
+			for(i=0;i<tabSH[num_sh].sh_size;i++){
+				c=fgetc(f);
+				printf("%x",c);
+				section[i]=c;
+			}
+			section[i]='\0';
+			fclose(f);
 		}
-		section[i]='\0';
-		fclose(f);
 		return section;
 	}
 }

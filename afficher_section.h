@@ -7,6 +7,7 @@ Affichage d'une section specifique
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <elf.h>
 
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
