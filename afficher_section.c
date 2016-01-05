@@ -91,10 +91,12 @@ char *afficher_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH,
 				c=fgetc(f);
 				printf("%x",c);
 				section[i]=c;
+				if(i%8==0) printf(" ");
 			}
 			section[i]='\0';
 			fclose(f);
 		}
+		printf("\n");
 	}
 	return section;
 }
