@@ -6,9 +6,9 @@ Programme principal de la partie 1
 
 #include "lecture_headers.h"
 #include "afficher_section.h"
-#include "lectureST.h"
+//#include "lectureST.h"
 #include "lectureSH.h"
-#include "affichage_relocation.h"
+//#include "affichage_relocation.h"
 
 
 int main(int argc, char *argv[])
@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
 	if(argc != 2)
 	{
-		printf("Erreur : il faut transmettre en argument un nom de fichier")
+		printf("Erreur : il faut transmettre en argument un nom de fichier");
 		exit(1);
 	}
 
