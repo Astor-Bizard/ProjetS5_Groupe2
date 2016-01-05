@@ -13,8 +13,7 @@ long long int lireoctets(int mode, FILE *f, int nb_octet);
 
 /* Prends en parametre un fichier en formet ELF32 ouvert en mode lecture
 et lit toute la partie Headers du fichier
-
-Elf32_Ehdr lecture_Headers(FILE *f);
 */
+Elf32_Ehdr lecture_Headers(FILE *f);
 
 #endif
