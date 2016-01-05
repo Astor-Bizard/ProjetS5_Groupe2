@@ -72,7 +72,7 @@ char* sectionTypeString(uint32_t sh_type) {
 	return typeString;
 }
 
-char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* sectionsHeaders) {
+char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	int sLength, i, j; // Taille courante du tampon
 	char c; // Caractère lu
 
@@ -156,7 +156,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 		shTable[i].sh_entsize = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
 	}
 
-	char** names = getSectionsNames(f, elfHeader.e_shnum, shTable[elfHeader.e_shstrndx].sh_size, shTable[elfHeader.e_shstrndx].sh_offset);
+	char** names = getSectionsNames(f, elfHeader, shTable);
 
 	if (!silent) {
 		for(i=0; i<elfHeader.e_shnum; i++) {
