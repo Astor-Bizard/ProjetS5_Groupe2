@@ -11,12 +11,13 @@ Lecture de la table des symboles
 #include "lectureSH.h"
 
 
-int lectureSymbolTab(FILE *f, int sectionSymbolTabOffset, int sectionSymbolTabSize)
+Elf32_Sym* lectureSymbolTab(FILE *f, int sectionSymbolTabOffset, int sectionSymbolTabSize)
 {
-	
-	Elf32_Sym *symboleCourant = (Elf32_Sym) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16);
+	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
-	if(symboleCourant == NULL)
+	Elf32_Sym *symbolTab = (Elf32_Sym) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16);
+
+	if(symbolTab == NULL)
 	{
 		printf("Erreur d'allocation\n");
 		return;
@@ -29,29 +30,25 @@ int lectureSymbolTab(FILE *f, int sectionSymbolTabOffset, int sectionSymbolTabSi
 
 	for(int i=0; i<sectionSymbolTabSize; i=i+16)
 	{
+		symbolTab[j].st_name = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
+		symbolTab[j].st_value = (Elf32_Addr) lire_octets(BIG_ENDIAN,f,4);
+		symbolTab[j].st_size = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
+		symbolTab[j].st_info = (unsigned char) lire_octets(BIG_ENDIAN,f,1);
+		symbolTab[j].st_other = (unsigned char) lire_octets(BIG_ENDIAN,f,1);
+		symbolTab[j].st_shndx = (uint16_t) lire_octets(BIG_ENDIAN,f,2);
 
-		
-
-		symboleCourant[j].st_name = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
-		symboleCourant[j].st_value = (Elf32_Addr) lire_octets(BIG_ENDIAN,f,4);
-		symboleCourant[j].st_size = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
-		symboleCourant[j].st_info = (unsigned char) lire_octets(BIG_ENDIAN,f,1);
-		symboleCourant[j].st_other = (unsigned char) lire_octets(BIG_ENDIAN,f,1);
-		symboleCourant[j].st_shndx = (uint16_t) lire_octets(BIG_ENDIAN,f,2);
-
-		
-
-		printf("%2d %8x %d %d %d %x %s\n", j, symboleCourant[j].st_value, symboleCourant[j].st_size, symboleCourant[j].st_info, 
-			symboleCourant[j].st_other, symboleCourant[j].st_shndx, symboleCourant[j].st_name);
-
+		printf("%2d %8x %d %s %d %x %s\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(symbolTab[j].st_info), 
+			symbolTab[j].st_other, symbolTab[j].st_shndx, symbolTab[j].st_name);
 
 	}
+
+	return symbolTab;
 
 }
 
 char* typeSymbole(unsigned char info)
 {
-	char* typeSymbole[128];
+	char *typeSymbole[128];
 
 	switch(info)
 		{
