@@ -9,8 +9,13 @@ Lecture de la table des symboles
 #include "lectureSH.h"
 #include "lectureST.h"
 
+Elf32_Sym *lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHeader, int silent);
+char *typeSymbole(unsigned char info);
+char* bindSymbole(unsigned char bind);
+void initSymbolTabUsefullInfo(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHeader, int *size, int *offset);
 
-Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHeader, int silent)
+
+Elf32_Sym *lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHeader, int silent)
 {
 	int sectionSymbolTabSize;
 	int sectionSymbolTabOffset;
@@ -56,7 +61,7 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHea
 
 }
 
-char* typeSymbole(unsigned char info)
+char *typeSymbole(unsigned char info)
 {
 	char typeSymbole[128];
 
@@ -128,4 +133,6 @@ void initSymbolTabUsefullInfo(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionH
 
 	size = sectionHeader[i].sh_size;
 	offset = sectionHeader[i].sh_offset;
+
+	return;
 }
