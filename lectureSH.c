@@ -7,7 +7,7 @@ Lecture de la table des sections
 #include <elf.h>
 #include "lecture_headers.h"
 
-void sectionTypeString(uint32_t sh_type, char* typeString)
+void sectionTypeString(uint32_t sh_type, char* typeString) {
 	switch(sh_type) {
 		case SHT_NULL:
 			typeString = "NULL";
@@ -80,8 +80,7 @@ char** getSectionsNames(FILE* f, int sectionHeaderCount, uint32_t tableSize, Elf
 	}
 
 	fseek(f, tableOffset);
-	for(i=0; i<sectionHeaderCount+1; i++)
-	{
+	for(i=0; i<sectionHeaderCount+1; i++) {
 		sLength = 0;
 
 		c = fgetc(f);
@@ -98,9 +97,7 @@ char** getSectionsNames(FILE* f, int sectionHeaderCount, uint32_t tableSize, Elf
 			printf("Erreur lors de l'allocation d'une entrée de la table des noms.");
 			free(tampon);
 			for(j=0; j<i; j++)
-			{
 				free(names[i]);
-			}
 			free(names);
 
 			return shTable;
@@ -114,8 +111,7 @@ char** getSectionsNames(FILE* f, int sectionHeaderCount, uint32_t tableSize, Elf
 	return &names;
 }
 
-Elf32_Shdr* lectureSectionHeader(FILE *f, long int sectionHeaderOffset, int sectionHeaderSize, int sectionHeaderCount, int sectionHeaderStringTableIndex, int silent)
-{
+Elf32_Shdr* lectureSectionHeader(FILE *f, long int sectionHeaderOffset, int sectionHeaderSize, int sectionHeaderCount, int sectionHeaderStringTableIndex, int silent) {
 	int i, j;
 	char[10] type;
 	Elf32_Shdr* shTable = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*sectionHeaderCount);
@@ -131,8 +127,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, long int sectionHeaderOffset, int sect
 
 	fseek(f, sectionHeaderOffset);
 
-	for(i=0; i<sectionHeaderCount; i++)
-	{
+	for(i=0; i<sectionHeaderCount; i++) {
 		shTable[i].sh_name = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
 		shTable[i].sh_type = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
 		shTable[i].sh_flags = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
@@ -148,8 +143,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, long int sectionHeaderOffset, int sect
 	char** names = getSectionsNames(f, sectionHeaderCount, shTable[sectionHeaderStringTableIndex].sh_size, shTable[sectionHeaderStringTableIndex].sh_offset);
 
 	if (!silent) {
-		for(i=0; i<sectionHeaderCount; i++)
-		{
+		for(i=0; i<sectionHeaderCount; i++) {
 			sectionTypeString(shTable[i].sh_type, &type);
 
 			printf("[%2d] %s %s %8x %6x %6x %02x %08d %2d %3d %2d\n", i, names[shTable[i].sh_name], type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, shTable[i].sh_flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
