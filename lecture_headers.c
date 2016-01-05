@@ -8,30 +8,6 @@ Lecture d'un fichier elf et affichage du Header
 */
 #include "lecture_Headers.h"
 
-int main(int argc, char *argv[])
-{
-	FILE *f;
-	Elf32_Ehdr headers;
-
-	if (argc != 2)
-	{
-		printf("Nb argument incorrect ! \n1 argument requis : nom du fichier lue \n");
-		return 1;
-	}
-
-	f = fopen(argv[1],"r");
-
-	headers = lecture_Headers(f);
-	
-
-
-
-
-	return 0;
-
-
-}
-
 /*
 	lit nb_octet du fichier f, en little endian si mode = 1, 
 	en big endian si mode = 2
