@@ -13,4 +13,4 @@ Elf32_Sym* lectureSymbolTab(FILE *f, int sectionSymbolTabOffset, int sectionSymb
 /*
 Fonction qui retourne la chaine de caractère qui correspond au type du symbole donné en parametre
 */
-char* typeSymbole(unsigned char info)
+char* typeSymbole(unsigned char info);

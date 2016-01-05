@@ -56,29 +56,29 @@ char* typeSymbole(unsigned char info)
 
 	switch(info)
 		{
-			case 0:
+			case STT_NOTYPE:
 				typeSymbole = "NOTYPE";
 				break;
-			case 1:
+			case STT_OBJECT:
 				typeSymbole = "OBJECT";
 				break;
-			case 2:
+			case STT_FUNC:
 				typeSymbole = "FUNC";
 				break;
-			case 3:
+			case STT_SECTION:
 				typeSymbole = "SECTION";
 				break;
-			case 4:
+			case STT_FILE:
 				typeSymbole = "FILE";
 				break;
-			case 13:
+			case STT_LOPROC:
 				typeSymbole = "LOPROC";
 				break;
-			case 15:
-				typeSymbole = "HIRPOC";
+			case STT_HIPROC:
+				typeSymbole = "HIPROC";
 				break;
 			default:
-				typeSymbole = "UNDEFINED";
+				typeSymbole = "# ERR #";
 				break;
 		}
 	return typeSymbole;
