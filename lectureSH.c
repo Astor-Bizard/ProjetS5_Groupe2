@@ -75,7 +75,7 @@ char* sectionTypeString(uint32_t sh_type) {
 char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	int sLength, i, j; // Taille courante du tampon
 	char c; // Caractère lu
-	printf("BLLLLLEEEEEEEEEHHHHHHHH");
+	
 	// Initialisation du tableau de chaines contenant les noms des sections. Il contient 'elfHeader.e_shnum' chaines, plus une chaine vide.
 	char** names = (char**) malloc(sizeof(char*)*elfHeader.e_shnum+1);
 	if (names==NULL) {
@@ -122,7 +122,7 @@ char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 			names[i][j] = tampon[j];
 	}
 	free(tampon);
-
+	printf("taille names: %d", i)
 	return names;
 }
 
@@ -160,6 +160,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 
 	if (!silent) {
 		for(i=0; i<elfHeader.e_shnum; i++) {
+			printf("id: %d", shTable[i].sh_name);
 			type = sectionTypeString(shTable[i].sh_type);
 
 			printf("  [%2d] %18s %15s %8x %6x %6x %02x %08d %2d %3d %2d\n", i, names[shTable[i].sh_name], type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, shTable[i].sh_flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
