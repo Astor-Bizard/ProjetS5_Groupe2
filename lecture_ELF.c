@@ -12,8 +12,9 @@ Programme principal de la partie 1
 int main(int argc, char *argv[])
 {
 
-
 	Elf32_Ehdr elfHeaders;
+	Elf32_Shdr *section_headers;
+	FILE* f;
 
 	if(argc != 2)
 	{
@@ -21,13 +22,13 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	FILE* f = fopen(argv[1], "r");
-
+	f = fopen(argv[1], "r");
 	elfHeaders = lecture_Headers(f);
-
-	
 	fclose(f);
-
+	f = fopen(argv[1], "r");
+	section_headers = lectureSectionHeader(f,elfHeaders,0);
+	fclose(f);
+	afficher_section(argv[1], section_headers,elfHeaders.e_shnum, elfHeaders.e_shstrndx);
 
 	return 0;
 
