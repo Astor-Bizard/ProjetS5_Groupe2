@@ -1,3 +1,5 @@
+//05/01/2016 Gabriel
+
 #include <stdio.h>
 #include <stdin.h>
 #include "lecture_header.h"
@@ -5,12 +7,12 @@
 
 
 
-long long unsigned int lire_octets_charT(char *tableau, int mode, int debut, int nombre)
+long long unsigned int lire_octets_charT(char *tableau, int hdr_mode, int debut, int nombre)
 {
 	int i;
 	int k=1;
 	long long unsigned int R=0;
-	if(mode==2)
+	if(hdr_mode==2)
 	{
 		for(i=0;i<nombre;i++)
 		{
@@ -42,7 +44,21 @@ void afficher_sectionR(char *f,Elf32_Shdr *table_section,Elf32_Ehdr header,int n
 {
 	int i;
 	char* section=afficher_section(f,table_section,header.e_shnum, numS);
-	int addr = lire_octets_charT(section,header.e_idata[5],0,4);
+	int addr;
+	int info;
+
+	printf("Section de relocalisation '%s' à l'adresse de décalage contient %i entrées:\n",
+			table_section[i], table_section.sh_size);
+	printf("  Décalage \t  Info \t  Type\t  Val.-sym\t Noms-symboles\n")
+	for(i=0; i<table_section.sh_size; i++)
+	{
+		addr = lire_octets_charT(section,header.e_idata,i*8,4);
+		info = lire_octets_charT(section,header.e_idata,i*8 + 4,4);
+		printf("%i\t%i",addr,info);
+		
+
+	}
+	
 
 }
 
@@ -51,23 +67,26 @@ void affichage_relocation(Elf32_Ehdr header,Elf_32Shdr* table_section)
 {
 	int i;
 	int j;
+	char** SectionName;
+	SectionName = getSectionNames(f,header.e_shnum,section.sh_size,header.)
 	for(i=0;i<header.shnum)
 	{
+		
 		// on vérifie toutes les sections
 		// si ce sont des sections de relocations:
-		if(table_section[i][0]=='.' 
-			&& table_section[i][1]=='r' 
-			&& table_section[i][2]=='e' 
-			&& table_section[i][3]=='l' 
-			&& table_section[i][4]=='a' )
+		if(SectionName[i][0]=='.' 
+			&& SectionName[i][1]=='r' 
+			&& SectionName[i][2]=='e' 
+			&& SectionName[i][3]=='l' 
+			&& SectionName[i][4]=='a' )
 
 		{
 			afficher_sectionRA(f,table_section,header,i);
 		}
-		else if (table_section[i][0]=='.' 
-			&& table_section[i][1]=='r' 
-			&& table_section[i][2]=='e' 
-			&& table_section[i][3]=='l' )
+		else if (SectionName[i][0]=='.' 
+			&& SectionName[i][1]=='r' 
+			&& SectionName[i][2]=='e' 
+			&& SectionName[i][3]=='l' )
 		{
 			afficher_sectionR(f,table_section,header,i);
 		}

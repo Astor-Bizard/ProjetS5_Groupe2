@@ -1,5 +1,5 @@
-Etape 1 : Jonathan (Fini)  
-Etape 2 : Loic  
-Etape 3 : Astor  
-Etape 4 : Thai Binh  
-Etape 5 : Gabriel  
+Etape 1 : Jonathan (lecture_headers)(Fini)  
+Etape 2 : Loic (lectureSH)  
+Etape 3 : Astor (afficher_section)  
+Etape 4 : Thai Binh (lectureST)  
+Etape 5 : Gabriel (affichage_relocation)  

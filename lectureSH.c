@@ -117,12 +117,12 @@ char** getSectionsNames(FILE* f, uint16_t sectionHeaderCount, uint32_t tableSize
 	return &names;
 }
 
-Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Off sectionHeaderOffset, uint16_t sectionHeaderSize, uint16_t sectionHeaderCount, uint16_t sectionHeaderStringTableIndex, unsigned char mode_elf, int silent) {
+Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	int i, j;
 	char[10] type;
 
 	// Allocation de la table des en-têtes de section
-	Elf32_Shdr* shTable = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*sectionHeaderCount);
+	Elf32_Shdr* shTable = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeader.e_shnum);
 	if (shTable==NULL) {
 		printf("Erreur lors de l'allocation initiale de shTable.");
 		return NULL;
@@ -133,24 +133,24 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Off sectionHeaderOffset, uint16_
 		printf("[Nr] Name              Type            Addr     Off    Size   ES Flg      Lk Inf Al\n");
 	}
 
-	fseek(f, sectionHeaderOffset);
-	for(i=0; i<sectionHeaderCount; i++) {
-		shTable[i].sh_name = (uint32_t) lire_octets(mode_elf, f, 4);
-		shTable[i].sh_type = (uint32_t) lire_octets(mode_elf, f, 4);
-		shTable[i].sh_flags = (uint32_t) lire_octets(mode_elf, f, 4);
-		shTable[i].sh_addr = (Elf32_Addr) lire_octets(mode_elf, f, 4);
-		shTable[i].sh_offset = (Elf32_Off) lire_octets(mode_elf, f, 4);
-		shTable[i].sh_size = (uint32_t) lire_octets(mode_elf, f, 4,);
-		shTable[i].sh_link = (uint32_t) lire_octets(mode_elf, f, 4);
-		shTable[i].sh_info = (uint32_t) lire_octets(mode_elf, f, 4);
-		shTable[i].sh_addralign = (uint32_t) lire_octets(mode_elf, f, 4);
-		shTable[i].sh_entsize = (uint32_t) lire_octets(mode_elf, f, 4);
+	fseek(f, elfHeader.e_shoff);
+	for(i=0; i<elfHeader.e_shnum; i++) {
+		shTable[i].sh_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shTable[i].sh_type = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shTable[i].sh_flags = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shTable[i].sh_addr = (Elf32_Addr) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shTable[i].sh_offset = (Elf32_Off) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shTable[i].sh_size = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4,);
+		shTable[i].sh_link = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shTable[i].sh_info = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shTable[i].sh_addralign = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shTable[i].sh_entsize = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
 	}
 
-	char** names = getSectionsNames(f, sectionHeaderCount, shTable[sectionHeaderStringTableIndex].sh_size, shTable[sectionHeaderStringTableIndex].sh_offset);
+	char** names = getSectionsNames(f, elfHeader.e_shnum, shTable[elfHeader.e_shstrndx].sh_size, shTable[elfHeader.e_shstrndx].sh_offset);
 
 	if (!silent) {
-		for(i=0; i<sectionHeaderCount; i++) {
+		for(i=0; i<elfHeader.e_shnum; i++) {
 			sectionTypeString(shTable[i].sh_type, &type);
 
 			printf("[%2d] %s %s %8x %6x %6x %02x %08d %2d %3d %2d\n", i, names[shTable[i].sh_name], type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, shTable[i].sh_flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
