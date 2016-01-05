@@ -5,7 +5,8 @@ Programme principal de la partie 1
 */
 
 #include "lecture_headers.h"
-
+#include "afficher_section.h"
+#include "lectureSH.h"
 
 
 int main(int argc, char *argv[])
