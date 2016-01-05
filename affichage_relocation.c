@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "lecture_header.h"
+#include "lecture_headers.h"
 #include "afficher_section.h"
 
 
