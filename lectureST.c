@@ -24,7 +24,7 @@ Elf32_Sym* lectureSymbolTab(FILE *f, int sectionSymbolTabOffset, int sectionSymb
 	if (!silent)
 	{
 		printf("Symbol Table: \n");
-		printf("Num:      Value    Size Type     Other Name\n");
+		printf("Num:      Value    Size Type    BIND   Other Name\n");
 	}
 
 	int j = 0;
@@ -38,9 +38,12 @@ Elf32_Sym* lectureSymbolTab(FILE *f, int sectionSymbolTabOffset, int sectionSymb
 		symbolTab[j].st_other = (unsigned char) lire_octets(BIG_ENDIAN,f,1);
 		symbolTab[j].st_shndx = (uint16_t) lire_octets(BIG_ENDIAN,f,2);
 
+		unsigned char info = 1<<4 & symbolTab[j].st_info;
+		unsigned char bind = 1&0xf & symbolTab[j].st_info;
+
 		if (!silent)
 		{
-			printf("%2d %8x %d %s %d %x %s\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(symbolTab[j].st_info), 
+			printf("%2d %8x %d %s %s %d %x %s\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
 				symbolTab[j].st_other, symbolTab[j].st_shndx, symbolTab[j].st_name);
 		}
 
@@ -55,32 +58,59 @@ char* typeSymbole(unsigned char info)
 	char *typeSymbole[128];
 
 	switch(info)
-		{
-			case STT_NOTYPE:
-				typeSymbole = "NOTYPE";
-				break;
-			case STT_OBJECT:
-				typeSymbole = "OBJECT";
-				break;
-			case STT_FUNC:
-				typeSymbole = "FUNC";
-				break;
-			case STT_SECTION:
-				typeSymbole = "SECTION";
-				break;
-			case STT_FILE:
-				typeSymbole = "FILE";
-				break;
-			case STT_LOPROC:
-				typeSymbole = "LOPROC";
-				break;
-			case STT_HIPROC:
-				typeSymbole = "HIPROC";
-				break;
-			default:
-				typeSymbole = "# ERR #";
-				break;
-		}
+	{
+		case STT_NOTYPE:
+			typeSymbole = "NOTYPE";
+			break;
+		case STT_OBJECT:
+			typeSymbole = "OBJECT";
+			break;
+		case STT_FUNC:
+			typeSymbole = "FUNC";
+			break;
+		case STT_SECTION:
+			typeSymbole = "SECTION";
+			break;
+		case STT_FILE:
+			typeSymbole = "FILE";
+			break;
+		case STT_LOPROC:
+			typeSymbole = "LOPROC";
+			break;
+		case STT_HIPROC:
+			typeSymbole = "HIPROC";
+			break;
+		default:
+			typeSymbole = "# ERR #";
+			break;
+	}
 	return typeSymbole;
 }
 
+char* bindSymbole(unsigned char bind)
+{
+	char *bindSymbole[128];
+
+	switch(bind)
+	{
+		case STB_LOCAL:
+			bindSymbole = "LOCAL";
+			break;
+		case STB_GLOBAL:
+			bindSymbole = "GLOBAL";
+			break;
+		case STB_WEAK:
+			bindSymbole = "WEAK";
+			break;
+		case STB_LOPROC:
+			bindSymbole = "LOPROC";
+			break;
+		case STB_HIPROC:
+			bindSymbole = "HIPROC";
+			break;
+		default:
+			bindSymbole = "# ERR #";
+			break;
+	}
+	return bindSymbole;
+}
