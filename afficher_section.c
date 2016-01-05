@@ -31,7 +31,7 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 // Affiche le contenu d'une section désignée par nom ou numéro. Renvoie ce contenu, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
 unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	FILE *f;
-	unsigned char str[42];
+	char str[42];
 	int num_sh=0,i;
 	unsigned char c;
 	unsigned char *section;
