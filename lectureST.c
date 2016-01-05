@@ -7,14 +7,18 @@ Lecture de la table des symboles
 #include <elf.h>
 #include "lecture_header.h"
 #include "lectureSH.h"
+#include "lectureST.h"
 
 
-Elf32_Sym* lectureSymbolTab(FILE *f, int sectionSymbolTabOffset, int sectionSymbolTabSize, int silent)
+Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHeader, int silent)
 {
+	int sectionSymbolTabSize;
+	int sectionSymbolTabOffset;
+	initSymbolTabUsefullInfo(sectionHeader, *sectionSymbolTabSize, *sectionSymbolTabOffset);
+
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
 	Elf32_Sym *symbolTab = (Elf32_Sym) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16);
-
 	if(symbolTab == NULL)
 	{
 		printf("Erreur d'allocation\n");
@@ -26,17 +30,16 @@ Elf32_Sym* lectureSymbolTab(FILE *f, int sectionSymbolTabOffset, int sectionSymb
 		printf("Symbol Table: \n");
 		printf("Num:      Value    Size Type    BIND   Other Name\n");
 	}
-
 	int j = 0;
 
 	for(int i=0; i<sectionSymbolTabSize; i=i+16)
 	{
-		symbolTab[j].st_name = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
-		symbolTab[j].st_value = (Elf32_Addr) lire_octets(BIG_ENDIAN,f,4);
-		symbolTab[j].st_size = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
-		symbolTab[j].st_info = (unsigned char) lire_octets(BIG_ENDIAN,f,1);
-		symbolTab[j].st_other = (unsigned char) lire_octets(BIG_ENDIAN,f,1);
-		symbolTab[j].st_shndx = (uint16_t) lire_octets(BIG_ENDIAN,f,2);
+		symbolTab[j].st_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
+		symbolTab[j].st_value = (Elf32_Addr) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
+		symbolTab[j].st_size = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
+		symbolTab[j].st_info = (unsigned char) lire_octets(elfHeader.e_ident[EI_DATA],f,1);
+		symbolTab[j].st_other = (unsigned char) lire_octets(elfHeader.e_ident[EI_DATA],f,1);
+		symbolTab[j].st_shndx = (uint16_t) lire_octets(elfHeader.e_ident[EI_DATA],f,2);
 
 		unsigned char info = 1<<4 & symbolTab[j].st_info;
 		unsigned char bind = 1&0xf & symbolTab[j].st_info;
@@ -113,4 +116,16 @@ char* bindSymbole(unsigned char bind)
 			break;
 	}
 	return bindSymbole;
+}
+
+void initSymbolTabUsefullInfo(Elf32_Shdr sectionHeader, int *size, int *offset)
+{
+	int i=0;
+
+	//ICI C'EST FAUX !!!! 
+	while(sectionHeader[i].sh_name != ".symtab")
+	{}
+
+	size = sectionHeader[i].sh_size;
+	offset = sectionHeader[i].sh_offset;
 }
