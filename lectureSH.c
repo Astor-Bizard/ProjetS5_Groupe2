@@ -122,7 +122,7 @@ char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 			names[i][j] = tampon[j];
 	}
 	free(tampon);
-	printf("taille names: %d", i);
+	printf("taille names: %d\n", i);
 	return names;
 }
 
@@ -160,10 +160,10 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 
 	if (!silent) {
 		for(i=0; i<elfHeader.e_shnum; i++) {
-			printf("id: %d", shTable[i].sh_name);
+			printf("id: %d\n", shTable[i].sh_name);
 			type = sectionTypeString(shTable[i].sh_type);
 
-			printf("  [%2d] %18s %15s %8x %6x %6x %02x %08d %2d %3d %2d\n", i, names[shTable[i].sh_name], type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, shTable[i].sh_flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+			printf("  [%2d] %18s %15s %8x %6x %6x %02x %08d %2d %3d %2d\n", i, "bidule", type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, shTable[i].sh_flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
 		}
 	}
 
