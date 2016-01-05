@@ -8,7 +8,7 @@ Programme principal de la partie 1
 #include "afficher_section.h"
 //#include "lectureST.h"
 #include "lectureSH.h"
-//#include "affichage_relocation.h"
+#include "affichage_relocation.h"
 
 
 int main(int argc, char *argv[])

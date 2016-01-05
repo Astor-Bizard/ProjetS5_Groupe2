@@ -45,7 +45,7 @@ char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	fclose(f);
 
 	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
-		printf("Section absente : %d\n", num_sh);
+		printf("Section absente : %s\n", str);
 		return NULL;
 	}
 	else{
