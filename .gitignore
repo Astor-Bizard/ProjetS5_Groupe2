@@ -4,7 +4,7 @@
 *.log
 *.status
 *~
-afficher_section
+lecture_ELF
 elf_linker-1.0/.deps/
 elf_linker-1.0/ARM_runner_example
 elf_linker-1.0/Examples_loader/Makefile
