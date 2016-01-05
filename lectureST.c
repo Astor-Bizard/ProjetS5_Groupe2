@@ -6,6 +6,7 @@ Lecture de la table des symboles
 #include <stdio.h>
 #include <elf.h>
 #include "lecture_header.h"
+#include "afficher_section.h"
 #include "lectureSH.h"
 #include "lectureST.h"
 
@@ -58,7 +59,7 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHea
 
 char* typeSymbole(unsigned char info)
 {
-	char *typeSymbole[128];
+	char typeSymbole[128];
 
 	switch(info)
 	{
@@ -92,7 +93,7 @@ char* typeSymbole(unsigned char info)
 
 char* bindSymbole(unsigned char bind)
 {
-	char *bindSymbole[128];
+	char bindSymbole[128];
 
 	switch(bind)
 	{
