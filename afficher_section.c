@@ -57,9 +57,9 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 		if(section != NULL){
 			// On affiche le contenu de la section
 			for(i=0;i<tabSH[num_sh].sh_size;i++){
-				if(i!=0 && i%8==0) printf(" ");
+				if(i!=0 && i%4==0) printf(" ");
 				c=fgetc(f);
-				printf("%x",c);
+				printf("%02x",c);
 				section[i]=c;
 			}
 			section[i]='\0';
@@ -90,9 +90,9 @@ unsigned char *afficher_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shd
 		if(section != NULL){
 			// On affiche le contenu de la section
 			for(i=0;i<tabSH[num_sh].sh_size;i++){
-				if(i!=0 && i%8==0) printf(" ");
+				if(i!=0 && i%4==0) printf(" ");
 				c=fgetc(f);
-				printf("%x",c);
+				printf("%02x",c);
 				section[i]=c;
 			}
 			section[i]='\0';
