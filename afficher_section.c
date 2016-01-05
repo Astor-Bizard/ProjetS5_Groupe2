@@ -23,8 +23,7 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 			num_sh=0;
 			while(num_sh<elfHeader.e_shnum && strcmp(str,names[num_sh]))num_sh++;
 		}
-		if(num_sh<0 || num_sh>=elfHeader.e_shnum) return -1;
-		else return num_sh;
+		return num_sh;
 	}
 	else return -1;
 }
@@ -46,7 +45,7 @@ char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	fclose(f);
 
 	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
-		printf("Section absente : %d", num_sh);
+		printf("Section absente : %d\n", num_sh);
 		return NULL;
 	}
 	else{
