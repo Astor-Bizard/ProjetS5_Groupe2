@@ -18,12 +18,10 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 
 	initSymbolTabUsefullInfo(names, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset);
 
-
-
-
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
 	Elf32_Sym *symbolTab = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16));
+
 	if(symbolTab == NULL)
 	{
 		printf("Erreur d'allocation\n");
