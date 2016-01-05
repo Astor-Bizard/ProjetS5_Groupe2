@@ -1,3 +1,9 @@
+/*
+Creer le 4 janvier 2016 par Jonathan
+
+Lecture d'un fichier elf et affichage du Header
+*/
+
 #ifndef LECTURE_HEADERS
 #define LECTURE_HEADERS
 
