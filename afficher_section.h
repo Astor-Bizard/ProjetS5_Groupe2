@@ -8,4 +8,4 @@ Affichage d'une section specifique
 int index_Shdr(char str[], FILE *f, int ShdrCount, int ShdrStrIndex);
 
 // Affiche le contenu d'une section désignée par nom ou numéro. Renvoie ce contenu, NULL si la section n'existe pas.
-char *afficher_section(char *nom_f, Elf32_Shdr *tabSH, int ShdrCount, int ShdrStrIndex){
+char *afficher_section(char *nom_f, Elf32_Shdr *tabSH, int ShdrCount, int ShdrStrIndex);
