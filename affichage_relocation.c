@@ -137,14 +137,14 @@ void type_relocation(int info)
 //affiche une section de relocation_A
 void afficher_sectionRA(char *f,Elf32_Shdr *table_section,Elf32_Ehdr header,int numS)
 {
-    null;
+    afficher_sectionR(f,table_section,header,numS);
 }
 
 //affiche une section de relocation
 void afficher_sectionR(char *f,Elf32_Shdr *table_section,Elf32_Ehdr header,int numS)
 {
 	int i;
-	char* section=afficher_section(f,table_section,header.e_shnum, numS);
+	char* section=afficher_section(f,header,table_section, numS);
 	int addr;
 	int info;
         char *nom_section;
