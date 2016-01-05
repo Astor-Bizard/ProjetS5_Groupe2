@@ -65,42 +65,49 @@ void sectionTypeString(uint32_t sh_type, char* typeString) {
 
 char** getSectionsNames(FILE* f, int sectionHeaderCount, uint32_t tableSize, Elf32_Off tableOffset)
 {
+	int sLength; // Taille courante du tampon
+	char c; // Caractère lu
+
+	// Initialisation du tableau de chaines contenant les noms des sections. Il contient 'sectionHeaderCount' chaines, plus une chaine vide.
 	char** names = (char**) malloc(sizeof(char*)*sectionHeaderCount+1);
 	if (names==NULL) {
 		printf("Erreur lors de l'allocation initiale de la table des noms.");
-		return shTable;
+		return NULL;
 	}
 
-	int sLength;
-	char c;
+	// Initialisation du tampon qui sert à récuperer chaque chaine.
 	char* tampon = (char*) malloc(tableSize*sizeof(char));
 	if (tampon==NULL) {
 		printf("Erreur lors de l'allocation du tampon de remplissage de la table des noms.");
-		return shTable;
+		free(names);
+		return NULL;
 	}
 
-	fseek(f, tableOffset);
-	for(i=0; i<sectionHeaderCount+1; i++) {
+	fseek(f, tableOffset); // On se place au depart de la table des noms dans le fichier
+	// On cherche autant de chaines qu'il y a de Section Header, plus la chaine vide au debut du tableau.
+	for(i=0; i<sectionHeaderCount+1; i++) { 
 		sLength = 0;
 
 		c = fgetc(f);
-		while(c != '\0') {
-			tampon[i] = c;
+		while(c != '\0') { // Tant qu'on ne change pas de chaine
+			tampon[sLength] = c;
 			sLength++;
 			c = fgetc(f);
 		}
-		tampon[i] = c;
+		tampon[sLength] = c;
 		sLength++;
 
+		// Allocation de la chaine dans le tableau, de la même longueur que le tampon(longueur courante).
 		names[i] = (char*) malloc(sLength*sizeof(char));
 		if (names[i]==NULL) {
 			printf("Erreur lors de l'allocation d'une entrée de la table des noms.");
+			// On libère les objets
 			free(tampon);
 			for(j=0; j<i; j++)
 				free(names[i]);
 			free(names);
 
-			return shTable;
+			return NULL;
 		}
 
 		for(j=0; j<sLength; j++)
@@ -114,19 +121,20 @@ char** getSectionsNames(FILE* f, int sectionHeaderCount, uint32_t tableSize, Elf
 Elf32_Shdr* lectureSectionHeader(FILE *f, long int sectionHeaderOffset, int sectionHeaderSize, int sectionHeaderCount, int sectionHeaderStringTableIndex, int silent) {
 	int i, j;
 	char[10] type;
+
+	// Allocation de la table des en-têtes de section
 	Elf32_Shdr* shTable = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*sectionHeaderCount);
 	if (shTable==NULL) {
 		printf("Erreur lors de l'allocation initiale de shTable.");
-		return shTable;
+		return NULL;
 	}
 	
-	if (!silent) {
+	if (!silent) { 
 		printf("Section Headers: \n");
 		printf("[Nr] Name              Type            Addr     Off    Size   ES Flg      Lk Inf Al\n");
 	}
 
 	fseek(f, sectionHeaderOffset);
-
 	for(i=0; i<sectionHeaderCount; i++) {
 		shTable[i].sh_name = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
 		shTable[i].sh_type = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
