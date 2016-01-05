@@ -9,19 +9,19 @@ Lecture de la table des symboles
 #include "lectureSH.h"
 #include "lectureST.h"
 
-Elf32_Sym *lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHeader, int silent)
+Elf32_Sym *lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHeader, int silent)
 {
 	int sectionSymbolTabSize;
 	int sectionSymbolTabOffset;
-	initSymbolTabUsefullInfo(f, elfHeader, sectionHeader, sectionSymbolTabSize, sectionSymbolTabOffset);
+	initSymbolTabUsefullInfo(f, elfHeader, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset);
 
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
-	Elf32_Sym *symbolTab = (Elf32_Sym) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16));
+	Elf32_Sym *symbolTab = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16));
 	if(symbolTab == NULL)
 	{
 		printf("Erreur d'allocation\n");
-		return;
+		return NULL;
 	}
 
 	if (!silent)
@@ -30,8 +30,8 @@ Elf32_Sym *lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHea
 		printf("Num:      Value    Size Type    BIND   Other Name\n");
 	}
 	int j = 0;
-
-	for(int i=0; i<sectionSymbolTabSize; i=i+16)
+	int i;
+	for(i = 0; i<sectionSymbolTabSize; i=i+16)
 	{
 		symbolTab[j].st_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
 		symbolTab[j].st_value = (Elf32_Addr) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
@@ -124,7 +124,7 @@ char* bindSymbole(unsigned char bind)
 	return bindSymbole;
 }
 
-void initSymbolTabUsefullInfo(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionHeader, int *size, int *offset)
+void initSymbolTabUsefullInfo(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHeader, int *size, int *offset)
 {
 	int i=0;
 	char** names;
@@ -132,8 +132,8 @@ void initSymbolTabUsefullInfo(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr sectionH
 
 	while(names[sectionHeader[i].sh_name] != ".symtab"){}
 
-	&size = sectionHeader[i].sh_size;
-	&offset = sectionHeader[i].sh_offset;
+	*size = sectionHeader[i].sh_size;
+	*offset = sectionHeader[i].sh_offset;
 
-	return;
+	return NULL;
 }
