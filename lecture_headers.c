@@ -80,7 +80,7 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 		exit(1);
 	}
 
-	if (lec_Cour == LITTLE_ENDIAN)
+	if (lec_Cour == 0x01)
 	{
 		printf("  Data: \t\t\t\tLITTLE ENDIAN\n");
 		mode = LITTLE_ENDIAN;
