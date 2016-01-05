@@ -29,12 +29,12 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 }
 
 // Affiche le contenu d'une section désignée par nom ou numéro. Renvoie ce contenu, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
-char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
+unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	FILE *f;
-	char str[42];
+	unsigned char str[42];
 	int num_sh=0,i;
-	char c;
-	char *section;
+	unsigned char c;
+	unsigned char *section;
 
 	printf("Section à afficher : ");
 	scanf("%s",str);
@@ -53,7 +53,7 @@ char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 		printf("Section %s\n",str);
 		// On se place
 		fseek(f,tabSH[num_sh].sh_offset,0);
-		section=malloc(sizeof(char)*(tabSH[num_sh].sh_size+1));
+		section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
 		if(section != NULL){
 			// On affiche le contenu de la section
 			for(i=0;i<tabSH[num_sh].sh_size;i++){
@@ -71,11 +71,11 @@ char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 }
 
 // Affiche le contenu de la section numero num_sh. Renvoie ce contenu, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
-char *afficher_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int num_sh){
+unsigned char *afficher_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int num_sh){
 	FILE *f;
 	int i;
-	char c;
-	char *section;
+	unsigned char c;
+	unsigned char *section;
 
 	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
 		printf("Section absente : %d\n", num_sh);
@@ -86,7 +86,7 @@ char *afficher_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH,
 		printf("Section %d\n",num_sh);
 		// On se place
 		fseek(f,tabSH[num_sh].sh_offset,0);
-		section=malloc(sizeof(char)*(tabSH[num_sh].sh_size+1));
+		section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
 		if(section != NULL){
 			// On affiche le contenu de la section
 			for(i=0;i<tabSH[num_sh].sh_size;i++){
