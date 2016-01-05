@@ -2,13 +2,9 @@
 Creer le 4 janvier 2016 par Jonathan
 
 Lecture d'un fichier elf et affichage du Header
-
-
-
 */
+
 #include "lecture_Headers.h"
-
-
 
 long long int lire_octets(int mode, FILE *f, int nb_octet)
 {

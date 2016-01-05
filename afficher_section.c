@@ -8,7 +8,7 @@ Affichage d'une section specifique
 //char** getSectionsNames(FILE* f, int sectionHeaderCount, uint32_t tableSize, Elf32_Off tableOffset);
 
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
-int index_Shdr(char str[], FILE *f, int ShdrCount, int ShdrStrIndex){
+int index_Shdr(char str[], FILE *f, int ShdrCount, int ShdrStrSize, int ShdrTabOffset){
 	int i,num_sh;
 	char **names;
 	if(str[0]!='\0'){
@@ -19,8 +19,9 @@ int index_Shdr(char str[], FILE *f, int ShdrCount, int ShdrStrIndex){
 			}
 		}
 		else{
-			names=getSectionsNames
-			//while(num_sh<ShdrCount && strcmp(str,tabSH[num_sh].name)
+			names=getSectionsNames(f,ShdrCount,ShdrStrSize,ShdrTabOffset);
+			num_sh=0;
+			while(num_sh<ShdrCount && strcmp(str,names[num_sh]))num_sh++;
 		}
 		if(num_sh<0 || num_sh>=ShdrCount) return -1;
 		else return num_sh;
@@ -38,7 +39,7 @@ char *afficher_section(char *nom_f, Elf32_Shdr *tabSH, int ShdrCount, int ShdrSt
 	scanf("%s",str);
 
 	f=fopen(nom_f,"r");
-	num_sh=index_Shrd(str,f,ShdrStrIndex);
+	num_sh=index_Shrd(str,f,tabSH[ShdrStrIndex].size,tabSH[ShdrStrIndex].offset);
 	fclose(f);
 
 	if(num_sh<0 || num_sh>=ShdrCount){
@@ -48,7 +49,7 @@ char *afficher_section(char *nom_f, Elf32_Shdr *tabSH, int ShdrCount, int ShdrSt
 	else{
 		f=fopen(nom_f,"r");
 		printf("Section %s\n",str);
-		for(i=0;i<tabSH[num_sh].offset;i++) fgetc(f);
+		fseek(f,tabSH[num_sh].offset);
 		char section[tabSH[num_sh].size+1];
 		for(i=0;i<tabSH[num_sh].size;i++){
 			c=fgetc(f)
