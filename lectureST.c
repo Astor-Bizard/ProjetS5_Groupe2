@@ -134,10 +134,8 @@ void initSymbolTabUsefullInfo(char** names, Elf32_Shdr *sectionHeader, int *size
 {
 	int i=0;
 
-	while(names[sectionHeader[i].sh_name] != ".symtab"){}
+	while(!strcmp(names[sectionHeader[i].sh_name], ".symtab")){}
 
 	*size = sectionHeader[i].sh_size;
 	*offset = sectionHeader[i].sh_offset;
-
-	return NULL;
 }
