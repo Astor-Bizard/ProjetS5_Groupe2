@@ -8,10 +8,7 @@ Lecture d'un fichier elf et affichage du Header
 */
 #include "lecture_Headers.h"
 
-/*
-	lit nb_octet du fichier f, en little endian si mode = 1, 
-	en big endian si mode = 2
-*/
+
 
 long long int lire_octets(int mode, FILE *f, int nb_octet)
 {
@@ -36,6 +33,7 @@ long long int lire_octets(int mode, FILE *f, int nb_octet)
 	}
 	return retour;
 }
+
 
 
 
@@ -70,11 +68,11 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 
 	printf("  Class: \t\t\t\tELF%llu\n",32*lec_Cour);
 
-	headers.e_ident[0]=0x7F;
-	headers.e_ident[1]='E';
-	headers.e_ident[2]='L';
-	headers.e_ident[3]='F';
-	headers.e_ident[4]= 32*lec_Cour;
+	headers.e_ident[EI_MAG0]=0x7F;
+	headers.e_ident[EI_MAG1]='E';
+	headers.e_ident[EI_MAG2]='L';
+	headers.e_ident[EI_MAG3]='F';
+	headers.e_ident[EI_CLASS]= 32*lec_Cour;
 
 	lec_Cour = lire_octets(BIG_ENDIAN,f,1);
 	octet_cour++;
@@ -96,7 +94,7 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 		printf("  Data: \t\t\t\tBIG ENDIAN\n");
 	}
 
-	headers.e_ident[5]=mode;
+	headers.e_ident[EI_DATA]=mode;
 
 	lec_Cour = lire_octets(mode,f,1);
 	octet_cour++;
@@ -111,7 +109,7 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 		printf("  Version header: \t\t\t%llu (current)\n",lec_Cour);
 	}
 
-	headers.e_ident[6]=lec_Cour;
+	headers.e_ident[EI_VERSION]=lec_Cour;
 
 	lire_octets(mode,f,9);
 	octet_cour +=9;
