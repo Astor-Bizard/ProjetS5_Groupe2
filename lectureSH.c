@@ -122,7 +122,7 @@ char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 			names[i][j] = tampon[j];
 	}
 	free(tampon);
-	printf("taille names: %d", i)
+	printf("taille names: %d", i);
 	return names;
 }
 
