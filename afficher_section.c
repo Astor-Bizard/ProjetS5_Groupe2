@@ -26,10 +26,11 @@ int index_Shdr(char str[], FILE *f, int ShdrCount, int ShdrStrIndex){
 	else return -1;
 }
 
-void afficher_section(char *nom_f, Elf32_Shdr *tabSH, int ShdrCount, int ShdrStrIndex){
+char *afficher_section(char *nom_f, Elf32_Shdr *tabSH, int ShdrCount, int ShdrStrIndex){
 	FILE *f;
 	char str[42];
 	int num_sh=0,i;
+	char c;
 
 	printf("Section à afficher : ");
 	scanf("%s",str);
@@ -38,12 +39,22 @@ void afficher_section(char *nom_f, Elf32_Shdr *tabSH, int ShdrCount, int ShdrStr
 	num_sh=index_Shrd(str,f,ShdrStrIndex);
 	fclose(f);
 
-	if(num_sh<0 || num_sh>=ShdrCount) printf("Section absente : %d", sum_sh);
+	if(num_sh<0 || num_sh>=ShdrCount){
+		printf("Section absente : %d", sum_sh);
+		return NULL;
+	}
 	else{
 		f=fopen(nom_f,"r");
 		printf("Section %s\n",str);
-		for(i=0;i<tabSH[num_sh].offset) fgetc(f);
-		for(i=0;i<tabSH[num_sh].size) printf("%x",fgetc(f));
+		for(i=0;i<tabSH[num_sh].offset;i++) fgetc(f);
+		char section[tabSH[num_sh].size+1];
+		for(i=0;i<tabSH[num_sh].size;i++){
+			c=fgetc(f)
+			printf("%x",c);
+			section[i]=c;
+		}
+		section[i]='\0';
 		fclose(f);
+		return section;
 	}
 }
