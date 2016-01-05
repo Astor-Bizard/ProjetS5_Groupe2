@@ -6,8 +6,15 @@ Lecture de la table des sections
 #include <stdio.h>
 #include <elf.h>
 #include "lecture_headers.h"
+#include "lectureSH.h"
 
-void sectionTypeString(uint32_t sh_type, char* typeString) {
+char* sectionTypeString(uint32_t sh_type) {
+	char* typeString =  (char*) malloc(sizeof(char)*10);
+	if (typeString==NULL) {
+		printf("Erreur lors de l'allocation d'une chaine de type.");
+		return NULL;
+	}
+
 	switch(sh_type) {
 		case SHT_NULL:
 			typeString = "NULL";
@@ -61,30 +68,32 @@ void sectionTypeString(uint32_t sh_type, char* typeString) {
 			typeString = "# ERR #";
 			break;
 	}
+
+	return typeString;
 }
 
-char** getSectionsNames(FILE* f, uint16_t sectionHeaderCount, uint32_t tableSize, Elf32_Off tableOffset) {
-	int sLength; // Taille courante du tampon
+char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* sectionsHeaders) {
+	int sLength, i, j; // Taille courante du tampon
 	char c; // Caractère lu
 
-	// Initialisation du tableau de chaines contenant les noms des sections. Il contient 'sectionHeaderCount' chaines, plus une chaine vide.
-	char** names = (char**) malloc(sizeof(char*)*sectionHeaderCount+1);
+	// Initialisation du tableau de chaines contenant les noms des sections. Il contient 'elfHeader.e_shnum' chaines, plus une chaine vide.
+	char** names = (char**) malloc(sizeof(char*)*elfHeader.e_shnum+1);
 	if (names==NULL) {
 		printf("Erreur lors de l'allocation initiale de la table des noms.");
 		return NULL;
 	}
 
 	// Initialisation du tampon qui sert à récuperer chaque chaine.
-	char* tampon = (char*) malloc(tableSize*sizeof(char));
+	char* tampon = (char*) malloc(shTable[elfHeader.e_shstrndx].sh_size*sizeof(char));
 	if (tampon==NULL) {
 		printf("Erreur lors de l'allocation du tampon de remplissage de la table des noms.");
 		free(names);
 		return NULL;
 	}
 
-	fseek(f, tableOffset); // On se place au depart de la table des noms dans le fichier
+	fseek(f, shTable[elfHeader.e_shstrndx].sh_offset, 0); // On se place au depart de la table des noms dans le fichier
 	// On cherche autant de chaines qu'il y a de Section Header, plus la chaine vide au debut du tableau.
-	for(i=0; i<sectionHeaderCount+1; i++) { 
+	for(i=0; i<elfHeader.e_shnum+1; i++) { 
 		sLength = 0;
 
 		c = fgetc(f);
@@ -114,12 +123,12 @@ char** getSectionsNames(FILE* f, uint16_t sectionHeaderCount, uint32_t tableSize
 	}
 	free(tampon);
 
-	return &names;
+	return names;
 }
 
 Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
-	int i, j;
-	char[10] type;
+	int i;
+	char* type;
 
 	// Allocation de la table des en-têtes de section
 	Elf32_Shdr* shTable = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeader.e_shnum);
@@ -133,7 +142,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 		printf("[Nr] Name              Type            Addr     Off    Size   ES Flg      Lk Inf Al\n");
 	}
 
-	fseek(f, elfHeader.e_shoff);
+	fseek(f, elfHeader.e_shoff, 0);
 	for(i=0; i<elfHeader.e_shnum; i++) {
 		shTable[i].sh_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
 		shTable[i].sh_type = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
@@ -151,7 +160,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 
 	if (!silent) {
 		for(i=0; i<elfHeader.e_shnum; i++) {
-			sectionTypeString(shTable[i].sh_type, &type);
+			type = sectionTypeString(shTable[i].sh_type);
 
 			printf("[%2d] %s %s %8x %6x %6x %02x %08d %2d %3d %2d\n", i, names[shTable[i].sh_name], type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, shTable[i].sh_flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
 		}
