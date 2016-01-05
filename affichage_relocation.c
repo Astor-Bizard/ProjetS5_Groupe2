@@ -1,7 +1,7 @@
 //05/01/2016 Gabriel
 
 #include <stdio.h>
-#include <stdin.h>
+#include <stdlib.h>
 #include "lecture_header.h"
 #include "afficher_section.h"
 
