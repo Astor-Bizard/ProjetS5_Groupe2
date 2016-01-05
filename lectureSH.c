@@ -118,7 +118,7 @@ char** getSectionsNames(FILE* f, int sectionHeaderCount, uint32_t tableSize, Elf
 	return &names;
 }
 
-Elf32_Shdr* lectureSectionHeader(FILE *f, long int sectionHeaderOffset, int sectionHeaderSize, int sectionHeaderCount, int sectionHeaderStringTableIndex, int silent) {
+Elf32_Shdr* lectureSectionHeader(FILE *f, long int sectionHeaderOffset, int sectionHeaderSize, int sectionHeaderCount, int sectionHeaderStringTableIndex, int mode_elf, int silent) {
 	int i, j;
 	char[10] type;
 
@@ -136,16 +136,16 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, long int sectionHeaderOffset, int sect
 
 	fseek(f, sectionHeaderOffset);
 	for(i=0; i<sectionHeaderCount; i++) {
-		shTable[i].sh_name = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
-		shTable[i].sh_type = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
-		shTable[i].sh_flags = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
-		shTable[i].sh_addr = (Elf32_Addr) lire_octets(BIG_ENDIAN,f,4);
-		shTable[i].sh_offset = (Elf32_Off) lire_octets(BIG_ENDIAN,f,4);
-		shTable[i].sh_size = (uint32_t) lire_octets(BIG_ENDIAN,f,4,);
-		shTable[i].sh_link = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
-		shTable[i].sh_info = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
-		shTable[i].sh_addralign = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
-		shTable[i].sh_entsize = (uint32_t) lire_octets(BIG_ENDIAN,f,4);
+		shTable[i].sh_name = (uint32_t) lire_octets(mode_elf, f, 4);
+		shTable[i].sh_type = (uint32_t) lire_octets(mode_elf, f, 4);
+		shTable[i].sh_flags = (uint32_t) lire_octets(mode_elf, f, 4);
+		shTable[i].sh_addr = (Elf32_Addr) lire_octets(mode_elf, f, 4);
+		shTable[i].sh_offset = (Elf32_Off) lire_octets(mode_elf, f, 4);
+		shTable[i].sh_size = (uint32_t) lire_octets(mode_elf, f, 4,);
+		shTable[i].sh_link = (uint32_t) lire_octets(mode_elf, f, 4);
+		shTable[i].sh_info = (uint32_t) lire_octets(mode_elf, f, 4);
+		shTable[i].sh_addralign = (uint32_t) lire_octets(mode_elf, f, 4);
+		shTable[i].sh_entsize = (uint32_t) lire_octets(mode_elf, f, 4);
 	}
 
 	char** names = getSectionsNames(f, sectionHeaderCount, shTable[sectionHeaderStringTableIndex].sh_size, shTable[sectionHeaderStringTableIndex].sh_offset);
