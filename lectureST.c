@@ -48,8 +48,14 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 
 		if (!silent)
 		{
-			printf("%3d  %08x %4d %-7s %-6s %d %d %x\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
-				visionSymbole(symbolTab[j].st_other), shnxdSymbole(symbolTab[j].st_shndx), symbolTab[j].st_name);
+			if(symbolTab[j].st_shndx == 0)
+			{
+				printf("%3d  %08x %4d %-7s %-6s %-7s UND %s\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
+					visionSymbole(symbolTab[j].st_other), symbolTab[j].st_name);
+			}
+			else
+				printf("%3d  %08x %4d %-7s %-6s %-7s %3d %s\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
+					visionSymbole(symbolTab[j].st_other), symbolTab[j].st_shndx, symbolTab[j].st_name);
 		}
 		j++;
 
@@ -146,26 +152,6 @@ char* visionSymbole(unsigned char vis)
 			break;
 	}
 	return visSymbole;
-}
-
-char* shndxSymbole(uint16_t shndx)
-{
-	char* shndxSymbole =  (char*) malloc(sizeof(char)*10);
-	if (shndxSymbole==NULL) {
-		printf("Erreur lors de l'allocation d'une chaine de type.");
-		return NULL;
-	}
-
-	switch(shndx)
-	{
-		case 0:
-			shndxSymbole = "UND";
-			break;
-		default:
-			shndxSymbole = shndx;
-			break;
-	}
-	return shndxSymbole;
 }
 
 void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *size, uint32_t *offset)
