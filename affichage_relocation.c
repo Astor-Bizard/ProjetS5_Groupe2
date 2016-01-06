@@ -141,7 +141,7 @@ void type_relocation(int info)
 
 
 //affiche une section de relocation
-Elf32_Rel afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames)
+void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames)
 {
 	int i;
 	unsigned char *section = afficher_section_num(f,header,table_section, numS);
@@ -171,7 +171,7 @@ Elf32_Rel afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,
 }
 
 //affiche une section de relocation_A
-Elf32_Rela afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames)
+void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames)
 {
     afficher_sectionR(f,table_section,header,numS, SectionNames);
 }
