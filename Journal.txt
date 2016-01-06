@@ -1,9 +1,13 @@
-04-01-2016
-
-	-Premier jour de projet. 
+	-04/01/16 : Premier jour de projet. 
 		Nous avons préparé le terrain, créé le projet sur GitHub
 et nous avons commencé un fastidieux travail de lecture du sujet et de la documentation.
 Creation des premier fichier C pour lire le headers et afficher les differents informations
 	
-	-Deuxieme jour de projet.
+	-05/01/16 : Deuxieme jour de projet.
 		Répartition concrète des premières taches (1 à 5), débogage des étapes 1 à 3.
+
+	-06/01/16 : Troisième jour de projet.
+		La phase 1 est presque terminée, il reste l'étape 5 à corriger (notamment en Little Endian).
+		Réorganisation des fichiers.
+		On commence à lire et réfléchir à la phase 2.
+
