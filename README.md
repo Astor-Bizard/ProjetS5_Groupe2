@@ -26,6 +26,6 @@ cette commande donne le même resultat que make
 arm-eabi-as -o example1_as.o example1.s  
 arm-eabi-as -o example2_as.o example2.s  
 arm-eabi-as -o example3_as.o example3.s  
-arm-eabi-as -o example'_as.o example4.s  
+arm-eabi-as -o example4_as.o example4.s  
 
 source ~/.envarm/setenvarm.sh  
