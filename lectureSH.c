@@ -151,7 +151,7 @@ char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	}
 
 	fseek(f, shTable[elfHeader.e_shstrndx].sh_offset, 0);
-	for(i=0; i<sh_size; i++)
+	for(i=0; i<shTable[elfHeader.e_shstrndx].sh_size; i++)
 		names[i] = fgetc(f);
 	
 	return names;
