@@ -178,6 +178,10 @@ char* getSectionName(char* names, uint32_t nameIndex) {
 	return &sectionName;
 }
 
+char* getSectionNameBis(char* names, Elf32_Shdr sectionHeader) {
+	return getSectionName(names, sectionHeader.sh_name);
+}
+
 Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	int i;
 	char* type;
