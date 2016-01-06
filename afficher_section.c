@@ -5,23 +5,25 @@ Affichage d'une section specifique
 #include "afficher_section.h"
 #include "lectureSH.h"
 
+#define ASCII_0 48
+
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
 int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	int i,num_sh;
 	char *names;
+	names = fetchSectionNames(f,elfHeader,tabSH);
 	if(str[0]!='\0'){
 		// Cas nombre : on traduit le nombre (string) en int
-		if(str[0]>=48 && str[0]<=57){
-			num_sh = str[0]-48;
+		if(str[0]>=ASCII_0 && str[0]<=ASCII_0+9){
+			num_sh = str[0]-ASCII_0;
 			for(i=1;str[i]!='\0';i++){
-				if(str[i]>=48 && str[i]<=57) num_sh = num_sh*10 + str[i]-48;
+				if(str[i]>=ASCII_0 && str[i]<=ASCII_0+9) num_sh = num_sh*10 + str[i]-ASCII_0;
 			}
+			strcpy(str,getSectionNameBis(names,tabSH[num_sh]));
 		}
 		// Cas nom : on le cherche dans la table str
 		else{
-			names=fetchSectionNames(f,elfHeader,tabSH);
 			num_sh=0;
-			//getSectionNameBis(char* names, Elf32_Shdr sectionHeader);
 			while(num_sh<elfHeader.e_shnum && strcmp(str,getSectionNameBis(names,tabSH[num_sh]))) num_sh++;
 		}
 		return num_sh;
@@ -37,6 +39,7 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 	unsigned char c;
 	unsigned char *section;
 
+	//str=malloc(sizeof(char)*42);
 	printf("Section à afficher : ");
 	scanf("%s",str);
 
@@ -51,23 +54,34 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 	}
 	else{
 		f=fopen(nom_f,"r");
-		printf("Section %s\n",str);
+		printf("Section %s (%d):\n",str,num_sh);
 		// On se place
 		fseek(f,tabSH[num_sh].sh_offset,0);
 		section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
 		if(section != NULL){
 			// On affiche le contenu de la section
-			for(i=0;i<tabSH[num_sh].sh_size;i++){
-				if(i!=0 && i%4==0) printf(" ");
-				c=fgetc(f);
-				printf("%02x",c);
-				section[i]=c;
+			if(tabSH[num_sh].sh_size==0){
+				printf("Rien à afficher dans cette section\n");
+				section[0]='\0';
 			}
-			section[i]='\0';
+			else{
+				printf("  Ox%08x ",0);
+				for(i=0;i<tabSH[num_sh].sh_size;i++){
+					if(i!=0){
+						if(i%16==0) printf("\n  0x%08x ",i);
+						else if(i%4==0) printf(" ");
+					}
+					c=fgetc(f);
+					printf("%02x",c);
+					section[i]=c;
+				}
+				section[i]='\0';
+			}
 			fclose(f);
 		}
 		printf("\n");
 	}
+	//free(str);
 	return section;
 }
 
@@ -79,27 +93,22 @@ unsigned char *afficher_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shd
 	unsigned char *section;
 
 	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
-		printf("Section absente : %d\n", num_sh);
 		return NULL;
 	}
 	else{
 		f=fopen(nom_f,"r");
-		printf("Section %d\n",num_sh);
 		// On se place
 		fseek(f,tabSH[num_sh].sh_offset,0);
 		section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
 		if(section != NULL){
 			// On affiche le contenu de la section
 			for(i=0;i<tabSH[num_sh].sh_size;i++){
-				if(i!=0 && i%4==0) printf(" ");
 				c=fgetc(f);
-				printf("%02x",c);
 				section[i]=c;
 			}
 			section[i]='\0';
 			fclose(f);
 		}
-		printf("\n");
 	}
 	return section;
 }
