@@ -148,7 +148,7 @@ char* visionSymbole(unsigned char vis)
 	return visSymbole;
 }
 
-char* visionSymbole(uint16_t shndx)
+char* shndxSymbole(uint16_t shndx)
 {
 	char* shndxSymbole =  (char*) malloc(sizeof(char)*10);
 	if (shndxSymbole==NULL) {

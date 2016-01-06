@@ -29,7 +29,7 @@ char* visionSymbole(unsigned char vis);
 /*
 Fonction qui retourne la chaine de caractère qui correspond au "shndx" du symbole donné en parametre
 */
-char* visionSymbole(uint16_t shndx);
+char* shndxSymbole(uint16_t shndx);
 
 /*
 Fonction qui initialise les donnée nessessaires au bon fonctionnement de la lecture
