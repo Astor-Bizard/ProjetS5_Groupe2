@@ -134,11 +134,18 @@ void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *
 	int i=0;
 
 	//while(!strcmp(names[sectionHeader[i].sh_name], ".symtab")){}
-	while(!strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab"))
+	while(1)
 	{
-		printf("Section %d non\n",i);
-		i++;
+		if (!strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab"))
+		{
+			printf("Section %d non\n",i);
+			i++;
+		}
+		else
+		{
+			*size = sectionHeader[i].sh_size;
+			*offset = sectionHeader[i].sh_offset;
+			break;
+		}
 	}
-	*size = sectionHeader[i].sh_size;
-	*offset = sectionHeader[i].sh_offset;
 }
