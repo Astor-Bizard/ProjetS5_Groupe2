@@ -17,8 +17,7 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 	char* names = fetchSectionNames(f, elfHeader, sectionHeader);
 	char* symbolNames;
 	int i=0;
-	int j = 0;
-
+	int j=0;
 
 	while(strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab"))
 	{
@@ -27,8 +26,6 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 	sectionSymbolTabSize = sectionHeader[i].sh_size;
 	sectionSymbolTabOffset = sectionHeader[i].sh_offset;
 	symbolNames = fetchSymbolNames(f,sectionHeader,i);
-
-	//initSymbolTabUsefullInfo(names, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset, symbolNames);	
 
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
@@ -166,14 +163,8 @@ char* visionSymbole(unsigned char vis)
 	return visSymbole;
 }
 
-/*
-void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *size, uint32_t *offset, char *symbolNames)
+char* fetchSymbolNames(FILE* f, Elf32_Shdr* shTable, int symbolTabIndex) 
 {
-	
-}
-*/
-
-char* fetchSymbolNames(FILE* f, Elf32_Shdr* shTable, int symbolTabIndex) {
 	int i;
 
 	char* symbols = (char*) malloc(sizeof(char)*shTable[symbolTabIndex].sh_size);
@@ -189,7 +180,8 @@ char* fetchSymbolNames(FILE* f, Elf32_Shdr* shTable, int symbolTabIndex) {
 	return symbols;
 }
 
-char* getSymbolName(char* symbols, uint32_t symbolIndex) {
+char* getSymbolName(char* symbols, uint32_t symbolIndex) 
+{
 	int i = 1;
 
 	while(symbols[symbolIndex+i] != '\0')
@@ -210,6 +202,7 @@ char* getSymbolName(char* symbols, uint32_t symbolIndex) {
 	return symbolName;
 }
 
-char* getSymbolNameBis(char* symbols, Elf32_Sym symbol) {
+char* getSymbolNameBis(char* symbols, Elf32_Sym symbol) 
+{
 	return getSymbolName(symbols, symbol.st_name);
 }
