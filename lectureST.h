@@ -30,4 +30,11 @@ char* visionSymbole(unsigned char vis);
 Fonction qui initialise les donnée nessessaires au bon fonctionnement de la lecture
 */
 void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *size, uint32_t *offset);
+
+
+char* fetchSymbolNames(FILE* f, Elf32_Shdr* shTable, int symbolTabIndex);
+
+char* getSymbolName(char* symbols, uint32_t symbolIndex);
+
+char* getSymbolNameBis(char* symbols, Elf32_Sym symbol);
 #endif
