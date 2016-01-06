@@ -12,7 +12,7 @@ Réimplantation de type R_ARM_ABS*
 #include "lectureST.h"
 #include "reimpl_R_ARM_ABS.h"
 
-void reimplementation_R_ARM_ABS()
+void reimplantation_R_ARM_ABS()
 {
 	// TODO: Faire tout
 }
