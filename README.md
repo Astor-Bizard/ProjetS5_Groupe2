@@ -1,8 +1,12 @@
 Etape 1 : Jonathan (lecture_headers)(Fini)  
 Etape 2 : Loic (lectureSH)(Fini)  
 Etape 3 : Astor (afficher_section)(Fini)  
-Etape 4 : Thai Binh (lectureST)  
+Etape 4 : Thai Binh (lectureST)(Fini)  
 Etape 5 : Gabriel (affichage_relocation)  
+
+Etape 6 : Jonathan  
+Etape 7 : Loic (correctionSymboles)  
+Etape 8 : Thai Binh (reimpl_R_ARM_ABS)  
 
 
 ## Questions :  
