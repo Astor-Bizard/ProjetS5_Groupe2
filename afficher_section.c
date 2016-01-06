@@ -39,7 +39,6 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 	unsigned char c;
 	unsigned char *section;
 
-	//str=malloc(sizeof(char)*42);
 	printf("Section à afficher : ");
 	scanf("%s",str);
 	printf("\n");
@@ -50,7 +49,7 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 	fclose(f);
 
 	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
-		printf("Section absente : %s\n", str);
+		printf("Section absente : %s", str);
 		return NULL;
 	}
 	else{
@@ -80,9 +79,8 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 			}
 			fclose(f);
 		}
-		printf("\n");
 	}
-	//free(str);
+	printf("\n\n");
 	return section;
 }
 
