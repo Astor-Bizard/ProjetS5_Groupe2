@@ -64,6 +64,21 @@ char* sectionTypeString(uint32_t sh_type) {
 		case SHT_HIUSER:
 			typeString = "HIUSER";
 			break;
+		case SHT_ARM_EXIDX:
+			typeString = "ARM_EXIDX";
+			break;
+		case SHT_ARM_PREEMPTMAP:
+			typeString = "ARM_PREEMPTMAP";
+			break;
+		case SHT_ARM_ATTRIBUTES:
+			typeString = "ARM_ATTRIBUTES";
+			break;
+		case SHT_ARM_DEBUGOVERLAY:
+			typeString = "ARM_DEBUGOVERLAY";
+			break;
+		case SHT_ARM_OVERLAYSECTION:
+			typeString = "ARM_OVERLAYSECTION";
+			break;
 		default:
 			typeString = "# ERR #";
 			break;
@@ -176,7 +191,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	
 	if (!silent) { 
 		printf("Section Headers: \n");
-		printf("  [Nr] Name               Type            Addr     Off    Size   ES Flg      Lk Inf Al\n");
+		printf("  [Nr] Name               Type               Addr     Off    Size   ES Flg      Lk Inf Al\n");
 	}
 
 	fseek(f, elfHeader.e_shoff, 0);
@@ -199,7 +214,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 		for(i=0; i<elfHeader.e_shnum; i++) {
 			type = sectionTypeString(shTable[i].sh_type);
 
-			printf("  [%2d] %18s %15s %8x %6x %6x %02x %08d %2d %3d %2d\n", i, getSectionName(names, shTable[i].sh_name), type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, shTable[i].sh_flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+			printf("  [%2d] %18s %18s %8x %6x %6x %02x %08d %2d %3d %2d\n", i, getSectionName(names, shTable[i].sh_name), type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, shTable[i].sh_flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
 		}
 	}
 
