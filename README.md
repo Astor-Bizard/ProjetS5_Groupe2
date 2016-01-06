@@ -1,5 +1,4 @@
-Taches
-======
+##Taches
 
 Etape 1 : Jonathan (lecture_headers)(Fini)  
 Etape 2 : Loic (lectureSH)(Fini)  
@@ -12,7 +11,7 @@ Etape 7 : Loic (correctionSymboles)
 Etape 8 : Thai Binh (reimpl_R_ARM_ABS)  
 
 
-# Questions :
+##Questions :
 -Utilité du numero de la machine  
 Test si on est bien sur la machine ARM , si on est pas dans cette machine , dire architecture non reconnue
 et des flags ?  
@@ -24,7 +23,7 @@ Les 2 sont utilisable.
 arm-eabi-as --gdwarf2  -EB  -r  -o example1-arm.o example1.s  
 cette commande donne le même resultat que make  
 
-## Mémo des commandes :  
+##Mémo des commandes :  
 
 > $ arm-eabi-as -o example1_as.o example1.s  
 > $ arm-eabi-as -o example2_as.o example2.s  
