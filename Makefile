@@ -14,3 +14,6 @@ lectureSH.o: lecture_headers.h lectureSH.h
 afficher_section.o: lecture_headers.h lectureSH.h afficher_section.h
 lectureST.o: lecture_headers.h lectureSH.h lectureST.h
 affichage_relocation.o:	lecture_headers.h afficher_section.h affichage_relocation.h
+
+clean:
+	rm *.o lecture_ELF
