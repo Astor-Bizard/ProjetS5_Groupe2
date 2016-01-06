@@ -137,8 +137,8 @@ void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *
 	while(1)
 	{
 		printf("%s\n",getSectionNameBis(names,sectionHeader[i]));
-		
-		if (!strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab"))
+
+		if (strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab"))
 		{
 			printf("Section %d non\n",i);
 			i++;
