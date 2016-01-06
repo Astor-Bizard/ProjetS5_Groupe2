@@ -39,6 +39,8 @@ int main(int argc, char *argv[])
 	/*sym_tab = */lectureSymbolTab(f,elfHeaders,section_headers,0);
 	fclose(f);
 
+	affichage_relocation(argv[1],elfHeaders,section_headers);
+
 	return 0;
 
 

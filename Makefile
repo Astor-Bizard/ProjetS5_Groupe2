@@ -1,8 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -Werror
 
-lecture_ELF: lecture_ELF.o lecture_headers.o lectureSH.o afficher_section.o lectureST.o
-#affichage_relocation.o
+lecture_ELF: lecture_ELF.o lecture_headers.o lectureSH.o afficher_section.o lectureST.o affichage_relocation.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 %.o: %.c
