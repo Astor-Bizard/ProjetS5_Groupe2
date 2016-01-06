@@ -22,6 +22,16 @@ Fonction qui retourne la chaine de caractère qui correspond au "bind" du symbol
 char* bindSymbole(unsigned char bind);
 
 /*
+Fonction qui retourne la chaine de caractère qui correspond a la vision du symbole donné en parametre
+*/
+char* visionSymbole(unsigned char vis);
+
+/*
+Fonction qui retourne la chaine de caractère qui correspond au "shndx" du symbole donné en parametre
+*/
+char* visionSymbole(uint16_t shndx);
+
+/*
 Fonction qui initialise les donnée nessessaires au bon fonctionnement de la lecture
 */
 void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *size, uint32_t *offset);
