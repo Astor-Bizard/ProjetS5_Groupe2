@@ -1,18 +1,22 @@
 CC=gcc
 CFLAGS=-Wall -Werror
+BUILD=build
+SRC=src
+EXEC=lecture_ELF
 
-lecture_ELF: lecture_ELF.o lecture_headers.o lectureSH.o afficher_section.o lectureST.o affichage_relocation.o
+lecture_ELF: $(BUILD)/lecture_ELF.o $(BUILD)/lecture_headers.o $(BUILD)/lectureSH.o $(BUILD)/afficher_section.o $(BUILD)/lectureST.o $(BUILD)/affichage_relocation.o
 	$(CC) $(CFLAGS) -o $@ $^
 
-%.o: %.c
+$(BUILD)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) -c $<
+	mv `basename $@` $(BUILD)
 
-lecture_ELF.o: lecture_headers.h lectureSH.h afficher_section.h affichage_relocation.h lectureST.h
-lectureSH.o: lecture_headers.h lectureSH.h
-afficher_section.o: lecture_headers.h lectureSH.h afficher_section.h
-lectureST.o: lecture_headers.h lectureSH.h lectureST.h
-affichage_relocation.o:	lecture_headers.h afficher_section.h affichage_relocation.h
+$(BUILD)/lecture_ELF.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h $(SRC)/afficher_section.h $(SRC)/affichage_relocation.h $(SRC)/lectureST.h
+$(BUILD)/lectureSH.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h
+$(BUILD)/afficher_section.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h $(SRC)/afficher_section.h
+$(BUILD)/lectureST.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h $(SRC)/lectureST.h
+$(BUILD)/affichage_relocation.o: $(SRC)/lecture_headers.h $(SRC)/afficher_section.h $(SRC)/affichage_relocation.h
 
 clean:
-	rm *.o lecture_ELF
+	rm $(BUILD)/*.o $(EXEC)
 
