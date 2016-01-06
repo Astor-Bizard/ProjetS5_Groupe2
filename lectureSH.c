@@ -144,7 +144,7 @@ char* sectionTypeString(uint32_t sh_type) {
 char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	int i;
 
-	char** names = (char**) malloc(sizeof(char*)*sh_size);
+	char* names = (char*) malloc(sizeof(char)*shTable[elfHeader.e_shstrndx].sh_size);
 	if (names==NULL) {
 		printf("Erreur lors de l'allocation initiale de la table des noms.");
 		return NULL;
@@ -175,7 +175,7 @@ char* getSectionName(char* names, uint32_t nameIndex) {
 		i++;
 	}
 
-	return &sectionName;
+	return sectionName;
 }
 
 char* getSectionNameBis(char* names, Elf32_Shdr sectionHeader) {

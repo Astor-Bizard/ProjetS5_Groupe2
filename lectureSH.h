@@ -5,6 +5,12 @@ Lecture de la table des sections
 #ifndef _LECTURESH
 #define _LECTURESH
 
+#define SHT_ARM_EXIDX 0x70000001
+#define SHT_ARM_PREEMPTMAP 0x70000002
+#define SHT_ARM_ATTRIBUTES 0x70000003
+#define SHT_ARM_DEBUGOVERLAY 0x70000004
+#define SHT_ARM_OVERLAYSECTION 0x70000005
+
 char* sectionTypeString(uint32_t sh_type);
 
 /*char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* sectionsHeaders);*/
