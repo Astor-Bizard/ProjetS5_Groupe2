@@ -177,46 +177,36 @@ void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int 
 // trouve toutes les sections de relocations et les affiche.
 void affichage_relocation(char* f,Elf32_Ehdr header,Elf32_Shdr* table_section)
 {
-	int i=0,j=0;
+	int i=0;
 	char* SectionNames;
+    char* CurrentSectionName;
     FILE *fichier ;
     fichier = fopen(f,"r");
-
 	SectionNames = fetchSectionNames(fichier,header, table_section);
-    int nchar_nomSection = table_section[header.e_shstrndx].sh_size;
 
-
-	while(i<header.e_shnum && j < nchar_nomSection)
+	while(i<header.e_shnum)
 	{
-		if(SectionNames[j]==0)
-        {
-            i++;
-        }
+        CurrentSectionName = SectionNames+table_section[i].sh_name;
 		// on vérifie toutes les sections
 		// si ce sont des sections de relocations:
-		if(j >= 5
-            && SectionNames[j-5]==0 
-            && SectionNames[j-4]=='.' 
-			&& SectionNames[j-3]=='r' 
-			&& SectionNames[j-2]=='e' 
-			&& SectionNames[j-1]=='l' 
-			&& SectionNames[j]=='a' )
-
+		if( CurrentSectionName[0]=='.' 
+			&& CurrentSectionName[1]=='r' 
+			&& CurrentSectionName[2]=='e' 
+			&& CurrentSectionName[3]=='l' 
+			&& CurrentSectionName[4]=='a' )
 		{
-            printf("%s Nom de la section courante: n°%i\n",SectionNames+(j-4),i);
+            printf("Nom de la section courante:%s n°%i\n",CurrentSectionName,i);
 			afficher_sectionRA(f,table_section,header,i,SectionNames);
 		}
-		else if (j >=4
-            && SectionNames[j-4]== 0 
-            && SectionNames[j-3]=='.' 
-			&& SectionNames[j-2]=='r' 
-			&& SectionNames[j-1]=='e' 
-			&& SectionNames[j]  =='l')
+		else if (CurrentSectionName[0]=='.' 
+            && CurrentSectionName[1]=='r' 
+            && CurrentSectionName[2]=='e' 
+            && CurrentSectionName[3]=='l' )
 		{
-            printf("%s Nom de la section courante: n°%i\n",SectionNames+(j-3),i);
+            printf("Nom de la section courante:%s n°%i\n",CurrentSectionName,i);
 			afficher_sectionR(f,table_section,header,i,SectionNames);
 		}
-        j++;
+        i++;
 	}
 }
 
