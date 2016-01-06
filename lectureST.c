@@ -30,7 +30,7 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 	if (!silent)
 	{
 		printf("Symbol Table: \n");
-		printf("Num:    Value Size Type    Bind   Vis      Ndx Name\n");
+		printf("Num:    Value Size Type    Bind   Vis     Ndx Name\n");
 	}
 	int j = 0;
 	int i;
@@ -109,8 +109,8 @@ char* bindSymbole(unsigned char bind)
 		printf("Erreur lors de l'allocation d'une chaine de type.");
 		return NULL;
 	}
-
-	switch(bind)
+	
+	switch(bind>>4)
 	{
 		case STB_LOCAL:
 			bindSymbole = "LOCAL";
