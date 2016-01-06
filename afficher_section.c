@@ -49,7 +49,7 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 	fclose(f);
 
 	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
-		printf("Section absente : %s", str);
+		printf("Section absente : %s\n\n", str);
 		return NULL;
 	}
 	else{
@@ -78,9 +78,13 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 				section[i]='\0';
 			}
 			fclose(f);
+			printf("\n\n");
+		}
+		else{
+			printf("Erreur d'allocation\n\n");
+			exit(42);
 		}
 	}
-	printf("\n\n");
 	return section;
 }
 
