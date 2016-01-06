@@ -17,7 +17,6 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 	char* names = fetchSectionNames(f, elfHeader, sectionHeader);
 
 	initSymbolTabUsefullInfo(names, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset);
-	printf("Size : %d Offset : %d\n",sectionSymbolTabSize,sectionSymbolTabOffset  );
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
 	Elf32_Sym *symbolTab = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16));
@@ -31,7 +30,7 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 	if (!silent)
 	{
 		printf("Symbol Table: \n");
-		printf("Num:      Value    Size Type    BIND   Other Name\n");
+		printf("Num:  Value    Size Type    BIND   Other   Name\n");
 	}
 	int j = 0;
 	int i;
@@ -49,7 +48,7 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 
 		if (!silent)
 		{
-			printf("%2d %8x %d %s %s %d %x %x\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
+			printf("%3d %08x %4d %-7s %-6s %d %x %x\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
 				symbolTab[j].st_other, symbolTab[j].st_shndx, symbolTab[j].st_name);
 		}
 		j++;
