@@ -254,6 +254,7 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 		printf("  Section header string table index: \t%llu\n", lec_Cour);
 	}
 
+	printf("\n");
 	return headers;
 
 }
