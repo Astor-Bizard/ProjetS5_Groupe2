@@ -8,6 +8,7 @@ lecture_ELF: $(BUILD)/lecture_ELF.o $(BUILD)/lecture_headers.o $(BUILD)/lectureS
 	$(CC) $(CFLAGS) -o $@ $^
 
 $(BUILD)/%.o: $(SRC)/%.c
+	mkdir -p $(BUILD)
 	$(CC) $(CFLAGS) -c $<
 	mv `basename $@` $(BUILD)
 
