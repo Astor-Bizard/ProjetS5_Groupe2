@@ -16,9 +16,12 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 	uint32_t sectionSymbolTabOffset;
 	char* names = fetchSectionNames(f, elfHeader, sectionHeader);
 
-	char* symbolNames = fetchSymbolNames(f,sectionHeader,symbolTab[j].st_name);
+	char* symbolNames;
 
-	initSymbolTabUsefullInfo(names, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset);
+	initSymbolTabUsefullInfo(names, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset, symbolNames);
+
+	
+
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
 	Elf32_Sym *symbolTab = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16));
@@ -53,11 +56,11 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 			if(symbolTab[j].st_shndx == 0)
 			{
 				printf("%3d  %08x %4d %-7s %-6s %-7s UND %x\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
-					visionSymbole(symbolTab[j].st_other), getSymbolNameBis(symbolNames,symbolTab[j].st_name));
+					visionSymbole(symbolTab[j].st_other), getSymbolNameBis(symbolNames,symbolTab[j]));
 			}
 			else
 				printf("%3d  %08x %4d %-7s %-6s %-7s %3d %x\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
-					visionSymbole(symbolTab[j].st_other), symbolTab[j].st_shndx, getSymbolNameBis(symbolNames,symbolTab[j].st_name));
+					visionSymbole(symbolTab[j].st_other), symbolTab[j].st_shndx, getSymbolNameBis(symbolNames,symbolTab[j]));
 		}
 		j++;
 
@@ -156,7 +159,7 @@ char* visionSymbole(unsigned char vis)
 	return visSymbole;
 }
 
-void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *size, uint32_t *offset)
+void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *size, uint32_t *offset, char *symbolNames)
 {
 	int i=0;
 
@@ -167,6 +170,7 @@ void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *
 	}
 	*size = sectionHeader[i].sh_size;
 	*offset = sectionHeader[i].sh_offset;
+	symbolNames = fetchSymbolNames(f,sectionHeader,i);
 }
 
 
