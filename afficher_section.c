@@ -19,7 +19,7 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 			for(i=1;str[i]!='\0';i++){
 				if(str[i]>=ASCII_0 && str[i]<=ASCII_0+9) num_sh = num_sh*10 + str[i]-ASCII_0;
 			}
-			if(num_sh>=0 && num_sh<elfHeader.e_shnum) strcpy(str,getSectionNameBis(names,tabSH[num_sh]));
+			strcpy(str,getSectionNameBis(names,tabSH[num_sh]));
 		}
 		// Cas nom : on le cherche dans la table str
 		else{
@@ -49,7 +49,7 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 	fclose(f);
 
 	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
-		printf("Section absente : %s\n\n", str);
+		printf("Section absente !\n\n");
 		return NULL;
 	}
 	else{
@@ -61,7 +61,7 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 		if(section != NULL){
 			// On affiche le contenu de la section
 			if(tabSH[num_sh].sh_size==0){
-				printf("Rien à afficher dans cette section\n");
+				printf("Rien à afficher dans cette section");
 				section[0]='\0';
 			}
 			else{
