@@ -24,5 +24,5 @@ char* bindSymbole(unsigned char bind);
 /*
 Fonction qui initialise les donnée nessessaires au bon fonctionnement de la lecture
 */
-void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, int *size, int *offset);
+void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *size, uint32_t *offset);
 #endif

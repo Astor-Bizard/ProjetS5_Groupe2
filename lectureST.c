@@ -12,8 +12,8 @@ Lecture de la table des symboles
 
 Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHeader, int silent)
 {
-	int sectionSymbolTabSize;
-	int sectionSymbolTabOffset;
+	uint32_t sectionSymbolTabSize;
+	uint32_t sectionSymbolTabOffset;
 	char* names = fetchSectionNames(f, elfHeader, sectionHeader);
 
 	initSymbolTabUsefullInfo(names, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset);
@@ -129,7 +129,7 @@ char* bindSymbole(unsigned char bind)
 	return bindSymbole;
 }
 
-void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, int *size, int *offset)
+void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *size, uint32_t *offset)
 {
 	int i=0;
 
