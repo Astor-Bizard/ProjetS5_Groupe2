@@ -217,6 +217,7 @@ void affichage_relocation(char* f,Elf32_Ehdr header,Elf32_Shdr* table_section)
         {
             i++;
         }
+        j++;
 	}
 }
 
