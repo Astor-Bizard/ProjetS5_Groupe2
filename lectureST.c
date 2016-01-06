@@ -15,12 +15,20 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 	uint32_t sectionSymbolTabSize;
 	uint32_t sectionSymbolTabOffset;
 	char* names = fetchSectionNames(f, elfHeader, sectionHeader);
-
 	char* symbolNames;
+	int i=0;
+	int j = 0;
 
-	initSymbolTabUsefullInfo(names, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset, symbolNames);
 
-	
+	while(strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab"))
+	{
+		i++;
+	}
+	sectionSymbolTabSize = sectionHeader[i].sh_size;
+	sectionSymbolTabOffset = sectionHeader[i].sh_offset;
+	symbolNames = fetchSymbolNames(f,sectionHeader,i);
+
+	//initSymbolTabUsefullInfo(names, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset, symbolNames);	
 
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
@@ -37,8 +45,7 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 		printf("Symbol Table: \n");
 		printf("Num:    Value Size Type    Bind   Vis     Ndx Name\n");
 	}
-	int j = 0;
-	int i;
+	
 	for(i = 0; i<sectionSymbolTabSize; i=i+16)
 	{
 		symbolTab[j].st_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
@@ -159,20 +166,12 @@ char* visionSymbole(unsigned char vis)
 	return visSymbole;
 }
 
+/*
 void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *size, uint32_t *offset, char *symbolNames)
 {
-	int i=0;
-
-	//while(!strcmp(names[sectionHeader[i].sh_name], ".symtab")){}
-	while(strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab"))
-	{
-		i++;
-	}
-	*size = sectionHeader[i].sh_size;
-	*offset = sectionHeader[i].sh_offset;
-	symbolNames = fetchSymbolNames(f,sectionHeader,i);
+	
 }
-
+*/
 
 char* fetchSymbolNames(FILE* f, Elf32_Shdr* shTable, int symbolTabIndex) {
 	int i;
