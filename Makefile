@@ -15,3 +15,4 @@ affichage_relocation.o:	lecture_headers.h afficher_section.h affichage_relocatio
 
 clean:
 	rm *.o lecture_ELF
+
