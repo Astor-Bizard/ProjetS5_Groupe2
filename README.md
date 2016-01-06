@@ -9,7 +9,7 @@ Etape 7 : Loic (correctionSymboles)
 Etape 8 : Thai Binh (reimpl_R_ARM_ABS)  
 
 
-######## Questions :  
+##### Questions :  
 -Utilité du numero de la machine  
 Test si on est bien sur la machine ARM , si on est pas dans cette machine , dire architecture non reconnue
 et des flags ?  
