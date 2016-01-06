@@ -3,6 +3,7 @@
 *.a
 *.log
 *.status
+*.save
 *~
 lecture_ELF
 elf_linker-1.0/.deps/
