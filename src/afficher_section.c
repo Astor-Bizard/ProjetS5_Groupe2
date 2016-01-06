@@ -112,6 +112,10 @@ unsigned char *afficher_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shd
 			section[i]='\0';
 			fclose(f);
 		}
+		else{
+			printf("Erreur d'allocation\n\n");
+			exit(42);
+		}
 	}
 	return section;
 }
