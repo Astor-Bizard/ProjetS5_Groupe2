@@ -87,60 +87,6 @@ char* sectionTypeString(uint32_t sh_type) {
 	return typeString;
 }
 
-/*char** getSectionsNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
-	int sLength, i, j; // Taille courante du tampon
-	char c; // Caractère lu
-	
-	// Initialisation du tableau de chaines contenant les noms des sections. Il contient 'elfHeader.e_shnum' chaines, plus une chaine vide.
-	char** names = (char**) malloc(sizeof(char*)*elfHeader.e_shnum+1);
-	if (names==NULL) {
-		printf("Erreur lors de l'allocation initiale de la table des noms.");
-		return NULL;
-	}
-
-	// Initialisation du tampon qui sert à récuperer chaque chaine.
-	char* tampon = (char*) malloc(shTable[elfHeader.e_shstrndx].sh_size*sizeof(char));
-	if (tampon==NULL) {
-		printf("Erreur lors de l'allocation du tampon de remplissage de la table des noms.");
-		free(names);
-		return NULL;
-	}
-
-	fseek(f, shTable[elfHeader.e_shstrndx].sh_offset, 0); // On se place au depart de la table des noms dans le fichier
-	// On cherche autant de chaines qu'il y a de Section Header, plus la chaine vide au debut du tableau.
-	for(i=0; i<elfHeader.e_shnum+1; i++) { 
-		sLength = 0;
-
-		c = fgetc(f);
-		while(c != '\0') { // Tant qu'on ne change pas de chaine
-			tampon[sLength] = c;
-			sLength++;
-			c = fgetc(f);
-		}
-		tampon[sLength] = c;
-		sLength++;
-
-		// Allocation de la chaine dans le tableau, de la même longueur que le tampon(longueur courante).
-		names[i] = (char*) malloc(sLength*sizeof(char));
-		if (names[i]==NULL) {
-			printf("Erreur lors de l'allocation d'une entrée de la table des noms.");
-			// On libère les objets
-			free(tampon);
-			for(j=0; j<i; j++)
-				free(names[i]);
-			free(names);
-
-			return NULL;
-		}
-
-		for(j=0; j<sLength; j++)
-			names[i][j] = tampon[j];
-	}
-	free(tampon);
-	printf("taille names: %d\n", i);
-	return names;
-} */
-
 char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	int i;
 
