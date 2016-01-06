@@ -17,7 +17,7 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 	char* names = fetchSectionNames(f, elfHeader, sectionHeader);
 
 	initSymbolTabUsefullInfo(names, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset);
-
+	printf("Size : %d Offset : %d\n",sectionSymbolTabSize,sectionSymbolTabOffset  );
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
 	Elf32_Sym *symbolTab = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16));
