@@ -13,24 +13,19 @@
 long long unsigned int lire_octets_charT(unsigned char *tableau, int hdr_mode, int debut, int nombre)
 {
 	int i;
-	int k=1;
 	long long unsigned int R=0;
 	if(hdr_mode==2)
 	{
 		for(i=0;i<nombre;i++)
 		{
-			R = R*256 + tableau[debut+i];
+			R = (R<<8) + tableau[debut+i];
 		}
 	}
 	else
 	{
-		for(i=0;i<nombre;i++)
-		{
-			k=k*256;
-		}
 		for(i=0; i<nombre; i++)
 		{
-			R = tableau[debut+i]*k + R/256;
+			R = (tableau[debut+i] << (nombre*8)) + (R>>8);
 		}
 	}
     return R;
