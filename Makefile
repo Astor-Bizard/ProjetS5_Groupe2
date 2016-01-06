@@ -19,5 +19,5 @@ $(BUILD)/lectureST.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h $(SRC)/lecture
 $(BUILD)/affichage_relocation.o: $(SRC)/lecture_headers.h $(SRC)/afficher_section.h $(SRC)/affichage_relocation.h
 
 clean:
-	rm $(BUILD)/*.o $(EXEC)
+	rm $(BUILD)/*.o $(EXEC) *~ $(SRC)/*~
 
