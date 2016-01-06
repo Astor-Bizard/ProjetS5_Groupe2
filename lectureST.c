@@ -16,6 +16,8 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 	uint32_t sectionSymbolTabOffset;
 	char* names = fetchSectionNames(f, elfHeader, sectionHeader);
 
+	char* symbolNames = fetchSymbolNames(f,sectionHeader,symbolTab[j].st_name);
+
 	initSymbolTabUsefullInfo(names, sectionHeader, &sectionSymbolTabSize, &sectionSymbolTabOffset);
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
@@ -51,11 +53,11 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 			if(symbolTab[j].st_shndx == 0)
 			{
 				printf("%3d  %08x %4d %-7s %-6s %-7s UND %x\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
-					visionSymbole(symbolTab[j].st_other), symbolTab[j].st_name);
+					visionSymbole(symbolTab[j].st_other), getSymbolNameBis(symbolNames,symbolTab[j].st_name));
 			}
 			else
 				printf("%3d  %08x %4d %-7s %-6s %-7s %3d %x\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
-					visionSymbole(symbolTab[j].st_other), symbolTab[j].st_shndx, symbolTab[j].st_name);
+					visionSymbole(symbolTab[j].st_other), symbolTab[j].st_shndx, getSymbolNameBis(symbolNames,symbolTab[j].st_name));
 		}
 		j++;
 
