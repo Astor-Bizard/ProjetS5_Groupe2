@@ -14,18 +14,18 @@ long long unsigned int lire_octets_charT(unsigned char *tableau, int hdr_mode, i
 {
 	int i;
 	long long unsigned int R=0;
-	if(hdr_mode==2)
+	if(hdr_mode == B_ENDIAN)
 	{
 		for(i=0;i<nombre;i++)
 		{
-			R = (R<<8) + tableau[debut+i];
+			R = (R<<8) | tableau[debut+i];
 		}
 	}
 	else
 	{
 		for(i=0; i<nombre; i++)
 		{
-			R = (tableau[debut+i] << (nombre*8)) + (R>>8);
+			R =  R | (tableau[debut+i] << (i*8));
 		}
 	}
     return R;
@@ -154,10 +154,10 @@ void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int n
 	unsigned long long int addr;
 	unsigned long long int info;
     unsigned char type;
-    //unsigned charsym;
+    //unsigned char sym;
     
     char *nom_section= getSectionNameBis(SectionNames,table_section[numS]);
-        
+      
 	printf("\nSection de relocalisation '%s' à l'adresse de décalage %08x contient %i entrées:\n",
             nom_section,
             table_section[numS].sh_offset,
@@ -173,6 +173,7 @@ void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int n
 		printf("%08llx\t%08llx\t",addr,info);
         type_relocation(type);
         printf("\tType\t Valeur_Symbol\t");
+        //print_symbol(sym,);
         print_section(addr, table_section, header, SectionNames);  
         //on affiche les infos.
         printf("\n");
@@ -196,7 +197,9 @@ void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int 
     //unsigned charsym;
     
     char *nom_section= getSectionNameBis(SectionNames,table_section[numS]);
-        
+      
+   
+
     printf("\nSection de relocalisation '%s' à l'adresse de décalage %08x contient %i entrées:\n",
             nom_section,
             table_section[numS].sh_offset,
@@ -207,6 +210,7 @@ void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int 
         addr = lire_octets_charT(section, header.e_ident[EI_DATA], i*12, 4);
         info = lire_octets_charT(section, header.e_ident[EI_DATA], i*12 +4,4);
         addend = lire_octets_charT(section, header.e_ident[EI_DATA], i*12 +8,4);
+        
         type = info;
         //sym = info >>8;
 
