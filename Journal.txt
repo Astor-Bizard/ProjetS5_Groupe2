@@ -6,3 +6,4 @@ et nous avons commencé un fastidieux travail de lecture du sujet et de la docume
 Creation des premier fichier C pour lire le headers et afficher les differents informations
 	
 	-Deuxieme jour de projet.
+		Répartition concrète des premières taches (1 à 5), débogage des étapes 1 à 3.
