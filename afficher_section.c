@@ -19,7 +19,7 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 			for(i=1;str[i]!='\0';i++){
 				if(str[i]>=ASCII_0 && str[i]<=ASCII_0+9) num_sh = num_sh*10 + str[i]-ASCII_0;
 			}
-			strcpy(str,getSectionNameBis(names,tabSH[num_sh]));
+			if(num_sh>=0 && num_sh<elfHeader.e_shnum) strcpy(str,getSectionNameBis(names,tabSH[num_sh]));
 		}
 		// Cas nom : on le cherche dans la table str
 		else{
