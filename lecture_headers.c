@@ -12,21 +12,16 @@ long long int lire_octets(char mode, FILE *f, int nb_octet)
 {
 	int i;
 	long long int retour = 0;
-	int k=1;
-	for(i=0 ; i<nb_octet;i++)
-	{
-		k = k * 256;
-	}
-
 	for(i=0 ; i<nb_octet;i++)
 	{
 		if(mode == B_ENDIAN) 
 		{
-			retour = retour * 256 + fgetc(f);
+			retour = (retour << 8) | fgetc(f);			
 		}
 		else if (mode == L_ENDIAN)
 		{
-			retour = retour / 256 + fgetc(f) * k;
+			
+			retour = retour | (fgetc(f) << 8*i);
 		}
 	}
 	return retour;
