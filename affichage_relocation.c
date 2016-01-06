@@ -2,12 +2,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <elf.h>
+#include "lectureSH.h"
 #include "lecture_headers.h"
 #include "afficher_section.h"
 
 
 
-long long unsigned int lire_octets_charT(char *tableau, int hdr_mode, int debut, int nombre)
+long long unsigned int lire_octets_charT(unsigned char *tableau, int hdr_mode, int debut, int nombre)
 {
 	int i;
 	int k=1;
@@ -30,6 +32,7 @@ long long unsigned int lire_octets_charT(char *tableau, int hdr_mode, int debut,
 			R = tableau[debut+i]*k + R/256;
 		}
 	}
+    return R;
 }
 
 void type_relocation(int info)
@@ -134,28 +137,26 @@ void type_relocation(int info)
     }
 }
 
-//affiche une section de relocation_A
-void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS)
-{
-    afficher_sectionR(f,table_section,header,numS);
-}
+
 
 //affiche une section de relocation
-void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS)
+void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames)
 {
 	int i;
-	char* section=afficher_section(f,header,table_section, numS);
+	unsigned char *section = afficher_section_num(f,header,table_section, numS);
 	int addr;
 	int info;
-        char *nom_section;
+    
+    char *nom_section= getSectionNameBis(SectionNames,table_section[numS]);
         
-	printf("Section de relocalisation '%s' à l'adresse de décalage contient %i entrées:\n",
-			table_section[i], table_section[i].sh_size);
-	printf("  Décalage \t  Info \t  Type\t  Val.-sym\t Noms-symboles\n")
-	for(i=0; i<table_section.sh_size/8; i++)
+	printf("Section de relocalisation 'nomSection' à l'adresse de décalage contient %i entrées:\n",
+			table_section[numS].sh_size);
+    //table_section[numS].sh_name
+	printf("  Décalage \t  Info \t  Type\t  Val.-sym\t Noms-symboles\n");
+	for(i=0; i<table_section[i].sh_size/8; i++)
 	{
-		addr = lire_octets_charT(section,headers.e_ident[EI_DATA],i*8,4);
-		info = lire_octets_charT(section,headers.e_ident[EI_DATA],i*8 + 4,4);
+		addr = lire_octets_charT(section,header.e_ident[EI_DATA],i*8,4);
+		info = lire_octets_charT(section,header.e_ident[EI_DATA],i*8 + 4,4);
 		printf("%xllu\t%xllu\t",addr,info);
                 type_relocation(info);
                 printf("Type\t Valeur_Symbol\t");
@@ -168,34 +169,53 @@ void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int n
 	}
 }
 
-// trouve toutes les sections de relocations et les affiche.
-void affichage_relocation(Elf32_Ehdr header,Elf_32Shdr* table_section)
+//affiche une section de relocation_A
+void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames)
 {
-	int i;
-	int j;
-	char** SectionName;
-	SectionName = getSectionNames(f,header, table_section);
-	for(i=0;i<header.shnum)
+    afficher_sectionR(f,table_section,header,numS, SectionNames);
+}
+
+// trouve toutes les sections de relocations et les affiche.
+void affichage_relocation(char* f,Elf32_Ehdr header,Elf32_Shdr* table_section)
+{
+	int i=0,j=1;
+	char* SectionNames;
+    FILE *fichier ;
+    fichier = fopen(f,"r");
+
+	SectionNames = fetchSectionNames(fichier,header, table_section);
+    int nchar_nomSection = table_section[header.e_shstrndx].sh_size;
+
+
+	while(i<header.e_shnum && j < nchar_nomSection)
 	{
 		
 		// on vérifie toutes les sections
 		// si ce sont des sections de relocations:
-		if(SectionName[i][0]=='.' 
-			&& SectionName[i][1]=='r' 
-			&& SectionName[i][2]=='e' 
-			&& SectionName[i][3]=='l' 
-			&& SectionName[i][4]=='a' )
+		if(j >= 5
+            && SectionNames[j-5]==0 
+            && SectionNames[j-4]=='.' 
+			&& SectionNames[j-3]=='r' 
+			&& SectionNames[j-2]=='e' 
+			&& SectionNames[j-1]=='l' 
+			&& SectionNames[j]=='a' )
 
 		{
-			afficher_sectionRA(f,table_section,header,i);
+			afficher_sectionRA(f,table_section,header,i,SectionNames);
 		}
-		else if (SectionName[i][0]=='.' 
-			&& SectionName[i][1]=='r' 
-			&& SectionName[i][2]=='e' 
-			&& SectionName[i][3]=='l' )
+		else if (j >=4
+            && SectionNames[j-4]==0 
+            && SectionNames[j-3]=='.' 
+			&& SectionNames[j-2]=='r' 
+			&& SectionNames[j-1]=='e' 
+			&& SectionNames[j]=='l' )
 		{
-			afficher_sectionR(f,table_section,header,i);
+			afficher_sectionR(f,table_section,header,i,SectionNames);
 		}
+        if( SectionNames[j]==0 )
+        {
+            i++;
+        }
 	}
 }
 
