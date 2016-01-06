@@ -129,12 +129,12 @@ char* bindSymbole(unsigned char bind)
 	return bindSymbole;
 }
 
-void initSymbolTabUsefullInfo(char** names, Elf32_Shdr *sectionHeader, int *size, int *offset)
+void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, int *size, int *offset)
 {
 	int i=0;
 
-	while(!strcmp(names[sectionHeader[i].sh_name], ".symtab")){}
-
+	//while(!strcmp(names[sectionHeader[i].sh_name], ".symtab")){}
+	while(!strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab")){}
 	*size = sectionHeader[i].sh_size;
 	*offset = sectionHeader[i].sh_offset;
 }
