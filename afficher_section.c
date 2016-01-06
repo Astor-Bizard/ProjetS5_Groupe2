@@ -42,6 +42,7 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 	//str=malloc(sizeof(char)*42);
 	printf("Section à afficher : ");
 	scanf("%s",str);
+	printf("\n");
 
 	f=fopen(nom_f,"r");
 	// On traduit la demande (string) en index dans la table
