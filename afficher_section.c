@@ -8,7 +8,7 @@ Affichage d'une section specifique
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
 int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	int i,num_sh;
-	char **names;
+	char *names;
 	if(str[0]!='\0'){
 		// Cas nombre : on traduit le nombre (string) en int
 		if(str[0]>=48 && str[0]<=57){
@@ -19,9 +19,10 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 		}
 		// Cas nom : on le cherche dans la table str
 		else{
-			names=getSectionsNames(f,elfHeader,tabSH);
+			names=fetchSectionNames(f,elfHeader,tabSH);
 			num_sh=0;
-			while(num_sh<elfHeader.e_shnum && strcmp(str,names[num_sh]))num_sh++;
+			//getSectionNameBis(char* names, Elf32_Shdr sectionHeader);
+			while(num_sh<elfHeader.e_shnum && strcmp(str,getSectionNameBis(names,tabSH[num_sh]))) num_sh++;
 		}
 		return num_sh;
 	}
