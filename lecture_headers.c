@@ -143,36 +143,15 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 
 	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
 	octet_cour+=2;
-	printf("  Machine: \t\t\t\t");
-	switch(lec_Cour)
+	printf("  OS/ABI: \t\t\t\t");
+	
+	if(lec_Cour==40)
 	{
-		case 0:
-			printf("No machine\n");
-			break;
-		case 1:
-			printf("AT&T WE 32100\n");
-			break;
-		case 3:
-			printf("SPARC\n");
-			break;
-		case 4:
-			printf("Intel 80386\n");
-			break;
-		case 5:
-			printf("Motorola 68000\n");
-			break;
-		case 6:
-			printf("Motorola 88000\n");
-			break;
-		case 7:
-			printf("Intel 80860\n");
-			break;
-		case 8:
-			printf("MIPS RS3000\n");
-			break;
-		default:
-			printf("Machine numero : %llu\n", lec_Cour);
-			break;
+		printf("UNIX - System V\n");
+	}
+	else
+	{
+		printf("Machine numero : %llu (incompatible)", lec_Cour);
 	}
 
 	headers.e_machine=lec_Cour;
