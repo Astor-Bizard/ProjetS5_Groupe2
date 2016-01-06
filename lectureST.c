@@ -37,7 +37,6 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 	int i;
 	for(i = 0; i<sectionSymbolTabSize; i=i+16)
 	{
-		printf("Ceci est un test !");
 		symbolTab[j].st_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
 		symbolTab[j].st_value = (Elf32_Addr) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
 		symbolTab[j].st_size = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
@@ -53,6 +52,7 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 			printf("%2d %8x %d %s %s %d %x %x\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
 				symbolTab[j].st_other, symbolTab[j].st_shndx, symbolTab[j].st_name);
 		}
+		j++;
 
 	}
 
@@ -134,20 +134,10 @@ void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *
 	int i=0;
 
 	//while(!strcmp(names[sectionHeader[i].sh_name], ".symtab")){}
-	while(1)
+	while(strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab"))
 	{
-		printf("%s\n",getSectionNameBis(names,sectionHeader[i]));
-
-		if (strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab"))
-		{
-			printf("Section %d non\n",i);
-			i++;
-		}
-		else
-		{
-			*size = sectionHeader[i].sh_size;
-			*offset = sectionHeader[i].sh_offset;
-			break;
-		}
+		i++;
 	}
+	*size = sectionHeader[i].sh_size;
+	*offset = sectionHeader[i].sh_offset;
 }
