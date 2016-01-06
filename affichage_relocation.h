@@ -1,5 +1,5 @@
-#ifndef LECTURE_HEADERS
-#define LECTURE_HEADERS
+#ifndef AFFICHAGE_RELOCATION
+#define AFFICHAGE_RELOCATION
 
 #include <stdlib.h>
 #include <stdio.h>

@@ -6,6 +6,7 @@
 #include "lectureSH.h"
 #include "lecture_headers.h"
 #include "afficher_section.h"
+#include "affichage_relocation.h"
 
 
 
@@ -140,7 +141,7 @@ void type_relocation(int info)
 
 
 //affiche une section de relocation
-void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames)
+Elf32_Rel afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames)
 {
 	int i;
 	unsigned char *section = afficher_section_num(f,header,table_section, numS);
@@ -170,7 +171,7 @@ void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int n
 }
 
 //affiche une section de relocation_A
-void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames)
+Elf32_Rela afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames)
 {
     afficher_sectionR(f,table_section,header,numS, SectionNames);
 }
