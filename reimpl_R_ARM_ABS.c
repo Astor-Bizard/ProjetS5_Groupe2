@@ -14,5 +14,5 @@ Réimplantation de type R_ARM_ABS*
 
 void reimplementation_R_ARM_ABS()
 {
-	
+	// TODO: Faire tout
 }
