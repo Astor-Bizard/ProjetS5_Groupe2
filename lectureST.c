@@ -109,7 +109,7 @@ char* bindSymbole(unsigned char bind)
 		printf("Erreur lors de l'allocation d'une chaine de type.");
 		return NULL;
 	}
-	
+
 	switch(bind>>4)
 	{
 		case STB_LOCAL:
@@ -165,4 +165,46 @@ void initSymbolTabUsefullInfo(char* names, Elf32_Shdr *sectionHeader, uint32_t *
 	}
 	*size = sectionHeader[i].sh_size;
 	*offset = sectionHeader[i].sh_offset;
+}
+
+
+char* fetchSymbolNames(FILE* f, Elf32_Shdr* shTable, int symbolTabIndex) {
+	int i;
+
+	char* symbols = (char*) malloc(sizeof(char)*shTable[symbolTabIndex].sh_size);
+	if (symbols==NULL) {
+		printf("Erreur lors de l'allocation initiale de la table des noms.");
+		return NULL;
+	}
+
+	fseek(f, shTable[symbolTabIndex+1].sh_offset, 0);
+	for(i=0; i<shTable[symbolTabIndex+1].sh_size; i++)
+		symbols[i] = fgetc(f);
+	
+	return symbols;
+}
+
+char* getSymbolName(char* symbols, uint32_t symbolIndex) {
+	int i = 1;
+
+	while(symbols[symbolIndex+i] != '\0')
+		i++;
+
+	char* symbolName = (char*) malloc(sizeof(char)*i);
+	if (symbols==NULL) {
+		printf("Erreur lors de l'allocation initiale d'un nom de section.");
+		return NULL;
+	}
+
+	i = 0;
+	while(symbols[symbolIndex+i] != '\0') {
+		symbolName[i] = symbols[symbolIndex+i];
+		i++;
+	}
+
+	return symbolName;
+}
+
+char* getSymbolNameBis(char* symbols, Elf32_Sym symbol) {
+	return getSymbolName(symbols, symbol.st_name);
 }
