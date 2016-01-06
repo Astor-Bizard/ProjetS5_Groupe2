@@ -138,6 +138,17 @@ void type_relocation(int info)
     }
 }
 
+void print_section(unsigned long long int addr,Elf32_Shdr* table_section,Elf32_Ehdr header, char* SectionNames)
+{
+    int i;
+    for(i=0; i< header.e_shnum;i++)
+    {
+        if(table_section[i].sh_offset <= addr && addr <= table_section[i].sh_offset + table_section[i].sh_size)
+        {
+            printf("%s",SectionNames + table_section[i].sh_name);
+        }
+    }
+}
 
 
 //affiche une section de relocation
@@ -150,18 +161,19 @@ void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int n
     
     char *nom_section= getSectionNameBis(SectionNames,table_section[numS]);
         
-	printf("\nSection de relocalisation '%s' à l'adresse de décalage contient %i entrées:\n",nom_section,
+	printf("\nSection de relocalisation '%s' à l'adresse de décalage %08x contient %i entrées:\n",
+            nom_section,
+            table_section[numS].sh_offset,
 			(int) table_section[numS].sh_size/8);
 	printf("  Décalage \t  Info \t  Type\t  Val.-sym\t Noms-symboles\n");
-	for(i=0; i<table_section[i].sh_size/8; i++)
+	for(i=0; i<(int) table_section[numS].sh_size/8; i++)
 	{
-		addr = lire_octets_charT(section,header.e_ident[EI_DATA],i*8,4);
-		info = lire_octets_charT(section,header.e_ident[EI_DATA],i*8 + 4,4);
-		printf("%llx\t%llx\t",addr,info);
+		addr = lire_octets_charT(section, header.e_ident[EI_DATA], i*8, 4);
+		info = lire_octets_charT(section, header.e_ident[EI_DATA], i*8 +4,4);
+		printf("%08llx\t%08llx\t",addr,info);
         type_relocation(info);
-        printf("Type\t Valeur_Symbol\t");  
-        printf("J'ai fait un printf"); 
-        printf("%s","nom_section");
+        printf("Type\t Valeur_Symbol\t");
+        print_section(addr, table_section, header, SectionNames);  
         //on affiche les infos.
         printf("\n");
 	}
@@ -195,7 +207,7 @@ void affichage_relocation(char* f,Elf32_Ehdr header,Elf32_Shdr* table_section)
 			&& CurrentSectionName[3]=='l' 
 			&& CurrentSectionName[4]=='a' )
 		{
-            printf("Nom de la section courante:%s n°%i\n",CurrentSectionName,i);
+            //printf("Nom de la section courante:%s n°%i\n",CurrentSectionName,i);
 			afficher_sectionRA(f,table_section,header,i,SectionNames);
 		}
 		else if (CurrentSectionName[0]=='.' 
@@ -203,7 +215,7 @@ void affichage_relocation(char* f,Elf32_Ehdr header,Elf32_Shdr* table_section)
             && CurrentSectionName[2]=='e' 
             && CurrentSectionName[3]=='l' )
 		{
-            printf("Nom de la section courante:%s n°%i\n",CurrentSectionName,i);
+            //printf("Nom de la section courante:%s n°%i\n",CurrentSectionName,i);
 			afficher_sectionR(f,table_section,header,i,SectionNames);
 		}
         i++;
