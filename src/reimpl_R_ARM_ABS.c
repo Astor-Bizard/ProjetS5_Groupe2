@@ -26,14 +26,14 @@ void reimplantation_R_ARM_ABS(FILE *f, Str_Reloc tableReloc, ListeSymboles liste
 
 		if( (info == 2) || (info == 5) || (info == 8) )
 		{
-			listeDesSymboles.symbole[i].sh_name
-
-			res = listeDesSymboles.symbole[i].sh_value + tableReloc.Rel[i].addend
+			// TODO: retirer ces parties de table de relocation qui font rien
 
 			// (S + A) | T , addresse du symbole + relocation, T = 1 si symbole est du type STT_FUNC
 			// S = valeur du symbole 
 			// A = addend de la relocalisation
 			// T = 0
+
+			// donc y'a rien a faire, alé aplusse
 		}
 	}
 }
