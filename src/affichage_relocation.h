@@ -35,10 +35,13 @@ void type_relocation(int info);
 // affiche le nom de la section de relocation
 void print_section(unsigned long long int addr,Elf32_Shdr* table_section,Elf32_Ehdr header, char* SectionNames);
 
+//affiche la valeur et le nom d'un symbol
+void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* SymbolNames);
+
 // affiche les infos de relocation Rel
-void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames,Str_Reloc RETOUR, ListeSymboles table_symbol);
+void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames,Str_Reloc RETOUR, ListeSymboles table_symbol, char* SymbolNames);
 
 //affiche les infos de relocation Rela
-void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames,Str_Reloc RETOUR, ListeSymboles table_symbol);
+void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames,Str_Reloc RETOUR, ListeSymboles table_symbol, char* SymbolNames);
 
 #endif
