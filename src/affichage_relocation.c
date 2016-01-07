@@ -149,19 +149,14 @@ void print_section(unsigned long long int addr, Elf32_Shdr* table_section, Elf32
     }
 }
 
-int print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* SymbolNames)
+void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* SymbolNames)
 {
-    printf("\t%08x\t ",table_symbol.symboles[sym].st_value);
-    if((table_symbol.symboles[sym].st_info & 0xf) != 3)
-    {
-        printf("%s\t",getSymbolNameBis(SymbolNames,table_symbol.symboles[sym]));
-        return 0;
-    }
-    else
-    {
-        printf("C'est une Section");
-        return 1;
-    }
+    //printf("\t[%i]",sym);
+    printf("\t%08x ",table_symbol.symboles[sym].st_value);
+    //printf("\t%s",typeSymbole(table_symbol.symboles[sym].st_info & 0xf));
+    char* to_show;
+    to_show = getSymbolNameBis(SymbolNames, table_symbol.symboles[sym]);
+    printf("arbre%s",to_show);
 }
 
 //affiche une section de relocation
@@ -175,7 +170,7 @@ void afficher_sectionR(FILE *f,
 {
 	int i;
 	unsigned char *section;
-    section = recuperer_section_num(f,header,table_section, numS); // L'erreur est là!!!
+    section = recuperer_section_num(f,header,table_section, numS); // Y'a rien a voir circulez!
 	unsigned long long int addr;
 	unsigned long long int info;
     unsigned char type;
@@ -187,7 +182,7 @@ void afficher_sectionR(FILE *f,
             nom_section,
             table_section[numS].sh_offset,
 			(int) table_section[numS].sh_size/8);
-	printf("  Décalage \t  Info \t\t  Type\t  Val.-sym\t Noms-symboles\n");
+	printf("  Décalage \t  Info \t\t  Type\t  Symbol N°:\t  Val.-sym\t  Type-symboles\n");
 
     RETOUR->Rel = realloc(RETOUR->Rel,sizeof(Elf32_Rel)*(RETOUR->nb_Rel+(int) table_section[numS].sh_size/8));
     RETOUR->Sec_Rel = realloc(RETOUR->Sec_Rel,sizeof(int)*(RETOUR->nb_Rel+(int) table_section[numS].sh_size/8));
@@ -200,10 +195,9 @@ void afficher_sectionR(FILE *f,
 
 		printf("%08llx\t%08llx\t",addr,info);
         type_relocation(type);
-        /*if(print_symbol(sym,table_symbol,header,SymbolNames))
-            {
-                print_section(addr, table_section, header, SectionNames); 
-            }*/
+        print_symbol(sym,table_symbol,header,SymbolNames);
+        //print_section(addr, table_section, header, SectionNames); 
+        
         //on affiche les infos.
         sym = sym *2;
         printf("\n");
@@ -298,7 +292,7 @@ Str_Reloc affichage_relocation(FILE* f,
         CurrentSectionName = SectionNames+table_section[i].sh_name;
         // on vérifie toutes les sections
         // si ce sont des sections de relocations:
-        if( strcmp(".symtab",CurrentSectionName))
+        if( strcmp(".strtab",CurrentSectionName))
         {
             Symbol_tab_section_number=i;
             i=header.e_shnum;
