@@ -48,13 +48,15 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 	}
 	else
 	{
+		printf("Marque 2 %s\n", strOverride);
 		i = 0;
-		while (i<41 && strOverride[i] != '\0')
+		while (i<41 && strOverride[i]!='\0')
 		{
 			str[i] = strOverride[i];
 			i++;
 		}
 		str[i] = '\0';
+		printf("Marque 3 %s\n", str);
 	}
 
 	printf("\n");
