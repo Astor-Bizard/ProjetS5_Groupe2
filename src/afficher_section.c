@@ -41,7 +41,6 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 	unsigned char *section;
 	section=NULL;
 
-	printf("Section à afficher : ");
 	scanf("%s",str);
 	printf("\n");
 
@@ -56,21 +55,21 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 	}
 	else{
 		f=fopen(nom_f,"r");
-		printf("Section %s (%d):\n",str,num_sh);
+		printf("Hex dump of section '%s':\n",str);
 		// On se place
 		fseek(f,tabSH[num_sh].sh_offset,0);
 		if(renvoi) section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
 		if(section != NULL || !renvoi){
 			// On affiche le contenu de la section
 			if(tabSH[num_sh].sh_size==0){
-				printf("Rien à afficher dans cette section");
+				printf("Section '%s' has no data to dump.",str);
 				if(renvoi) section[0]='\0';
 			}
 			else{
-				printf("  0x%08x: ",0);
+				printf("  0x%08x ",0);
 				for(i=0;i<tabSH[num_sh].sh_size;i++){
 					if(i!=0){
-						if(i%16==0) printf("\n  0x%08x: ",i);
+						if(i%16==0) printf("\n  0x%08x ",i);
 						else if(i%4==0) printf(" ");
 					}
 					c=fgetc(f);
