@@ -26,7 +26,7 @@ void CopieOctet(char *dest, char *src, int id_dest)
 
 
 
-void renumerote_section(FILE *f_read, FILE *f_write,Elf32_Ehdr *elfHeaders, Elf32_Shdr *section_headers, ListeSymboles sym_tab,,Str_Reloc str_reloc)
+void renumerote_section(FILE *f_read, FILE *f_write,Elf32_Ehdr *elfHeaders, Elf32_Shdr *section_headers, ListeSymboles sym_tab,Str_Reloc str_reloc)
 {
 	int i;
 	int nbRel = 0; 
