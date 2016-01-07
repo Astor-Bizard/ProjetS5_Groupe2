@@ -49,14 +49,14 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 	else
 	{
 		i = 0;
-		while (i<42 && strOverrive[i] != '\0')
+		while (i<42 && strOverride[i] != '\0')
 		{
-			str[i] = strOverrive[i];
+			str[i] = strOverride[i];
 			i++;
 		}
 		str[i] = '\0';
 	}
-	
+
 	printf("\n");
 	fseek(f,0,0);
 	// On traduit la demande (string) en index dans la table
