@@ -16,7 +16,9 @@ typedef struct
 	int nb_Rel;
 	int nb_Rela;
 	Elf32_Rel *Rel;
+	int *Sec_rel;
 	Elf32_Rela *Rela;
+	int *Sec_Rela
 }Str_Reloc;
 
 
