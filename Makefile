@@ -16,7 +16,7 @@ $(BUILD)/lecture_ELF.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h $(SRC)/affic
 $(BUILD)/lectureSH.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h
 $(BUILD)/afficher_section.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h $(SRC)/afficher_section.h
 $(BUILD)/lectureST.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h $(SRC)/lectureST.h
-$(BUILD)/affichage_relocation.o: $(SRC)/lecture_headers.h $(SRC)/afficher_section.h $(SRC)/affichage_relocation.h
+$(BUILD)/affichage_relocation.o: $(SRC)/lecture_headers.h $(SRC)/afficher_section.h $(SRC)/affichage_relocation.h $(SRC)/lectureST.h
 
 clean:
 	rm -f $(BUILD)/*.o $(EXEC) *~ $(SRC)/*~

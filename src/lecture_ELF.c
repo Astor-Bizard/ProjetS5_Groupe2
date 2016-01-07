@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
 	Elf32_Ehdr elfHeaders;
 	Elf32_Shdr *section_headers;
-	//ListeSymboles *sym_tab;
+	ListeSymboles sym_tab;
 	FILE* f;
 
 	if(argc != 2)
@@ -36,10 +36,10 @@ int main(int argc, char *argv[])
 	afficher_section(argv[1], elfHeaders, section_headers);
 
 	f = fopen(argv[1], "r");
-	/*sym_tab = */lectureSymbolTab(f,elfHeaders,section_headers,0);
+	sym_tab = lectureSymbolTab(f,elfHeaders,section_headers,0);
 	fclose(f);
 
-	affichage_relocation(argv[1],elfHeaders,section_headers);
+	affichage_relocation(argv[1],elfHeaders,section_headers,sym_tab);
 
 	return 0;
 
