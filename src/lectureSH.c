@@ -1,4 +1,4 @@
-/*
+/* 
 Crée le 4 janvier 2016 par Loïc
 Lecture de la table des sections
 */
