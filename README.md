@@ -32,6 +32,12 @@ Les 2 sont utilisable.
 arm-eabi-as --gdwarf2  -EB  -r  -o example1-arm.o example1.s  
 cette commande donne le même resultat que make  
 
+
+
+-Dans la relocation, il semblerai que T et A soit toujours égal à 0 , est-ce normal , si oui à quoi sert cette operation ?
+
+
+
 ##Mémo des commandes :  
 
 > $ arm-eabi-as -o example1_as.o example1.s  
