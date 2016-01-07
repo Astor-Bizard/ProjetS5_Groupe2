@@ -165,20 +165,24 @@ int print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* Sy
 }
 
 //affiche une section de relocation
-void afficher_sectionR(char *f,Elf32_Shdr* table_section,
-    Elf32_Ehdr header,
-    int numS, 
-    char* SectionNames,Str_Reloc RETOUR, 
-    ListeSymboles table_symbol, 
-    char* SymbolNames)
+void afficher_sectionR(FILE *f,
+                        Elf32_Shdr* table_section,
+                        Elf32_Ehdr header,
+                        int numS, 
+                        char* SectionNames,Str_Reloc *RETOUR, 
+                        ListeSymboles table_symbol, 
+                        char* SymbolNames)
 {
 	int i;
-	unsigned char *section = recuperer_section_num(f,header,table_section, numS);
+    printf("Affectation section\n");
+	unsigned char *section;
+    section = recuperer_section_num(f,header,table_section, numS); // L'erreur est là!!!
 	unsigned long long int addr;
 	unsigned long long int info;
     unsigned char type;
     unsigned int sym;
     
+    printf("Affection nom sections");
     char *nom_section= getSectionNameBis(SectionNames,table_section[numS]);
       
 	printf("\nSection de relocalisation '%s' à l'adresse de décalage %08x contient %i entrées:\n",
@@ -195,29 +199,35 @@ void afficher_sectionR(char *f,Elf32_Shdr* table_section,
 
 		printf("%08llx\t%08llx\t",addr,info);
         type_relocation(type);
-        if(print_symbol(sym,table_symbol,header,SymbolNames))
+        /*if(print_symbol(sym,table_symbol,header,SymbolNames))
             {
                 print_section(addr, table_section, header, SectionNames); 
-            }
+            }*/
         //on affiche les infos.
+        sym = sym *2;
         printf("\n");
-        RETOUR.nb_Rel ++;
-        RETOUR.Rel = realloc(RETOUR.Rel,sizeof(Elf32_Rela)*(RETOUR.nb_Rel));
-        RETOUR.Rel[RETOUR.nb_Rel-1].r_offset = addr;
-        RETOUR.Rel[RETOUR.nb_Rel-1].r_info = info;
-        RETOUR.Sec_Rel = realloc(RETOUR.Sec_Rel,sizeof(int)*RETOUR.nb_Rel);
-        RETOUR.Sec_Rel[RETOUR.nb_Rel-1]=numS;
+        RETOUR->nb_Rel ++;
+
+        RETOUR->Rel = realloc(RETOUR->Rel,sizeof(Elf32_Rel)*RETOUR->nb_Rel);
+        RETOUR->Rel[RETOUR->nb_Rel-1].r_offset = addr;
+        RETOUR->Rel[RETOUR->nb_Rel-1].r_info = info;
+        printf("Realloc 1 OK\n");
+        RETOUR->Sec_Rel = realloc(RETOUR->Sec_Rel,sizeof(int)*RETOUR->nb_Rel);
+        RETOUR->Sec_Rel[RETOUR->nb_Rel-1]=numS;
+        printf("Realloc 2 OK\n");
 	}
-    printf("\n");
+
+    printf("\nFin de la fonction\n");
 }
 
 //affiche une section de relocation_A
+/*
 void afficher_sectionRA(char *f,
-    Elf32_Shdr* table_section,
-    Elf32_Ehdr header,int numS, 
-    char* SectionNames,Str_Reloc RETOUR, 
-    ListeSymboles table_symbol, 
-    char* SymbolNames)
+                        Elf32_Shdr* table_section,
+                        Elf32_Ehdr header,int numS, 
+                        char* SectionNames,Str_Reloc *RETOUR, 
+                        ListeSymboles table_symbol, 
+                        char* SymbolNames)
 {
     int i;
     unsigned char *section = recuperer_section_num(f,header,table_section, numS);
@@ -247,23 +257,27 @@ void afficher_sectionRA(char *f,
 
         printf("%08llx\t%08llx\t",addr,info);
         type_relocation(type);
-        print_symbol(sym,table_symbol,header,SymbolNames);
-        print_section(addr, table_section, header, SectionNames);  
+        if(print_symbol(sym,table_symbol,header,SymbolNames))
+            {
+                print_section(addr, table_section, header, SectionNames); 
+            }
         //on affiche les infos.
         printf("\n");
-        RETOUR.nb_Rela ++;
-        RETOUR.Rela = realloc(RETOUR.Rela,sizeof(Elf32_Rela)*(RETOUR.nb_Rela));
-        RETOUR.Rela[RETOUR.nb_Rela-1].r_offset = addr;
-        RETOUR.Rela[RETOUR.nb_Rela-1].r_info = info;
-        RETOUR.Rela[RETOUR.nb_Rela-1].r_addend = addend;
-        RETOUR.Sec_Rela = realloc(RETOUR.Sec_Rela,sizeof(int)*RETOUR.nb_Rela);
-        RETOUR.Sec_Rela[RETOUR.nb_Rela-1]=numS;
+        RETOUR->nb_Rela ++;
+        RETOUR->Rela = realloc(RETOUR->Rela,sizeof(Elf32_Rela)*(RETOUR->nb_Rela));
+        RETOUR->Rela[RETOUR->nb_Rela-1].r_offset = addr;
+        RETOUR->Rela[RETOUR->nb_Rela-1].r_info = info;
+        RETOUR->Rela[RETOUR->nb_Rela-1].r_addend = addend;
+        printf("Realloc 1 OK\n");
+        RETOUR->Sec_Rela = realloc(RETOUR->Sec_Rela,sizeof(int)*RETOUR->nb_Rela);
+        RETOUR->Sec_Rela[RETOUR->nb_Rela-1]=numS;
+        printf("Realloc 2 OK\n");
     }
     printf("\n");
 }
-
+*/
 // trouve toutes les sections de relocations et les affiche.
-Str_Reloc affichage_relocation(char* f,
+Str_Reloc affichage_relocation(FILE* f,
     Elf32_Ehdr header,
     Elf32_Shdr* table_section, 
     ListeSymboles table_symbol)
@@ -281,10 +295,7 @@ Str_Reloc affichage_relocation(char* f,
     char* SymbolNames;
     char* CurrentSectionName;
     int Symbol_tab_section_number=0;
-    FILE *fichier ;
-
-    fichier = fopen(f,"r");
-	SectionNames = fetchSectionNames(fichier,header, table_section);
+	SectionNames = fetchSectionNames(f,header, table_section);
 
     while(i<header.e_shnum)
     {
@@ -298,12 +309,13 @@ Str_Reloc affichage_relocation(char* f,
         }
         i++;
     }
-    rewind(fichier);
-    SymbolNames = fetchSymbolNames(fichier, table_section,Symbol_tab_section_number);
+    rewind(f);
+    SymbolNames = fetchSymbolNames(f, table_section,Symbol_tab_section_number);
 
     i=0;
 	while(i<header.e_shnum)
 	{
+        printf("Début de boucle: n°%i\n",i);
         CurrentSectionName = SectionNames+table_section[i].sh_name;
 		// on vérifie toutes les sections
 		// si ce sont des sections de relocations:
@@ -314,7 +326,7 @@ Str_Reloc affichage_relocation(char* f,
 			&& CurrentSectionName[4]=='a' )
 		{
             //printf("Nom de la section courante:%s n°%i\n",CurrentSectionName,i);
-			afficher_sectionRA(f,table_section,header,i,SectionNames, RETOUR, table_symbol, SymbolNames);
+			//afficher_sectionRA(f,table_section,header,i,SectionNames, &RETOUR, table_symbol, SymbolNames);
 		}
 		else if (CurrentSectionName[0]=='.' 
             && CurrentSectionName[1]=='r' 
@@ -322,10 +334,13 @@ Str_Reloc affichage_relocation(char* f,
             && CurrentSectionName[3]=='l' )
 		{
             //printf("Nom de la section courante:%s n°%i\n",CurrentSectionName,i);
-			afficher_sectionR(f,table_section,header,i,SectionNames, RETOUR, table_symbol, SymbolNames);
+            printf("Début de la fonction\n");
+			afficher_sectionR(f,table_section,header,i,SectionNames, &RETOUR, table_symbol, SymbolNames);
+            printf("Fonction finie\n");
 		}
         i++;
 	}
+    fclose(fichier);
     return RETOUR;
 }
 
