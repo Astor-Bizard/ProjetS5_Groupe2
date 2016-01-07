@@ -129,7 +129,7 @@ char* getSectionNameBis(char* names, Elf32_Shdr sectionHeader) {
 }
 
 char* sectionFlagsTranslation(uint32_t flags) {
-	char* flagsString = (char*) malloc(sizeof(char)*FLAG_STRING_LENGTH)
+	char* flagsString = (char*) malloc(sizeof(char)*FLAG_STRING_LENGTH);
 	if (shTable==NULL) {
 		printf("\nErreur lors d'allocation de flagsString.\n");
 		return NULL;
