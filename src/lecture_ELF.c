@@ -46,7 +46,9 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 
-	if(argv[1][0]!='-') {
+	printf("Arguments: %d\n", argc); 
+
+	if(argv[1][0]=='-') {
 		fileName = argv[argc-1];
 		i = 1;
 	}
