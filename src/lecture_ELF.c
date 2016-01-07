@@ -1,9 +1,7 @@
 /* 
-Creer le 5/01/2015 par Jonathan
+Crée le 5/01/2015 par Jonathan
 Programme principal de la partie 1
-
 */
-
 #include "lecture_headers.h"
 #include "afficher_section.h"
 #include "lectureST.h"
@@ -23,14 +21,14 @@ void print_usage() {
 	printf("Usage: lecture_ELF <option(s)> elf-file\n");
 	printf(" Display information about the contents of ELF format files\n");
 	printf(" Options are:\n");
-	printf("  -a                     Equivalent to: -h -S -s -x -r\n");
-	printf("  -h                     Display the ELF file header\n");
-	printf("  -S                     Display the sections' header\n");
-	printf("  -e                     Equivalent to: -h -S\n");
-	printf("  -s                     Display the symbol table\n");
-	printf("  -r                     Display the relocations (if present)\n");
-	printf("  -x                     Dump the contents of section <number|name> as bytes. If no name/number, it will be asked during execution.\n");
-	printf("  -H                     Display this information\n");
+	printf("  -a                 Equivalent to: -h -S -s -x -r\n");
+	printf("  -h                 Display the ELF file header\n");
+	printf("  -S                 Display the sections' header\n");
+	printf("  -e                 Equivalent to: -h -S\n");
+	printf("  -s                 Display the symbol table\n");
+	printf("  -r                 Display the relocations (if present)\n");
+	printf("  -x <number|name>   Dump the contents of section <number|name> as bytes. If no name/number, it will be asked during execution.\n");
+	printf("  -H                 Display this information\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -123,7 +121,9 @@ int main(int argc, char *argv[]) {
 	fclose(f);
 
 	if(options & OPTION_RELOCS) {
-		affichage_relocation(fileName, elfHeaders, section_headers, sym_tab);
+		f = fopen(fileName, "r");
+		affichage_relocation(f, elfHeaders, section_headers, sym_tab);
+		fclose(f);
 	}
 
 	return 0;
