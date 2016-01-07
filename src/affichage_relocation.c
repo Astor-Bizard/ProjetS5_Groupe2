@@ -10,7 +10,10 @@
 
 
 
-long long unsigned int lire_octets_charT(unsigned char *tableau, int hdr_mode, int debut, int nombre)
+long long unsigned int lire_octets_charT(unsigned char *tableau, 
+    int hdr_mode, 
+    int debut, 
+    int nombre)
 {
 	int i;
 	long long unsigned int R=0;
@@ -134,7 +137,10 @@ void type_relocation(int info)
 }
 
 
-void print_section(unsigned long long int addr,Elf32_Shdr* table_section,Elf32_Ehdr header, char* SectionNames)
+void print_section(unsigned long long int addr,
+    Elf32_Shdr* table_section,
+    Elf32_Ehdr header, 
+    char* SectionNames)
 {
     int i;
     for(i=0; i< header.e_shnum;i++)
@@ -146,7 +152,10 @@ void print_section(unsigned long long int addr,Elf32_Shdr* table_section,Elf32_E
     }
 }
 
-void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* SymbolNames)
+void print_symbol(int sym, 
+    ListeSymboles table_symbol,
+    Elf32_Ehdr header, 
+    char* SymbolNames)
 {
     printf("\t%08x\t %s\t",
             table_symbol.symboles[sym].st_value,
@@ -154,7 +163,12 @@ void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* S
 }
 
 //affiche une section de relocation
-void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames,Str_Reloc RETOUR, ListeSymboles table_symbol, char* SymbolNames)
+void afficher_sectionR(char *f,Elf32_Shdr* table_section,
+    Elf32_Ehdr header,
+    int numS, 
+    char* SectionNames,Str_Reloc RETOUR, 
+    ListeSymboles table_symbol, 
+    char* SymbolNames)
 {
 	int i;
 	unsigned char *section = afficher_section_num(f,header,table_section, numS);
@@ -194,7 +208,12 @@ void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int n
 }
 
 //affiche une section de relocation_A
-void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames,Str_Reloc RETOUR, ListeSymboles table_symbol, char* SymbolNames)
+void afficher_sectionRA(char *f,
+    Elf32_Shdr* table_section,
+    Elf32_Ehdr header,int numS, 
+    char* SectionNames,Str_Reloc RETOUR, 
+    ListeSymboles table_symbol, 
+    char* SymbolNames)
 {
     int i;
     unsigned char *section = afficher_section_num(f,header,table_section, numS);
@@ -240,7 +259,10 @@ void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int 
 }
 
 // trouve toutes les sections de relocations et les affiche.
-Str_Reloc affichage_relocation(char* f,Elf32_Ehdr header,Elf32_Shdr* table_section, ListeSymboles table_symbol)
+Str_Reloc affichage_relocation(char* f,
+    Elf32_Ehdr header,
+    Elf32_Shdr* table_section, 
+    ListeSymboles table_symbol)
 {
     Str_Reloc RETOUR;
     RETOUR.nb_Rel=0;
