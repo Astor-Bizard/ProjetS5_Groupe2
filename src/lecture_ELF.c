@@ -10,51 +10,121 @@ Programme principal de la partie 1
 #include "lectureSH.h"
 #include "affichage_relocation.h"
 
+#define OPTION_ALL 					0x001f
+#define OPTION_FILE_HEADER			(1 << 0)
+#define OPTION_SECTION_HEADERS		(1 << 1)
+#define OPTION_HEADERS				0x0003
+#define OPTION_SYMS					(1 << 2)
+#define OPTION_RELOCS				(1 << 3)
+#define OPTION_HEX_DUMP				(1 << 4)
+#define OPTION_HELP					(1 << 5)
+
 void print_usage() {
-	printf("Usage: lecture_ELF <option(s)> elf-file(s)\n");
+	printf("Usage: lecture_ELF <option(s)> elf-file\n");
 	printf(" Display information about the contents of ELF format files\n");
 	printf(" Options are:\n");
-	printf("  -a --all               Equivalent to: -h -l -S -s -r -d -V -A -I\n");
-	printf("  -h --file-header       Display the ELF file header\n");
-	printf("  -l --program-headers   Display the program headers\n");
-	printf("  -S --section-headers   Display the sections' header\n");
-	printf("  -g --section-groups    Display the section groups\n");
-	printf("  -t --section-details   Display the section details\n");
-	printf("  -e --headers           Equivalent to: -h -l -S\n");
-	printf("  -s --syms              Display the symbol table\n");
-	printf("  -r --relocs            Display the relocations (if present)\n");
-	printf("  -x --hex-dump=<number|name> Dump the contents of section <number|name> as bytes\n");
-	printf("  -H --help              Display this information\n");
+	printf("  -a                     Equivalent to: -h -S -s -x -r\n");
+	printf("  -h                     Display the ELF file header\n");
+	printf("  -S                     Display the sections' header\n");
+	printf("  -e                     Equivalent to: -h -S\n");
+	printf("  -s                     Display the symbol table\n");
+	printf("  -r                     Display the relocations (if present)\n");
+	printf("  -x                     Dump the contents of section <number|name> as bytes. If no name/number, it will be asked during execution.\n");
+	printf("  -H                     Display this information\n");
 }
 
-int main(int argc, char *argv[])
-{
-
+int main(int argc, char *argv[]) {
 	Elf32_Ehdr elfHeaders;
 	Elf32_Shdr *section_headers;
 	ListeSymboles sym_tab;
+	char* fileName;
+	char* hex_param;
 	FILE* f;
+	int i;
+	uint16_t options = 0;
 
 	if(argc < 2) {
 		print_usage();
 		exit(1);
 	}
 
-	f = fopen(argv[1], "r");
+	if(argv[1][0]!='-') {
+		fileName = argv[argc-1];
+		i = 1;
+	}
+	else {
+		fileName = argv[1];
+		i = 2;
+	}
+
+	while (i < argc) {
+		if (argv[i][0] == '-') {
+			switch(argv[i][1]) {
+				case 'a':
+					options = options | OPTION_ALL;
+					break;
+				case 'h':
+					options = options | OPTION_FILE_HEADER;
+					break;
+				case 'S':
+					options = options | OPTION_SECTION_HEADERS;
+					break;
+				case 'e':
+					options = options | OPTION_HEADERS;
+					break;
+				case 's':
+					options = options | OPTION_SYMS;
+					break;
+				case 'r':
+					options = options | OPTION_RELOCS;
+					break;
+				case 'x':
+					options = options | OPTION_HEX_DUMP;
+					if (argv[i+1][0] != '-')
+						hex_param = argv[i++];
+					else
+						hex_param = NULL;
+					break;
+				case 'H':
+					print_usage();
+					break;
+				default:
+					printf("Unrecognized option: -%c\n\n", argv[i][1]);
+					print_usage();
+					break;
+			}
+		}
+		i++;
+	}
+	if (!options)
+		options = OPTION_ALL;
+
+	f = fopen(fileName, "r");
 	elfHeaders = lecture_Headers(f);
 	fclose(f);
 
-	f = fopen(argv[1], "r");
-	section_headers = lectureSectionHeader(f,elfHeaders,0);
+	f = fopen(fileName, "r");
+	section_headers = lectureSectionHeader(f, elfHeaders, (!(options & OPTION_SECTION_HEADERS)));
 	fclose(f);
 
-	afficher_section(argv[1], elfHeaders, section_headers,0);
+	if(options & OPTION_HEX_DUMP) {
+		if(hex_param == NULL) {
+			f = fopen(fileName, "r");
+			afficher_section(f, elfHeaders, section_headers, 0);
+			fclose(f);
+		}
+		else {
+			printf("Not working yet.\n");
+		}
+	}
 
-	f = fopen(argv[1], "r");
-	sym_tab = lectureSymbolTab(f,elfHeaders,section_headers,0);
+	f = fopen(fileName, "r");
+	sym_tab = lectureSymbolTab(f, elfHeaders, section_headers, (!(options & OPTION_SYMS)));
 	fclose(f);
 
-	affichage_relocation(argv[1],elfHeaders,section_headers,sym_tab);
+	if(options & OPTION_RELOCS) {
+		affichage_relocation(fileName, elfHeaders, section_headers, sym_tab);
+	}
 
 	return 0;
 }
