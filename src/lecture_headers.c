@@ -241,7 +241,7 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 		printf("  Size of section headers: \t\t%d (bytes)\n", headers.e_shentsize);
 		printf("  Number of section headers: \t\t%d\n", headers.e_shnum);
 
-		if(headers.e_shstrndx=SHN_UNDEF)
+		if(headers.e_shstrndx==SHN_UNDEF)
 			printf("  Section header string table index: \tSHN_UNDEF\n");
 		else
 			printf("  Section header string table index: \t%d\n", headers.e_shstrndx);
