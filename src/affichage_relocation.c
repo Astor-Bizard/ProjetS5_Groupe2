@@ -173,7 +173,7 @@ void afficher_sectionR(char *f,Elf32_Shdr* table_section,
     char* SymbolNames)
 {
 	int i;
-	unsigned char *section = afficher_section_num(f,header,table_section, numS);
+	unsigned char *section = recuperer_section_num(f,header,table_section, numS);
 	unsigned long long int addr;
 	unsigned long long int info;
     unsigned char type;
