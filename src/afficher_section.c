@@ -48,7 +48,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 	}
 	else
 	{
-		printf("Marque 2 %s\n", strOverride);
+		printf("Marque 1 %s\n", strOverride);
 		i = 0;
 		while (i<41 && strOverride[i]!='\0')
 		{
@@ -56,7 +56,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 			i++;
 		}
 		str[i] = '\0';
-		printf("Marque 3 %s\n", str);
+		printf("Marque 2 %s\n", str);
 	}
 
 	printf("\n");
@@ -71,7 +71,9 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 		printf("Hex dump of section '%s':\n",str);
 		// On se place
 		fseek(f,tabSH[num_sh].sh_offset,0);
+		printf("Marque 3\n");
 		if(renvoi) section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
+		printf("Marque 4\n");
 		if(section != NULL || !renvoi){
 			// On affiche le contenu de la section
 			if(tabSH[num_sh].sh_size==0){
@@ -125,7 +127,9 @@ unsigned char *recuperer_section_num(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *
 	else{
 		// On se place
 		fseek(f,tabSH[num_sh].sh_offset,0);
+		printf("Marque 5\n");
 		section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
+		printf("Marque 6\n");
 		if(section != NULL){
 			// On affiche le contenu de la section
 			for(i=0;i<tabSH[num_sh].sh_size;i++){
