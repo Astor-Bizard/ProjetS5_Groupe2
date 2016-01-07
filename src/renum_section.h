@@ -9,7 +9,8 @@ Renumerote les section dans un ELF et la table des réimplantations
 #include <stdlib.h>
 #include <elf.h>
 #include "afficher_section.h"
-
+#include "lectureST.h"
+#include "affichage_relocation.h"
 
 /* Copie une chaine de 32 OCTETS dans une chaine source plus grande à partir de id_dest
 Fait pas le con Jimmy
