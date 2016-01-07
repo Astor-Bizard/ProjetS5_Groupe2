@@ -21,8 +21,8 @@ Lecture d'un fichier elf et affichage du Header
 long long int lire_octets(char mode, FILE *f, int nb_octet);
 
 /* Prends en parametre un fichier en formet ELF32 ouvert en mode lecture
-et lit toute la partie Headers du fichier
+et lit toute la partie Headers du fichier. Si silent!=0 aucun affichage produit en dehors des erreurs.
 */
-Elf32_Ehdr lecture_Headers(FILE *f);
+Elf32_Ehdr lecture_Headers(FILE *f, int silent);
 
 #endif

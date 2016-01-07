@@ -62,9 +62,12 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 
-	while (i < argc) {
-		if (argv[i][0] == '-') {
-			switch(argv[i][1]) {
+	while (i < argc) 
+	{
+		if (argv[i][0] == '-') 
+		{
+			switch(argv[i][1]) 
+			{
 				case 'a':
 					options = options | OPTION_ALL;
 					break;
@@ -99,8 +102,10 @@ int main(int argc, char *argv[]) {
 					break;
 			}
 		}
-		else {
-			if (i != fileNamePos) {
+		else 
+		{
+			if (i != fileNamePos) 
+			{
 				printf("Unrecognized option: %s\n\n", argv[i]);
 				print_usage();
 				return 0;
@@ -112,22 +117,25 @@ int main(int argc, char *argv[]) {
 		options = OPTION_ALL;
 
 	f = fopen(fileName, "r");
-	elfHeaders = lecture_Headers(f);
+	elfHeaders = lecture_Headers(f, (!(options & OPTION_FILE_HEADER)));
 	fclose(f);
 
 	f = fopen(fileName, "r");
 	section_headers = lectureSectionHeader(f, elfHeaders, (!(options & OPTION_SECTION_HEADERS)));
 	fclose(f);
 
-	if(options & OPTION_HEX_DUMP) {
-		if(hex_param == NULL) {
+	if(options & OPTION_HEX_DUMP) 
+	{
+		if(hex_param == NULL) 
+		{
 			f = fopen(fileName, "r");
-			afficher_section(f, elfHeaders, section_headers, 0);
+			afficher_section(f, elfHeaders, section_headers, 0, NULL);
 			fclose(f);
 		}
-		else {
+		else 
+		{
 			printf("hex_param: %s\n", hex_param);
-			printf("Not working yet.\n");
+			afficher_section(f, elfHeaders, section_headers, 0, hex_param);
 		}
 	}
 
@@ -135,7 +143,8 @@ int main(int argc, char *argv[]) {
 	sym_tab = lectureSymbolTab(f, elfHeaders, section_headers, (!(options & OPTION_SYMS)));
 	fclose(f);
 
-	if(options & OPTION_RELOCS) {
+	if(options & OPTION_RELOCS) 
+	{
 		f = fopen(fileName, "r");
 		affichage_relocation(f, elfHeaders, section_headers, sym_tab);
 		fclose(f);

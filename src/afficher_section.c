@@ -33,7 +33,7 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 }
 
 // Affiche le contenu d'une section désignée par nom ou numéro. Renvoie ce contenu, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
-unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int renvoi){
+unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int renvoi, char* strOverride){
 	char str[42];
 	int num_sh=0,i,j;
 	unsigned char c;
@@ -42,7 +42,10 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 	unsigned char aff[17];
 	for(j=0;j<17;j++)aff[j]='\0';
 
-	scanf("%s",str);
+	if(strOverride==NULL)
+		scanf("%s",str);
+	else
+		str = strOverride;
 	printf("\n");
 	fseek(f,0,0);
 	// On traduit la demande (string) en index dans la table
