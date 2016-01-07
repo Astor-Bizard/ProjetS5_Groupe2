@@ -6,4 +6,4 @@ Réimplantation de type R_ARM_ABS*
 /*
 Fonction principale qui fera la reimplantation de tout les type R_ARM_ABS(8-16-32)
 */
-void reimplantation_R_ARM_ABS(FILE *f, Str_Reloc tableReloc);
+char* reimplantation_R_ARM_ABS(char *chaineSection, Str_Reloc tableReloc, ListeSymboles listeDesSymboles);

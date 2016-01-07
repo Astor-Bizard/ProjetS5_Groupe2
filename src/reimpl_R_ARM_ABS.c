@@ -13,10 +13,12 @@ Réimplantation de type R_ARM_ABS*
 #include "affichage_relocation.h"
 #include "reimpl_R_ARM_ABS.h"
 
-void reimplantation_R_ARM_ABS(FILE *f, Str_Reloc tableReloc, ListeSymboles listeDesSymboles)
+char* reimplantation_R_ARM_ABS(char *chaine, Str_Reloc tableReloc, ListeSymboles listeDesSymboles)
 {
 	// TODO: Faire tout
 	int i;
+	int incrementeurChaine = 0;
+	int incrementeurChaineBis;
 	unsigned char info;
 	uint32_t addrSymbole;
 	for (i=0; i<tableReloc.nb_Rel; i++)
@@ -27,7 +29,12 @@ void reimplantation_R_ARM_ABS(FILE *f, Str_Reloc tableReloc, ListeSymboles liste
 		if( (info == 2) || (info == 5) || (info == 8) )
 		{
 			// TODO: retirer ces parties de table de relocation qui font rien
-
+			incrementeurChaineBis = incrementeurChaine + 12
+			for(incrementeurChaine, incrementeurChaine<incrementeurChaineBis, incrementeurChaine++)
+			{
+				chaine[incrementeurChaine] = "0";
+			}
+			
 			// (S + A) | T , addresse du symbole + relocation, T = 1 si symbole est du type STT_FUNC
 			// S = valeur du symbole 
 			// A = addend de la relocalisation
@@ -35,5 +42,10 @@ void reimplantation_R_ARM_ABS(FILE *f, Str_Reloc tableReloc, ListeSymboles liste
 
 			// donc y'a rien a faire, alé aplusse
 		}
+		else
+		{
+			incrementeurChaine = incrementeurChaine + 12;
+		}
 	}
+	return chaine;
 }
