@@ -80,17 +80,20 @@ int main(int argc, char *argv[]) {
 					break;
 				case 'x':
 					options = options | OPTION_HEX_DUMP;
-					if (argv[i+1][0] != '-')
+					if (i+1<argc && argv[i+1][0] != '-')
+						if
 						hex_param = argv[i++];
 					else
 						hex_param = NULL;
 					break;
 				case 'H':
 					print_usage();
+					exit(1);
 					break;
 				default:
 					printf("Unrecognized option: -%c\n\n", argv[i][1]);
 					print_usage();
+					exit(1);
 					break;
 			}
 		}
