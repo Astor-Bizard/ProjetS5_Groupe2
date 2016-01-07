@@ -134,8 +134,8 @@ int main(int argc, char *argv[]) {
 		}
 		else 
 		{
-			printf("hex_param: %s\n", hex_param);
-			afficher_section(f, elfHeaders, section_headers, 0, hex_param);
+			printf("Option '-x <number|name>'' is not working yet. Please use '-x' alone instead.\n");
+			//afficher_section(f, elfHeaders, section_headers, 0, hex_param);
 		}
 	}
 

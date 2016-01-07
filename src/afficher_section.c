@@ -8,7 +8,7 @@ Affichage d'une section specifique
 #define ASCII_0 48
 
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
-int index_Shdr(char* str, FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
+int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	int i,num_sh;
 	char *names;
 	names = fetchSectionNames(f,elfHeader,tabSH);
@@ -48,7 +48,6 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 	}
 	else
 	{
-		printf("Marque 1 %s\n", strOverride);
 		i = 0;
 		while (i<41 && strOverride[i]!='\0')
 		{
@@ -56,7 +55,6 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 			i++;
 		}
 		str[i] = '\0';
-		printf("Marque 2 %s\n", str);
 	}
 
 	printf("\n");
