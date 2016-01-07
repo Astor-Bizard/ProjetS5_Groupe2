@@ -33,8 +33,7 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 }
 
 // Affiche le contenu d'une section désignée par nom ou numéro. Renvoie ce contenu, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
-unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int renvoi){
-	FILE *f;
+unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int renvoi){
 	char str[42];
 	int num_sh=0,i,j;
 	unsigned char c;
@@ -45,8 +44,7 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 
 	scanf("%s",str);
 	printf("\n");
-
-	f=fopen(nom_f,"r");
+	fseek(f,0,0);
 	// On traduit la demande (string) en index dans la table
 	num_sh=index_Shdr(str,f,elfHeader,tabSH);
 	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
@@ -96,13 +94,11 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 			exit(42);
 		}
 	}
-	fclose(f);
 	return section;
 }
 
 // Affiche le contenu de la section numero num_sh. Renvoie ce contenu, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
-unsigned char *recuperer_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int num_sh){
-	FILE *f;
+unsigned char *recuperer_section_num(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int num_sh){
 	int i;
 	unsigned char c;
 	unsigned char *section;
@@ -111,7 +107,6 @@ unsigned char *recuperer_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Sh
 		return NULL;
 	}
 	else{
-		f=fopen(nom_f,"r");
 		// On se place
 		fseek(f,tabSH[num_sh].sh_offset,0);
 		section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
@@ -122,7 +117,6 @@ unsigned char *recuperer_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Sh
 				section[i]=c;
 			}
 			section[i]='\0';
-			fclose(f);
 		}
 		else{
 			printf("Erreur d'allocation\n\n");
