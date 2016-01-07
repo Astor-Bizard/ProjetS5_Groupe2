@@ -11,6 +11,9 @@ Etape 7 : Loic (correctionSymboles)
 Etape 8 : Thai Binh (reimpl_R_ARM_ABS)  
 
 #A savoir :
+Ajoutez cette ligne dans votre .bashrc :  
+> source ~/.envarm/setenvarm.sh >/dev/null
+
 Etape 8 :  
 R_ARM_ABS* = 32,16,8 uniquement
 
