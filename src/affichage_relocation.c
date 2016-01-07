@@ -181,8 +181,8 @@ void afficher_sectionR(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int n
         RETOUR.Rel = realloc(RETOUR.Rel,sizeof(Elf32_Rela)*(RETOUR.nb_Rel));
         RETOUR.Rel[RETOUR.nb_Rel-1].r_offset = addr;
         RETOUR.Rel[RETOUR.nb_Rel-1].r_info = info;
-        RETOUR.Sec_Rel = realloc(RETOUR.Sec_Rel,sizeof(int)*RETOUR.nb_rel);
-        RETOUR.Sec_Rel[RETOUR.nb_rel-1]=numS;
+        RETOUR.Sec_Rel = realloc(RETOUR.Sec_Rel,sizeof(int)*RETOUR.nb_Rel);
+        RETOUR.Sec_Rel[RETOUR.nb_Rel-1]=numS;
 	}
     printf("\n");
 }
@@ -227,8 +227,8 @@ void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int 
         RETOUR.Rela[RETOUR.nb_Rela-1].r_offset = addr;
         RETOUR.Rela[RETOUR.nb_Rela-1].r_info = info;
         RETOUR.Rela[RETOUR.nb_Rela-1].r_addend = addend;
-        RETOUR.Sec_Rela = realloc(RETOUR.Sec_Rela,sizeof(int)*RETOUR.nb_rela);
-        RETOUR.Sec_Rela[RETOUR.nb_rela-1]=numS;
+        RETOUR.Sec_Rela = realloc(RETOUR.Sec_Rela,sizeof(int)*RETOUR.nb_Rela);
+        RETOUR.Sec_Rela[RETOUR.nb_Rela-1]=numS;
     }
     printf("\n");
 }
