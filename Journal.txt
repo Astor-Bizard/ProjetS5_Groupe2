@@ -7,7 +7,7 @@ Creation des premier fichier C pour lire le headers et afficher les differents i
 		Répartition concrète des premières taches (1 à 5), débogage des étapes 1 à 3.
 
 	-06/01/16 : Troisième jour de projet.
-		La phase 1 est presque terminée, il reste l'étape 5 à corriger (notamment en Little Endian).
+		La phase 1 est presque terminée, il reste l'étape 5 à finir de corriger.
 		Réorganisation des fichiers.
 		On commence à lire et réfléchir à la phase 2.
 
