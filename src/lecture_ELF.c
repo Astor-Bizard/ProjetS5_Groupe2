@@ -28,7 +28,7 @@ void print_usage() {
 	printf("  -s                 Display the symbol table\n");
 	printf("  -r                 Display the relocations (if present)\n");
 	printf("  -x <number|name>   Dump the contents of section <number|name> as bytes. If no name/number, it will be asked during execution.\n");
-	printf("  -H                 Display this information\n");
+	printf("  -H                 Display this information\n\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -36,9 +36,9 @@ int main(int argc, char *argv[]) {
 	Elf32_Shdr *section_headers;
 	ListeSymboles sym_tab;
 	char* fileName;
-	char* hex_param;
+	char* hex_param = NULL;
 	FILE* f;
-	int i;
+	int fileNamePos, i;
 	uint16_t options = 0;
 
 	if(argc < 2) {
@@ -46,16 +46,16 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 
-	printf("Arguments: %d\n", argc); 
-
 	if(argv[1][0]=='-') {
-		fileName = argv[argc-1];
+		fileNamePos = argc-1;
 		i = 1;
 	}
 	else {
-		fileName = argv[1];
+		fileNamePos = 1;
 		i = 2;
 	}
+
+	fileName = argv[fileNamePos];
 	f = fopen(fileName, "r");
 	if (f == NULL) {
 		printf("Fichier introuvable: %s\n", fileName);
@@ -85,10 +85,8 @@ int main(int argc, char *argv[]) {
 					break;
 				case 'x':
 					options = options | OPTION_HEX_DUMP;
-					if (i+1<argc && argv[i+1][0] != '-')
-						hex_param = argv[i++];
-					else
-						hex_param = NULL;
+					if (i+1<argc && i+1!=fileNamePos && argv[i+1][0] != '-')
+						hex_param = argv[++i];
 					break;
 				case 'H':
 					print_usage();
@@ -99,6 +97,13 @@ int main(int argc, char *argv[]) {
 					print_usage();
 					return 0;
 					break;
+			}
+		}
+		else {
+			if (i != fileNamePos) {
+				printf("Unrecognized option: %s\n\n", argv[i]);
+				print_usage();
+				return 0;
 			}
 		}
 		i++;
@@ -121,6 +126,7 @@ int main(int argc, char *argv[]) {
 			fclose(f);
 		}
 		else {
+			printf("hex_param: %s\n", hex_param);
 			printf("Not working yet.\n");
 		}
 	}
