@@ -49,7 +49,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 	else
 	{
 		i = 0;
-		while (i<42 && strOverride[i] != '\0')
+		while (i<41 && strOverride[i] != '\0')
 		{
 			str[i] = strOverride[i];
 			i++;
