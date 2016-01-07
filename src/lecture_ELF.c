@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
 
 	if(argc < 2) {
 		print_usage();
-		exit(1);
+		return 0;
 	}
 
 	printf("Arguments: %d\n", argc); 
@@ -88,12 +88,12 @@ int main(int argc, char *argv[]) {
 					break;
 				case 'H':
 					print_usage();
-					exit(1);
+					return 0;
 					break;
 				default:
 					printf("Unrecognized option: -%c\n\n", argv[i][1]);
 					print_usage();
-					exit(1);
+					return 0;
 					break;
 			}
 		}
