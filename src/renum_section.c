@@ -2,19 +2,107 @@
 Renumerote les section dans un ELF et la table des réimplantations
 */
 
-/*Op : R_ARM_ABS32, JUMP24 , CALL*/
+#include "renum_section.h"
+
+/*
+
+ON REECRIE LE FICHIER
 
 
-void renumerote_section(FILE *f_read,FILE *f_write,Str_Reloc str_reloc)
+*/
+/* Copie une chaine de 32 OCTETS dans une chaine source plus grande à partir de id_dest
+Fait pas le con Jimmy
+*/
+void CopieOctet(char *dest, char *src, int id_dest)
+{
+
+	int i;
+	for(i=0; i<32;i++)
+	{
+		dest[i+id_dest] = src[i];
+	}
+
+}
+
+
+
+void renumerote_section(FILE *f_read, FILE *f_write,Elf32_Ehdr *elfHeaders, Elf32_Shdr *section_headers, ListeSymboles sym_tab,,Str_Reloc str_reloc)
 {
 	int i;
+	int nbRel = 0; 
+	int nb_Sec_A_Traiter = 0;
+	int id_Sec_Cour = 0;
+	char *sec_Cour = NULL;
+	//Modification du Headers
+	
+	nb_Sec_A_Traiter = nbSecRel(section_headers);
+	elfHeaders->e_shnum = elfHeaders->e_shnum - nbSecRel(section_headers);
+
+	//Modification table des symboles
+
+	for(i=0;i<elfHeaders->e_shnum;i++)
+	{
+		if(section_headers.sh_type == SHT_REL)
+		{
+			nbRel++;
+		}
+		section_headers[i] = section_headers[i+nbRel];
+	}
+
+
+	fwrite(elfHeaders,sizeof(elfHeaders),1,f_write);
+
+	// Ecriture de la nouvelle section
+	if(str_reloc.nb_Rel>0)
+	{
+		sec_Cour = recuperer_section_num(elfHeader, section_headers, str_reloc->Sec_Rel[i]);
+		id_Sec_Cour = str_reloc->Sec_Rel[i];
+	}
+	
+
 	for(i=0;i<str_reloc.nb_Rel;i++)
 	{
+		if(id_Sec_Cour != str_reloc->Rel[i])
+		{
+			// On appelle ce que fait la partie 8
+
+			//On ecrit dans le fichier
+			fwrite(sec_Cour,sizeof(sec_Cour),1,f_write);
+			free(sec_Cour);
+			sec_Cour = recuperer_section_num(elfHeader, section_headers, str_reloc->Sec_Rel[i]);
+			id_Sec_Cour = str_reloc->Sec_Rel[i];
+			
+
+			
+
+
+
+		}
+
+		CopieOctet(sec_Cour,str_reloc->Rel[i]->r_info,str_reloc->Rel[i]->r_offset);
+
 
 	}
-	for(i=0;i<str_reloc.nb_Rela;i++)
+	// On appelle ce que fait la partie 8
+
+	//On ecrit dans le fichier
+	write(sec_Cour,sizeof(sec_Cour),1,f_write);
+	free(sec_Cour);
+}
+
+
+int nbSecRel(Elf32_Ehdr *elfHeaders, Elf32_Shdr *section_headers)
+{
+	
+	int i;
+	int retour = 0;	
+	for(i=0; i<elfHeaders->e_shnum; i++)
 	{
-
+		if(section_headers.sh_type == SHT_REL)
+		{
+			retour++;
+		}
 	}
+	return retour;
 
 }
