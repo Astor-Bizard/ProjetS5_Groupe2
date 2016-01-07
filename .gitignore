@@ -1,10 +1,9 @@
-#ignorer les fichiers .o et .a
+#ignorer les fichiers à extensions suivantes :
 *.o
 *.a
 *.log
 *.status
 *.save
-*~
 *.in
 !elf_linker-1.0/*.in
 *.out
@@ -26,3 +25,4 @@ elf_linker-1.0/config.h
 elf_linker-1.0/stamp-h1
 
 lecture_ELF
+*~

@@ -10,6 +10,12 @@ Etape 6 : Jonathan (renum_section)
 Etape 7 : Loic (correctionSymboles)  
 Etape 8 : Thai Binh (reimpl_R_ARM_ABS)  
 
+#A savoir :
+Etape 8 :  
+R_ARM_ABS* = 32,16,8 uniquement
+
+Etape 9 :  
+R_ARM_CALL <=> R_ARM_JUMP24
 
 ##Questions :
 -Utilité du numero de la machine  
