@@ -33,7 +33,7 @@ char* getSectionNameBis(char* names, Elf32_Shdr sectionHeader);
 /*
 Traduit 'flags' en une chaine plus compréhensible
 */
-char* sectionFlagsTranslation(uint32_t flags)
+char* sectionFlagsTranslation(uint32_t flags);
 
 /*
 Récupère la liste des en-têtes de section.
