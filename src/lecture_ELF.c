@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	section_headers = lectureSectionHeader(f,elfHeaders,0);
 	fclose(f);
 
-	afficher_section(argv[1], elfHeaders, section_headers);
+	afficher_section(argv[1], elfHeaders, section_headers,0);
 
 	f = fopen(argv[1], "r");
 	sym_tab = lectureSymbolTab(f,elfHeaders,section_headers,0);

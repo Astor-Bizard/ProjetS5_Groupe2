@@ -19,7 +19,8 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 			for(i=1;str[i]!='\0';i++){
 				if(str[i]>=ASCII_0 && str[i]<=ASCII_0+9) num_sh = num_sh*10 + str[i]-ASCII_0;
 			}
-			strcpy(str,getSectionNameBis(names,tabSH[num_sh]));
+			if(num_sh>=0 && num_sh<elfHeader.e_shnum) strcpy(str,getSectionNameBis(names,tabSH[num_sh]));
+			else return -1;
 		}
 		// Cas nom : on le cherche dans la table str
 		else{
@@ -32,12 +33,13 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 }
 
 // Affiche le contenu d'une section désignée par nom ou numéro. Renvoie ce contenu, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
-unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
+unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int renvoi){
 	FILE *f;
 	char str[42];
 	int num_sh=0,i;
 	unsigned char c;
 	unsigned char *section;
+	section=NULL;
 
 	printf("Section à afficher : ");
 	scanf("%s",str);
@@ -48,7 +50,7 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 	num_sh=index_Shdr(str,f,elfHeader,tabSH);
 	fclose(f);
 
-	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
+	if(num_sh==-1){
 		printf("Section absente !\n\n");
 		return NULL;
 	}
@@ -57,12 +59,12 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 		printf("Section %s (%d):\n",str,num_sh);
 		// On se place
 		fseek(f,tabSH[num_sh].sh_offset,0);
-		section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
-		if(section != NULL){
+		if(renvoi) section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
+		if(section != NULL || !renvoi){
 			// On affiche le contenu de la section
 			if(tabSH[num_sh].sh_size==0){
 				printf("Rien à afficher dans cette section");
-				section[0]='\0';
+				if(renvoi) section[0]='\0';
 			}
 			else{
 				printf("  0x%08x: ",0);
@@ -73,9 +75,9 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 					}
 					c=fgetc(f);
 					printf("%02x",c);
-					section[i]=c;
+					if(renvoi) section[i]=c;
 				}
-				section[i]='\0';
+				if(renvoi) section[i]='\0';
 			}
 			fclose(f);
 			printf("\n\n");
