@@ -183,6 +183,7 @@ char* sectionFlagsTranslation(uint32_t flags) {
 Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	int i;
 	char* type;
+	char* nom;
 
 	// Allocation de la table des en-têtes de section
 	Elf32_Shdr* shTable = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeader.e_shnum);
@@ -217,8 +218,10 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	if (!silent) {
 		for(i=0; i<elfHeader.e_shnum; i++) {
 			type = sectionTypeString(shTable[i].sh_type);
-
-			printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, getSectionName(names, shTable[i].sh_name), type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, sectionFlagsTranslation(shTable[i].sh_flags), shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+			nom = getSectionName(names, shTable[i].sh_name);
+			nom[17] = '\0';
+			printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, nom, type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, sectionFlagsTranslation(shTable[i].sh_flags), shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+			free(nom);
 		}
 		printf("Key to Flags:\n");
 		printf("  W (write), A (alloc), X (execute), M (merge), S (strings)\n");
