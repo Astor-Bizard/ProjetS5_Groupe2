@@ -5,7 +5,11 @@
 *.status
 *.save
 *~
-lecture_ELF
+*.in
+!elf_linker-1.0/*.in
+*.out
+!elf_linker-1.0/*.out
+
 elf_linker-1.0/.deps/
 elf_linker-1.0/ARM_runner_example
 elf_linker-1.0/Examples_loader/Makefile
@@ -20,3 +24,5 @@ elf_linker-1.0/Makefile
 elf_linker-1.0/autom4te.cache/
 elf_linker-1.0/config.h
 elf_linker-1.0/stamp-h1
+
+lecture_ELF
