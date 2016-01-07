@@ -174,7 +174,6 @@ void afficher_sectionR(FILE *f,
                         char* SymbolNames)
 {
 	int i;
-    printf("Affectation section\n");
 	unsigned char *section;
     section = recuperer_section_num(f,header,table_section, numS); // L'erreur est là!!!
 	unsigned long long int addr;
@@ -182,7 +181,6 @@ void afficher_sectionR(FILE *f,
     unsigned char type;
     unsigned int sym;
     
-    printf("Affection nom sections");
     char *nom_section= getSectionNameBis(SectionNames,table_section[numS]);
       
 	printf("\nSection de relocalisation '%s' à l'adresse de décalage %08x contient %i entrées:\n",
@@ -190,6 +188,9 @@ void afficher_sectionR(FILE *f,
             table_section[numS].sh_offset,
 			(int) table_section[numS].sh_size/8);
 	printf("  Décalage \t  Info \t\t  Type\t  Val.-sym\t Noms-symboles\n");
+
+    RETOUR->Rel = realloc(RETOUR->Rel,sizeof(Elf32_Rel)*(RETOUR->nb_Rel+(int) table_section[numS].sh_size/8));
+    RETOUR->Sec_Rel = realloc(RETOUR->Sec_Rel,sizeof(int)*(RETOUR->nb_Rel+(int) table_section[numS].sh_size/8));
 	for(i=0; i<(int) table_section[numS].sh_size/8; i++)
 	{
 		addr = lire_octets_charT(section, header.e_ident[EI_DATA], i*8, 4);
@@ -208,16 +209,11 @@ void afficher_sectionR(FILE *f,
         printf("\n");
         RETOUR->nb_Rel ++;
 
-        RETOUR->Rel = realloc(RETOUR->Rel,sizeof(Elf32_Rel)*RETOUR->nb_Rel);
+        
         RETOUR->Rel[RETOUR->nb_Rel-1].r_offset = addr;
         RETOUR->Rel[RETOUR->nb_Rel-1].r_info = info;
-        printf("Realloc 1 OK\n");
-        RETOUR->Sec_Rel = realloc(RETOUR->Sec_Rel,sizeof(int)*RETOUR->nb_Rel);
         RETOUR->Sec_Rel[RETOUR->nb_Rel-1]=numS;
-        printf("Realloc 2 OK\n");
 	}
-
-    printf("\nFin de la fonction\n");
 }
 
 //affiche une section de relocation_A
@@ -315,7 +311,6 @@ Str_Reloc affichage_relocation(FILE* f,
     i=0;
 	while(i<header.e_shnum)
 	{
-        printf("Début de boucle: n°%i\n",i);
         CurrentSectionName = SectionNames+table_section[i].sh_name;
 		// on vérifie toutes les sections
 		// si ce sont des sections de relocations:
@@ -334,9 +329,7 @@ Str_Reloc affichage_relocation(FILE* f,
             && CurrentSectionName[3]=='l' )
 		{
             //printf("Nom de la section courante:%s n°%i\n",CurrentSectionName,i);
-            printf("Début de la fonction\n");
 			afficher_sectionR(f,table_section,header,i,SectionNames, &RETOUR, table_symbol, SymbolNames);
-            printf("Fonction finie\n");
 		}
         i++;
 	}
