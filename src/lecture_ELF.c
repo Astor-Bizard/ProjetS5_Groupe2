@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
 	Elf32_Ehdr elfHeaders;
 	Elf32_Shdr *section_headers;
-	//Elf32_Sym *sym_tab;
+	//ListeSymboles *sym_tab;
 	FILE* f;
 
 	if(argc != 2)

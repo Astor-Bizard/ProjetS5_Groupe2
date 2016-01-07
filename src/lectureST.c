@@ -10,7 +10,7 @@ Lecture de la table des symboles
 #include "lectureSH.h"
 #include "lectureST.h"
 
-Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHeader, int silent)
+ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHeader, int silent)
 {
 	uint32_t sectionSymbolTabSize;
 	uint32_t sectionSymbolTabOffset;
@@ -18,6 +18,7 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 	char* symbolNames;
 	int i=0;
 	int j=0;
+	ListeSymboles listeSymboles;
 
 	while(strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab"))
 	{
@@ -29,12 +30,13 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 
 	fseek(f,sectionSymbolTabOffset,SEEK_SET);
 
-	Elf32_Sym *symbolTab = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16));
-
-	if(symbolTab == NULL)
+	listeSymboles.symboles = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16));
+	if(listeSymboles.symboles == NULL)
 	{
 		printf("Erreur d'allocation\n");
-		return NULL;
+		listeSymboles.symboles = NULL;
+		listeSymboles.nbSymboles = 0;
+		return listeSymboles;
 	}
 
 	if (!silent)
@@ -45,32 +47,33 @@ Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHe
 	
 	for(i = 0; i<sectionSymbolTabSize; i=i+16)
 	{
-		symbolTab[j].st_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
-		symbolTab[j].st_value = (Elf32_Addr) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
-		symbolTab[j].st_size = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
-		symbolTab[j].st_info = (unsigned char) lire_octets(elfHeader.e_ident[EI_DATA],f,1);
-		symbolTab[j].st_other = (unsigned char) lire_octets(elfHeader.e_ident[EI_DATA],f,1);
-		symbolTab[j].st_shndx = (uint16_t) lire_octets(elfHeader.e_ident[EI_DATA],f,2);
+		listeSymboles.symboles[j].st_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
+		listeSymboles.symboles[j].st_value = (Elf32_Addr) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
+		listeSymboles.symboles[j].st_size = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
+		listeSymboles.symboles[j].st_info = (unsigned char) lire_octets(elfHeader.e_ident[EI_DATA],f,1);
+		listeSymboles.symboles[j].st_other = (unsigned char) lire_octets(elfHeader.e_ident[EI_DATA],f,1);
+		listeSymboles.symboles[j].st_shndx = (uint16_t) lire_octets(elfHeader.e_ident[EI_DATA],f,2);
 
-		unsigned char info = 15 & symbolTab[j].st_info;
-		unsigned char bind = 15<<4 & symbolTab[j].st_info;
+		unsigned char info = 15 & listeSymboles.symboles[j].st_info;
+		unsigned char bind = 15<<4 & listeSymboles.symboles[j].st_info;
 
 		if (!silent)
 		{
-			if(symbolTab[j].st_shndx == 0)
+			if(listeSymboles.symboles[j].st_shndx == 0)
 			{
-				printf("%3d  %08x %4d %-7s %-6s %-7s UND %s\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
-					visionSymbole(symbolTab[j].st_other), getSymbolNameBis(symbolNames,symbolTab[j]));
+				printf("%3d  %08x %4d %-7s %-6s %-7s UND %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), getSymbolNameBis(symbolNames,listeSymboles.symboles[j]));
 			}
 			else
-				printf("%3d  %08x %4d %-7s %-6s %-7s %3d %s\n", j, symbolTab[j].st_value, symbolTab[j].st_size, typeSymbole(info), bindSymbole(bind),
-					visionSymbole(symbolTab[j].st_other), symbolTab[j].st_shndx, getSymbolNameBis(symbolNames,symbolTab[j]));
+			{
+				printf("%3d  %08x %4d %-7s %-6s %-7s %3d %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), listeSymboles.symboles[j].st_shndx, getSymbolNameBis(symbolNames,listeSymboles.symboles[j]));
+			}
 		}
 		j++;
-
 	}
 
-	return symbolTab;
+	listeSymboles.nbSymboles = j;
+
+	return listeSymboles;
 }
 
 char* typeSymbole(unsigned char info)

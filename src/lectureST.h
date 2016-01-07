@@ -5,11 +5,16 @@ Lecture de la table des symboles
 #ifndef _LECTURESTH
 #define _LECTURESTH
 
+typedef struct {
+	Elf32_Sym* symboles;
+	int nbSymboles;
+} ListeSymboles;
+
 /*
 Fonction qui retourne un tableau de symboles
 Si silent est a 1, la fonction n'affichera pas le resultat sur la sortie standard
 */
-Elf32_Sym* lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHeader, int silent);
+ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHeader, int silent);
 
 /*
 Fonction qui retourne la chaine de caractère qui correspond au type du symbole donné en parametre
