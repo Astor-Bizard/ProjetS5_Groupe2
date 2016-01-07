@@ -1,6 +1,6 @@
 /*
 Creer le 6 janvier 2016 par Thai Binh
-Réimplantation de type R_ARM_ABS*
+Réimplantation de type R_ARM
 */
 
 #include <stdlib.h>
@@ -11,9 +11,9 @@ Réimplantation de type R_ARM_ABS*
 #include "lectureSH.h"
 #include "lectureST.h"
 #include "affichage_relocation.h"
-#include "reimpl_R_ARM_ABS.h"
+#include "reimpl_R_ARM.h"
 
-char* reimplantation_R_ARM_ABS(char *chaine, Str_Reloc tableReloc, ListeSymboles listeDesSymboles)
+char* reimplantation_R_ARM(char *chaine, Str_Reloc tableReloc, ListeSymboles listeDesSymboles)
 {
 	// TODO: Faire tout
 	int i;
