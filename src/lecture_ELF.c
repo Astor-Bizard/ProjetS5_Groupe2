@@ -56,6 +56,11 @@ int main(int argc, char *argv[]) {
 		fileName = argv[1];
 		i = 2;
 	}
+	f = fopen(fileName, "r");
+	if (f == NULL) {
+		printf("Fichier introuvable: %s\n", fileName);
+		return 0;
+	}
 
 	while (i < argc) {
 		if (argv[i][0] == '-') {
