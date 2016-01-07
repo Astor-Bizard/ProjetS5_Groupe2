@@ -5,6 +5,10 @@ make -s
 mkdir -p test/
 
 cd elf_linker-1.0/Examples_loader/
+arm-eabi-as -o example1_as.o example1.s
+arm-eabi-as -o example2_as.o example2.s
+arm-eabi-as -o example3_as.o example3.s
+arm-eabi-as -o example4_as.o example4.s
 echo "1" >tmp
 for i in example*.o
 do
