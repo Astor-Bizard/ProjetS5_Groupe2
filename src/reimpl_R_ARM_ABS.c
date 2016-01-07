@@ -27,25 +27,34 @@ char* reimplantation_R_ARM_ABS(char *chaine, Str_Reloc tableReloc, ListeSymboles
 		info = 255 & tableReloc.Rel[i].r_info;
 		//addrSymbole = (16777215<<8 & tableReloc.Rel[i].r_info)>>8;
 
-		if( (info == 2) || (info == 5) || (info == 8) )
+		switch(info)
 		{
-			// TODO: retirer ces parties de table de relocation qui font rien
-			incrementeurChaineBis = incrementeurChaine + 16
-			for(incrementeurChaine, incrementeurChaine<incrementeurChaineBis, incrementeurChaine++)
-			{
-				chaine[incrementeurChaine] = "0";
-			}
+			case 2:
+			case 5: 
+			case 8: 
+				// TODO: retirer ces parties de table de relocation qui font rien
+				incrementeurChaineBis = incrementeurChaine + 16
+				for(incrementeurChaine, incrementeurChaine<incrementeurChaineBis, incrementeurChaine++)
+				{
+					chaine[incrementeurChaine] = "0";
+				}
 
-			// (S + A) | T , addresse du symbole + relocation, T = 1 si symbole est du type STT_FUNC
-			// S = valeur du symbole 
-			// A = addend de la relocalisation
-			// T = 0
+				// (S + A) | T , addresse du symbole + relocation, T = 1 si symbole est du type STT_FUNC
+				// S = valeur du symbole 
+				// A = addend de la relocalisation
+				// T = 0
 
-			// donc y'a rien a faire, alé aplusse
-		}
-		else
-		{
-			incrementeurChaine = incrementeurChaine + 16;
+				// donc y'a rien a faire, alé aplusse
+				break;
+			case 28: 
+				// R_ARM_CALL
+				break;
+			case 29:
+				// R_ARM_JUMP24
+				break;
+			default:
+				incrementeurChaine = incrementeurChaine + 16;
+				break;
 		}
 	}
 	return chaine;
