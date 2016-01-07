@@ -11,7 +11,7 @@ Lecture de la table des sections
 char* sectionTypeString(uint32_t sh_type) {
 	char* typeString =  (char*) malloc(sizeof(char)*10);
 	if (typeString==NULL) {
-		printf("Erreur lors de l'allocation d'une chaine de type.");
+		printf("\nErreur lors de l'allocation d'une chaine de type.\n");
 		return NULL;
 	}
 
@@ -92,7 +92,7 @@ char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 
 	char* names = (char*) malloc(sizeof(char)*shTable[elfHeader.e_shstrndx].sh_size);
 	if (names==NULL) {
-		printf("Erreur lors de l'allocation initiale de la table des noms.");
+		printf("\nErreur lors de l'allocation initiale de la table des noms.\n");
 		return NULL;
 	}
 
@@ -111,7 +111,7 @@ char* getSectionName(char* names, uint32_t nameIndex) {
 
 	char* sectionName = (char*) malloc(sizeof(char)*i);
 	if (names==NULL) {
-		printf("Erreur lors de l'allocation initiale d'un nom de section.");
+		printf("\nErreur lors de l'allocation initiale d'un nom de section.\n");
 		return NULL;
 	}
 
@@ -128,6 +128,31 @@ char* getSectionNameBis(char* names, Elf32_Shdr sectionHeader) {
 	return getSectionName(names, sectionHeader.sh_name);
 }
 
+char* sectionFlagsTranslation(uint32_t flags) {
+	char* flagsString = (char*) malloc(sizeof(char)*FLAG_STRING_LENGTH)
+	if (shTable==NULL) {
+		printf("\nErreur lors d'allocation de flagsString.\n");
+		return NULL;
+	}
+
+	int i = 0;
+	if (flags&SHF_MASKPROC) {
+		flagsString[i++] = 'P';
+	}
+	if (flags&SHF_WRITE) {
+		flagsString[i++] = 'W';
+	}
+	if (flags&SHF_ALLOC) {
+		flagsString[i++] = 'A';
+	}
+	if (flags&SHF_EXECINSTR) {
+		flagsString[i++] = 'X';
+	}
+	flagsString[i] = '\0';
+
+	return flagsString;
+}
+
 Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	int i;
 	char* type;
@@ -135,13 +160,13 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	// Allocation de la table des en-têtes de section
 	Elf32_Shdr* shTable = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeader.e_shnum);
 	if (shTable==NULL) {
-		printf("Erreur lors de l'allocation initiale de shTable.");
+		printf("\nErreur lors de l'allocation initiale de shTable.\n");
 		return NULL;
 	}
 	
 	if (!silent) { 
 		printf("Section Headers: \n");
-		printf("  [Nr] Name               Type               Addr     Off    Size   ES Flg      Lk Inf Al\n");
+		printf("  [Nr] Name               Type               Addr     Off    Size   ES Flg  Lk Inf Al\n");
 	}
 
 	fseek(f, elfHeader.e_shoff, 0);
@@ -164,7 +189,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 		for(i=0; i<elfHeader.e_shnum; i++) {
 			type = sectionTypeString(shTable[i].sh_type);
 
-			printf("  [%2d] %-18s %-18s %08x %06x %06x %02x %08d %2d %3d %2d\n", i, getSectionName(names, shTable[i].sh_name), type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, shTable[i].sh_flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+			printf("  [%2d] %-18s %-18s %08x %06x %06x %02x %-4s %2d %3d %2d\n", i, getSectionName(names, shTable[i].sh_name), type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, sectionFlagsTranslation(shTable[i].sh_flags), shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
 		}
 		printf("\n");
 	}

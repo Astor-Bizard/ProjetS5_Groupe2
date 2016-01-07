@@ -7,6 +7,7 @@ Lecture de la table des sections
 
 #define SHT_ARM_DEBUGOVERLAY 0x70000004
 #define SHT_ARM_OVERLAYSECTION 0x70000005
+#define FLAG_STRING_LENGTH 5
 
 /*
 Associe une chaine de type à l'identifiant numérique fourni. 
@@ -28,6 +29,11 @@ char* getSectionName(char* names, uint32_t nameIndex);
 Récupère le nom de la section corresponant au header sectionHeader
 */
 char* getSectionNameBis(char* names, Elf32_Shdr sectionHeader);
+
+/*
+Traduit 'flags' en une chaine plus compréhensible
+*/
+char* sectionFlagsTranslation(uint32_t flags)
 
 /*
 Récupère la liste des en-têtes de section.
