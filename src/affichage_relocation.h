@@ -18,7 +18,7 @@ typedef struct
 	Elf32_Rel *Rel;
 	int *Sec_Rel;
 	Elf32_Rela *Rela;
-	int *Sec_Rela
+	int *Sec_Rela;
 }Str_Reloc;
 
 
