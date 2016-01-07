@@ -47,10 +47,8 @@ char* reimplantation_R_ARM(char *chaine, Str_Reloc tableReloc, ListeSymboles lis
 				// donc y'a rien a faire, alé aplusse
 				break;
 			case 28: 
-				// R_ARM_CALL
-				break;
 			case 29:
-				// R_ARM_JUMP24
+				// R_ARM_CALL & R_ARM_JUMP24
 				break;
 			default:
 				incrementeurChaine = incrementeurChaine + 16;
