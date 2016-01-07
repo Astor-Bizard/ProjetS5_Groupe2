@@ -38,7 +38,7 @@ Elf32_Ehdr lecture_Headers(FILE *f)
 	Elf32_Ehdr headers;
 	headers.e_ident[EI_DATA]=(char) B_ENDIAN;
 
-	printf("ELF Header: \n");
+	printf("ELF Header:\n");
 	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
 	octet_cour += 4;
 
