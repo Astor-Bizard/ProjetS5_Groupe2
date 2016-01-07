@@ -30,7 +30,7 @@ char* reimplantation_R_ARM_ABS(char *chaine, Str_Reloc tableReloc, ListeSymboles
 		if( (info == 2) || (info == 5) || (info == 8) )
 		{
 			// TODO: retirer ces parties de table de relocation qui font rien
-			incrementeurChaineBis = incrementeurChaine + 12
+			incrementeurChaineBis = incrementeurChaine + 16
 			for(incrementeurChaine, incrementeurChaine<incrementeurChaineBis, incrementeurChaine++)
 			{
 				chaine[incrementeurChaine] = "0";
@@ -45,7 +45,7 @@ char* reimplantation_R_ARM_ABS(char *chaine, Str_Reloc tableReloc, ListeSymboles
 		}
 		else
 		{
-			incrementeurChaine = incrementeurChaine + 12;
+			incrementeurChaine = incrementeurChaine + 16;
 		}
 	}
 	return chaine;
