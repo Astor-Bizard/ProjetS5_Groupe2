@@ -8,7 +8,7 @@ Affichage d'une section specifique
 #define ASCII_0 48
 
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
-int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
+int index_Shdr(char* str, FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	int i,num_sh;
 	char *names;
 	names = fetchSectionNames(f,elfHeader,tabSH);
@@ -71,9 +71,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 		printf("Hex dump of section '%s':\n",str);
 		// On se place
 		fseek(f,tabSH[num_sh].sh_offset,0);
-		printf("Marque 3\n");
 		if(renvoi) section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
-		printf("Marque 4\n");
 		if(section != NULL || !renvoi){
 			// On affiche le contenu de la section
 			if(tabSH[num_sh].sh_size==0){
@@ -127,9 +125,7 @@ unsigned char *recuperer_section_num(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *
 	else{
 		// On se place
 		fseek(f,tabSH[num_sh].sh_offset,0);
-		printf("Marque 5\n");
 		section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
-		printf("Marque 6\n");
 		if(section != NULL){
 			// On affiche le contenu de la section
 			for(i=0;i<tabSH[num_sh].sh_size;i++){
