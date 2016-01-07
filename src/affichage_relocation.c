@@ -241,6 +241,8 @@ Str_Reloc affichage_relocation(char* f,Elf32_Ehdr header,Elf32_Shdr* table_secti
     RETOUR.nb_Rela=0;
     RETOUR.Rel=NULL;
     RETOUR.Rela=NULL;
+    RETOUR.Sec_Rela=NULL;
+    RETOUR.Sec_Rel=NULL;
 
 	int i=0;
 	char* SectionNames;
