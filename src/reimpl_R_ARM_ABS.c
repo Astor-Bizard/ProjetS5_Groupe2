@@ -20,11 +20,12 @@ char* reimplantation_R_ARM_ABS(char *chaine, Str_Reloc tableReloc, ListeSymboles
 	int incrementeurChaine = 0;
 	int incrementeurChaineBis;
 	unsigned char info;
-	uint32_t addrSymbole;
+	//uint32_t addrSymbole;
 	for (i=0; i<tableReloc.nb_Rel; i++)
 	{
+		
 		info = 255 & tableReloc.Rel[i].r_info;
-		addrSymbole = (16777215<<8 & tableReloc.Rel[i].r_info)>>8;
+		//addrSymbole = (16777215<<8 & tableReloc.Rel[i].r_info)>>8;
 
 		if( (info == 2) || (info == 5) || (info == 8) )
 		{
@@ -34,7 +35,7 @@ char* reimplantation_R_ARM_ABS(char *chaine, Str_Reloc tableReloc, ListeSymboles
 			{
 				chaine[incrementeurChaine] = "0";
 			}
-			
+
 			// (S + A) | T , addresse du symbole + relocation, T = 1 si symbole est du type STT_FUNC
 			// S = valeur du symbole 
 			// A = addend de la relocalisation
