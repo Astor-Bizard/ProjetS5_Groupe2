@@ -8,6 +8,7 @@ Renumerote les section dans un ELF et la table des réimplantations
 #include <stdio.h>
 #include <stdlib.h>
 #include <elf.h>
+#include <string.h>
 #include "afficher_section.h"
 #include "lectureST.h"
 #include "affichage_relocation.h"
@@ -15,14 +16,14 @@ Renumerote les section dans un ELF et la table des réimplantations
 /* Copie une chaine de 32 OCTETS dans une chaine source plus grande à partir de id_dest
 Fait pas le con Jimmy
 */
-void CopieOctet(char *dest, char *src, int id_dest);
+void CopieOctet(unsigned char *dest,Elf32_Word *src, Elf32_Addr id_dest);
 
 /*Compte le nombre de section de type Rel dans la structure section_headers*/
 
 int nbSecRel(Elf32_Ehdr *elfHeaders, Elf32_Shdr *section_headers);
 
 /* renumerote et corrige les section de type Rel ecrit le headers et les sections modifier ou non dans f_write*/
-void renumerote_section(FILE *f_read, FILE *f_write,Elf32_Ehdr *elfHeaders, Elf32_Shdr *section_headers, ListeSymboles sym_tab,,Str_Reloc str_reloc);
+void renumerote_section(FILE *f_read, FILE *f_write,Elf32_Ehdr *elfHeaders, Elf32_Shdr *section_headers, ListeSymboles sym_tab,Str_Reloc str_reloc);
 
 
 
