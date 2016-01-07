@@ -340,7 +340,6 @@ Str_Reloc affichage_relocation(FILE* f,
 		}
         i++;
 	}
-    fclose(fichier);
     return RETOUR;
 }
 
