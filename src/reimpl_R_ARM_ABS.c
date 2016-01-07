@@ -23,6 +23,8 @@ void reimplantation_R_ARM_ABS(FILE *f, Str_Reloc tableReloc)
 		if( (tableReloc.Rel[i].r_info == 2) || (tableReloc.Rel[i].r_info == 5) || (tableReloc.Rel[i].r_info == 8) )
 		{
 			printf("HOLA une realocation a faire ici qq.");
+
+			// (S + A) | T , addresse du symbole + relocation, T = 1 si symbole est du type STT_FUNC
 		}
 	}
 }
