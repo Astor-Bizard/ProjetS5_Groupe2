@@ -36,10 +36,12 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int renvoi){
 	FILE *f;
 	char str[42];
-	int num_sh=0,i;
+	int num_sh=0,i,j;
 	unsigned char c;
 	unsigned char *section;
 	section=NULL;
+	unsigned char aff[17];
+	for(j=0;j<17;j++)aff[j]='\0';
 
 	scanf("%s",str);
 	printf("\n");
@@ -47,14 +49,11 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 	f=fopen(nom_f,"r");
 	// On traduit la demande (string) en index dans la table
 	num_sh=index_Shdr(str,f,elfHeader,tabSH);
-	fclose(f);
-
 	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
 		printf("Section absente !\n\n");
 		return NULL;
 	}
 	else{
-		f=fopen(nom_f,"r");
 		printf("Hex dump of section '%s':\n",str);
 		// On se place
 		fseek(f,tabSH[num_sh].sh_offset,0);
@@ -67,18 +66,29 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 			}
 			else{
 				printf("  0x%08x ",0);
-				for(i=0;i<tabSH[num_sh].sh_size;i++){
+				i=0;
+				while(i<tabSH[num_sh].sh_size){
 					if(i!=0){
-						if(i%16==0) printf("\n  0x%08x ",i);
+						if(i%16==0){
+							printf(" %s\n  0x%08x ",aff,i);
+							for(j=0;j<17;j++)aff[j]='\0';
+						}
 						else if(i%4==0) printf(" ");
 					}
 					c=fgetc(f);
 					printf("%02x",c);
 					if(renvoi) section[i]=c;
+					if(c>=33 && c<=126) aff[i%16]=c;
+					else aff[i%16]='.';
+					i++;
 				}
 				if(renvoi) section[i]='\0';
+				while(i%16!=0){
+					printf("  ");
+					i++;
+				}
+				printf(" %s",aff);
 			}
-			fclose(f);
 			printf("\n\n");
 		}
 		else{
@@ -86,6 +96,7 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 			exit(42);
 		}
 	}
+	fclose(f);
 	return section;
 }
 
