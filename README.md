@@ -8,7 +8,7 @@ Etape 5 : Gabriel (affichage_relocation)
 
 Etape 6 : Jonathan (renum_section)  
 Etape 7 : Loic (correctionSymboles)  
-Etape 8 : Thai Binh (reimpl_R_ARM_ABS)  
+Etape 8-9 : Thai Binh (reimpl_R_ARM)  
 
 #A savoir :
 Ajoutez cette ligne dans votre .bashrc :  
