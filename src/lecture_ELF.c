@@ -81,7 +81,6 @@ int main(int argc, char *argv[]) {
 				case 'x':
 					options = options | OPTION_HEX_DUMP;
 					if (i+1<argc && argv[i+1][0] != '-')
-						if
 						hex_param = argv[i++];
 					else
 						hex_param = NULL;
