@@ -101,7 +101,7 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 }
 
 // Affiche le contenu de la section numero num_sh. Renvoie ce contenu, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
-unsigned char *afficher_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int num_sh){
+unsigned char *recuperer_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int num_sh){
 	FILE *f;
 	int i;
 	unsigned char c;

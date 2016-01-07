@@ -17,6 +17,6 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH);
 unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int renvoi);
 
 // Renvoie un pointeur sur le contenu de la section numero num_sh, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
-unsigned char *afficher_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int num_sh);
+unsigned char *recuperer_section_num(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int num_sh);
 
 #endif
