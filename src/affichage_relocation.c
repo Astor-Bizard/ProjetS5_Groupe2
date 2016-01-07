@@ -137,10 +137,7 @@ void type_relocation(int info)
 }
 
 
-void print_section(unsigned long long int addr,
-    Elf32_Shdr* table_section,
-    Elf32_Ehdr header, 
-    char* SectionNames)
+void print_section(unsigned long long int addr, Elf32_Shdr* table_section, Elf32_Ehdr header, char* SectionNames)
 {
     int i;
     for(i=0; i< header.e_shnum;i++)
@@ -152,14 +149,19 @@ void print_section(unsigned long long int addr,
     }
 }
 
-void print_symbol(int sym, 
-    ListeSymboles table_symbol,
-    Elf32_Ehdr header, 
-    char* SymbolNames)
+int print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* SymbolNames)
 {
-    printf("\t%08x\t %s\t",
-            table_symbol.symboles[sym].st_value,
-            getSymbolNameBis(SymbolNames,table_symbol.symboles[sym]));
+    printf("\t%08x\t ",table_symbol.symboles[sym].st_value);
+    if((table_symbol.symboles[sym].st_info & 0xf) != 3)
+    {
+        printf("%s\t",getSymbolNameBis(SymbolNames,table_symbol.symboles[sym]));
+        return 0;
+    }
+    else
+    {
+        printf("C'est une Section");
+        return 1;
+    }
 }
 
 //affiche une section de relocation
@@ -193,8 +195,10 @@ void afficher_sectionR(char *f,Elf32_Shdr* table_section,
 
 		printf("%08llx\t%08llx\t",addr,info);
         type_relocation(type);
-        print_symbol(sym,table_symbol,header,SymbolNames);
-        print_section(addr, table_section, header, SectionNames);  
+        if(print_symbol(sym,table_symbol,header,SymbolNames))
+            {
+                print_section(addr, table_section, header, SectionNames); 
+            }
         //on affiche les infos.
         printf("\n");
         RETOUR.nb_Rel ++;
@@ -216,7 +220,7 @@ void afficher_sectionRA(char *f,
     char* SymbolNames)
 {
     int i;
-    unsigned char *section = afficher_section_num(f,header,table_section, numS);
+    unsigned char *section = recuperer_section_num(f,header,table_section, numS);
     unsigned long long int addr;
     unsigned long long int info;
     unsigned long long int addend;
