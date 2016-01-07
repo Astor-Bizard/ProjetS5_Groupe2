@@ -50,7 +50,7 @@ unsigned char *afficher_section(char *nom_f, Elf32_Ehdr elfHeader, Elf32_Shdr *t
 	num_sh=index_Shdr(str,f,elfHeader,tabSH);
 	fclose(f);
 
-	if(num_sh==-1){
+	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
 		printf("Section absente !\n\n");
 		return NULL;
 	}
