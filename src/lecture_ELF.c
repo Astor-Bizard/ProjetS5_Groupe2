@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
 				case 'x':
 					options = options | OPTION_HEX_DUMP;
 					if (i+1<argc && i+1!=fileNamePos && argv[i+1][0] != '-')
-						hex_param = argv[i++];
+						hex_param = argv[++i];
 					break;
 				case 'H':
 					print_usage();
@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
 			fclose(f);
 		}
 		else {
-			printf("hex_param: %s", hex_param);
+			printf("hex_param: %s\n", hex_param);
 			printf("Not working yet.\n");
 		}
 	}
