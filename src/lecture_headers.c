@@ -34,14 +34,15 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 	int octet_cour = 0;
 	Elf32_Ehdr headers;
 	headers.e_ident[EI_DATA]=(char) B_ENDIAN;
+	int i;
 
 	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
 	octet_cour += 4;
 
 	if (lec_Cour != 0x7f454c46)
 	{
-		printf("erreur lecture_Header : 7f45 4c46 (%i)\n", octet_cour);
-		printf("Octets lue : %llx\n", lec_Cour);
+		printf("Erreur lecture_Header : 7f45 4c46 (%i)\n", octet_cour);
+		printf("Octets lus : %llx\n", lec_Cour);
 		exit(1);
 	}
 
@@ -50,8 +51,8 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 
 	if (lec_Cour != 1 && lec_Cour != 2)
 	{
-		printf("erreur lecture_Header : Classe (%i)\n", octet_cour);
-		printf("Octets lue : %llx\n", lec_Cour);
+		printf("Erreur lecture_Header : Classe (%i)\n", octet_cour);
+		printf("Octets lus : %llx\n", lec_Cour);
 		exit(1);
 	}
 
@@ -59,15 +60,15 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 	headers.e_ident[EI_MAG1]='E';
 	headers.e_ident[EI_MAG2]='L';
 	headers.e_ident[EI_MAG3]='F';
-	headers.e_ident[EI_CLASS]= 32*lec_Cour;
+	headers.e_ident[EI_CLASS]=lec_Cour;
 
 	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,1);
 	octet_cour++;
 
 	if (lec_Cour != 1 && lec_Cour != 2)
 	{
-		printf("erreur lecture_Header : Data (%i)\n", octet_cour);
-		printf("Octets lue : %llx\n", lec_Cour);
+		printf("Erreur lecture_Header : Data (%i)\n", octet_cour);
+		printf("Octets lus : %llx\n", lec_Cour);
 		exit(1);
 	}
 
@@ -80,8 +81,8 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 	octet_cour++;
 	if(! (lec_Cour))
 	{
-		printf("erreur lecture_Header : Version header (%i)\n", octet_cour);
-		printf("Octets lue : %llx\n", lec_Cour);
+		printf("Erreur lecture_Header : Version header (%i)\n", octet_cour);
+		printf("Octets lus : %llx\n", lec_Cour);
 		exit(1);
 	}
 
@@ -103,7 +104,7 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 		case 0xffff:
 			break;
 		default:
-			printf("erreur lecture_Header : Type(%i)\n", octet_cour);
+			printf("Erreur lecture_Header : Type(%i)\n", octet_cour);
 			exit(1);
 	}
 
@@ -118,8 +119,8 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 	octet_cour+=4;
 	if(! (lec_Cour))
 	{
-		printf("erreur lecture_Header : Version (%i)\n", octet_cour);
-		printf("Octets lue : %llx\n", lec_Cour);
+		printf("Erreur lecture_Header : Version (%i)\n", octet_cour);
+		printf("Octets lus : %llx\n", lec_Cour);
 		exit(1);
 	}
 
@@ -178,73 +179,67 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 	else
 		headers.e_shstrndx=lec_Cour;
 
-	if(!silent) 
+	if(!silent)
 	{
-		printf("ELF Header:\n");
-		printf("  Class: \t\t\t\tELF%d\n",headers.e_ident[EI_CLASS]);
-		if (lec_Cour == L_ENDIAN)
-			printf("  Data: \t\t\t\tLITTLE ENDIAN\n");
-		else
-			printf("  Data: \t\t\t\tBIG ENDIAN\n");
+		printf("ELF Header:\n  Magic:  ");
+		for(i=0;i<EI_NIDENT;i++) printf(" %02x",headers.e_ident[i]);
+		printf("\n  Class:                             ELF%d\n",headers.e_ident[EI_CLASS]*32);
+		printf("  Data:                              2's complement, ");
+		if (lec_Cour == L_ENDIAN) printf("little endian\n");
+		else printf("big endian\n");
 
-		printf("  Version header: \t\t\t%d (current)\n",headers.e_ident[EI_VERSION]);
+		printf("  Version:                           %d (current)\n",headers.e_ident[EI_VERSION]);
 
-		printf("  Type: \t\t\t\t");
+		printf("  Type:                              ");
 		switch(headers.e_type)
 		{
 			case 0:
-				printf("No file type\n");
+				printf("NONE (No file type)\n");
 				break;
 			case 1:
-				printf("Relocatable file\n");
+				printf("REL (Relocatable file)\n");
 				break;
 			case 2:
-				printf("Executable\n");
+				printf("EXEC (Executable)\n");
 				break;
 			case 3:
-				printf("Shared object file\n");
+				printf("DYN (Shared object file)\n");
 				break;
 			case 4:
-				printf("Core file\n");
+				printf("CORE (Core file)\n");
 				break;
 			case 0xff00:
-				printf("Processor-specific\n");
+				printf("LOPROC (Processor-specific)\n");
 				break;
 			case 0xffff:
-				printf("Processor-specific\n");
+				printf("HIPROC (Processor-specific)\n");
 				break;
 		}
 
-		printf("  OS/ABI: \t\t\t\t");
+		printf("  OS/ABI:                            ");
 		if(headers.e_machine==40)
 			printf("UNIX - System V\n");
 		else
 			printf("Machine numero : %d (incompatible)", headers.e_machine);
 		
-		printf("  Version : \t\t\t\t%x\n",headers.e_version);
-		printf("  Entry point address: \t\t\t%x\n",headers.e_entry);
-		
-		if(headers.e_phoff)
-			printf("  Start of program headers: \t\t%u\n",headers.e_phoff);
-		else
-			printf("  Start of program headers: \t\t0 (no program header table)\n");
+		printf("  Version :                          Ox%x\n",headers.e_version);
+		printf("  Entry point address:               Ox%x\n",headers.e_entry);
 
-		if(headers.e_shoff)
-			printf("  Start of program section headers: \t%u\n",headers.e_shoff);
-		else
-			printf("  Start of program section headers: \t0 (no program header table)\n");
+		printf("  Start of program headers:          %u (bytes into file)\n",headers.e_phoff);
 
-		printf("  Flags: \t\t\t\t%x\n",headers.e_flags);
-		printf("  Size of this header: \t\t\t%d (bytes)\n", headers.e_ehsize);
-		printf("  Size of this program header: \t\t%d (bytes)\n", headers.e_phentsize);
-		printf("  Number of program headers: \t\t%d\n", headers.e_phnum);
-		printf("  Size of section headers: \t\t%d (bytes)\n", headers.e_shentsize);
-		printf("  Number of section headers: \t\t%d\n", headers.e_shnum);
+		printf("  Start of section headers:          %u (bytes into file)\n",headers.e_shoff);
+
+		printf("  Flags:                             Ox%x\n",headers.e_flags);
+		printf("  Size of this header:               %d (bytes)\n", headers.e_ehsize);
+		printf("  Size of program headers:           %d (bytes)\n", headers.e_phentsize);
+		printf("  Number of program headers:         %d\n", headers.e_phnum);
+		printf("  Size of section headers:           %d (bytes)\n", headers.e_shentsize);
+		printf("  Number of section headers:         %d\n", headers.e_shnum);
 
 		if(headers.e_shstrndx==SHN_UNDEF)
-			printf("  Section header string table index: \tSHN_UNDEF\n");
+			printf("  Section header string table index: SHN_UNDEF\n");
 		else
-			printf("  Section header string table index: \t%d\n", headers.e_shstrndx);
+			printf("  Section header string table index: %d\n", headers.e_shstrndx);
 
 		printf("\n");
 	}
