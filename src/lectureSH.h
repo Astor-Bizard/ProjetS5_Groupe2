@@ -7,7 +7,7 @@ Lecture de la table des sections
 
 #define SHT_ARM_DEBUGOVERLAY 0x70000004
 #define SHT_ARM_OVERLAYSECTION 0x70000005
-#define FLAG_STRING_LENGTH 5
+#define FLAG_STRING_LENGTH 4
 
 /*
 Associe une chaine de type à l'identifiant numérique fourni. 

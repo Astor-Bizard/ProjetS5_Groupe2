@@ -136,9 +136,6 @@ char* sectionFlagsTranslation(uint32_t flags) {
 	}
 
 	int i = 0;
-	if (flags&SHF_MASKPROC) {
-		flagsString[i++] = 'P';
-	}
 	if (flags&SHF_WRITE) {
 		flagsString[i++] = 'W';
 	}
@@ -147,6 +144,36 @@ char* sectionFlagsTranslation(uint32_t flags) {
 	}
 	if (flags&SHF_EXECINSTR) {
 		flagsString[i++] = 'X';
+	}
+	if (flags&SHF_MERGE) {
+		flagsString[i++] = 'M';
+	}
+	if (flags&SHF_STRINGS) {
+		flagsString[i++] = 'S';
+	}
+	if (flags&SHF_INFO_LINK) {
+		flagsString[i++] = 'I';
+	}
+	if (flags&SHF_LINK_ORDER) {
+		flagsString[i++] = 'L';
+	}
+	if (flags&SHF_GROUP) {
+		flagsString[i++] = 'G';
+	}
+	if (flags&SHF_TLS) {
+		flagsString[i++] = 'T';
+	}
+	if (flags&SHF_EXCLUDE) {
+		flagsString[i++] = 'E';
+	}
+	if (flags&SHF_OS_NONCONFORMING) {
+		flagsString[i++] = 'O';
+	}
+	if (flags&SHF_MASKOS) {
+		flagsString[i++] = 'o';
+	}
+	if (flags&SHF_MASKPROC) {
+		flagsString[i++] = 'p';
 	}
 	flagsString[i] = '\0';
 
@@ -165,8 +192,10 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	}
 	
 	if (!silent) { 
-		printf("Section Headers: \n");
-		printf("  [Nr] Name               Type               Addr     Off    Size   ES Flg  Lk Inf Al\n");
+		//printf("Section Headers: \n");
+		//printf("  [Nr] Name               Type               Addr     Off    Size   ES Flg  Lk Inf Al\n");
+		printf("Section Headers:\n");
+		printf("  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al\n");
 	}
 
 	fseek(f, elfHeader.e_shoff, 0);
@@ -189,10 +218,12 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 		for(i=0; i<elfHeader.e_shnum; i++) {
 			type = sectionTypeString(shTable[i].sh_type);
 
-			printf("  [%2d] %-18s %-18s %08x %06x %06x %02x %4s %2d %3d %2d\n", i, getSectionName(names, shTable[i].sh_name), type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, sectionFlagsTranslation(shTable[i].sh_flags), shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+			printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, getSectionName(names, shTable[i].sh_name), type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, sectionFlagsTranslation(shTable[i].sh_flags), shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
 		}
-		printf("Flags:\n");
-		printf("  W (écriture), A (allocation), X (exécution), P (spécifique au processeur)\n");
+		printf("Key to Flags:\n");
+		printf("  W (write), A (alloc), X (execute), M (merge), S (strings)\n");
+		printf("  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)\n");
+		printf("  O (extra OS processing required) o (OS specific), p (processor specific)\n");
 		printf("\n");
 	}
 
