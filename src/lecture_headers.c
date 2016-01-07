@@ -181,13 +181,13 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 	if(!silent) 
 	{
 		printf("ELF Header:\n");
-		printf("  Class: \t\t\t\tELF%llu\n",headers.e_ident[EI_CLASS]);
+		printf("  Class: \t\t\t\tELF%d\n",headers.e_ident[EI_CLASS]);
 		if (lec_Cour == L_ENDIAN)
 			printf("  Data: \t\t\t\tLITTLE ENDIAN\n");
 		else
 			printf("  Data: \t\t\t\tBIG ENDIAN\n");
 
-		printf("  Version header: \t\t\t%llu (current)\n",headers.e_ident[EI_VERSION]);
+		printf("  Version header: \t\t\t%d (current)\n",headers.e_ident[EI_VERSION]);
 
 		printf("  Type: \t\t\t\t");
 		switch(headers.e_type)
@@ -219,32 +219,32 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 		if(headers.e_machine==40)
 			printf("UNIX - System V\n");
 		else
-			printf("Machine numero : %llu (incompatible)", headers.e_machine);
+			printf("Machine numero : %d (incompatible)", headers.e_machine);
 		
-		printf("  Version : \t\t\t\t%llx\n",headers.e_version);
-		printf("  Entry point address: \t\t\t%llx\n",headers.e_entry);
+		printf("  Version : \t\t\t\t%x\n",headers.e_version);
+		printf("  Entry point address: \t\t\t%x\n",headers.e_entry);
 		
 		if(headers.e_phoff)
-			printf("  Start of program headers: \t\t%llu\n",headers.e_phoff);
+			printf("  Start of program headers: \t\t%u\n",headers.e_phoff);
 		else
 			printf("  Start of program headers: \t\t0 (no program header table)\n");
 
 		if(headers.e_shoff)
-			printf("  Start of program section headers: \t%llu\n",headers.e_shoff);
+			printf("  Start of program section headers: \t%u\n",headers.e_shoff);
 		else
 			printf("  Start of program section headers: \t0 (no program header table)\n");
 
-		printf("  Flags: \t\t\t\t%llx\n",headers.e_flags);
-		printf("  Size of this header: \t\t\t%llu (bytes)\n", headers.e_ehsize);
-		printf("  Size of this program header: \t\t%llu (bytes)\n", headers.e_phentsize);
-		printf("  Number of program headers: \t\t%llu\n", headers.e_phnum);
-		printf("  Size of section headers: \t\t%llu (bytes)\n", headers.e_shentsize);
-		printf("  Number of section headers: \t\t%llu\n", headers.e_shnum);
+		printf("  Flags: \t\t\t\t%x\n",headers.e_flags);
+		printf("  Size of this header: \t\t\t%d (bytes)\n", headers.e_ehsize);
+		printf("  Size of this program header: \t\t%d (bytes)\n", headers.e_phentsize);
+		printf("  Number of program headers: \t\t%d\n", headers.e_phnum);
+		printf("  Size of section headers: \t\t%d (bytes)\n", headers.e_shentsize);
+		printf("  Number of section headers: \t\t%d\n", headers.e_shnum);
 
 		if(headers.e_shstrndx=SHN_UNDEF)
 			printf("  Section header string table index: \tSHN_UNDEF\n");
 		else
-			printf("  Section header string table index: \t%llu\n", headers.e_shstrndx);
+			printf("  Section header string table index: \t%d\n", headers.e_shstrndx);
 
 		printf("\n");
 	}
