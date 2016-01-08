@@ -10,15 +10,25 @@ Correction des symboles
 #include "lectureSH.h"
 #include "lectureST.h"
 
-size_t ecrire32b(FILE* f, int mode, uint32_t value) {
-	return fwrite(&value, 4, 1, f);
+size_t fwrite32(FILE* f, int mode, uint32_t value) {
+	uint32_t bytes;
+	if(mode==L_ENDIAN)
+		bytes = ByteSwap32(value);
+	else
+		bytes = value;
+	return fwrite(&bytes, 4, 1, f);
 }
 
-size_t ecrire16b(FILE* f, int mode, uint16_t value) {
-	return fwrite(&value, 2, 1, f);
+size_t fwrite16(FILE* f, int mode, uint16_t value) {
+	uint16_t bytes;
+	if(mode==L_ENDIAN)
+		bytes = ByteSwap16(value);
+	else
+		bytes = value;
+	return fwrite(&bytes, 2, 1, f);
 }
 
-size_t ecrire8b(FILE* f, int mode, uint8_t value) {
+size_t fwrite8(FILE* f, int mode, uint8_t value) {
 	return fwrite(&value, 1, 1, f);
 }
 
@@ -114,11 +124,11 @@ void ecrireNouveauxSymboles(FILE* newFile, Elf32_Ehdr newElfHeader, Elf32_Shdr* 
 	fseek(newFile, writingOffset, 0);
 	for(i = 0; i<newST.nbSymboles; i++)
 	{
-		ecrire32b(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_name);
-		ecrire32b(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_value);
-		ecrire32b(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_size);
-		ecrire8b(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_info);
-		ecrire8b(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_other);
-		ecrire16b(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_shndx);
+		fwrite32(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_name);
+		fwrite32(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_value);
+		fwrite32(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_size);
+		fwrite8(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_info);
+		fwrite8(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_other);
+		fwrite16(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_shndx);
 	}
 }
