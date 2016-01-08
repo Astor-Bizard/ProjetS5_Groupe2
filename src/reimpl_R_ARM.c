@@ -20,18 +20,18 @@ char* reimplantation_R_ARM(char *chaine, Str_Reloc tableReloc, ListeSymboles lis
 	int incrementeurChaine = 0;
 	int incrementeurChaineBis;
 	unsigned char info;
-	//uint32_t addrSymbole;
+	Elf32_Addr addrSymbole;
 	for (i=0; i<tableReloc.nb_Rel; i++)
 	{
 		
 		info = 255 & tableReloc.Rel[i].r_info;
-		//addrSymbole = (16777215<<8 & tableReloc.Rel[i].r_info)>>8;
+		addrSymbole - = (16777215<<8 & tableReloc.Rel[i].r_info)>>8;
 
 		switch(info)
 		{
 			case 2:
-			case 5: 
-			case 8: 
+			case 5:
+			case 8:
 				// TODO: retirer ces parties de table de relocation qui font rien
 				incrementeurChaineBis = incrementeurChaine + 16
 				for(incrementeurChaine, incrementeurChaine<incrementeurChaineBis, incrementeurChaine++)
@@ -46,9 +46,11 @@ char* reimplantation_R_ARM(char *chaine, Str_Reloc tableReloc, ListeSymboles lis
 
 				// donc y'a rien a faire, alé aplusse
 				break;
-			case 28: 
+			case 28:
 			case 29:
 				// R_ARM_CALL & R_ARM_JUMP24
+				addrSymbole - tableReloc.Rel[i].r_offset;
+				// ((S+A) | T) - P
 				break;
 			default:
 				incrementeurChaine = incrementeurChaine + 16;
