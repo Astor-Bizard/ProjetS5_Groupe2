@@ -23,63 +23,98 @@ void CopieOctet(unsigned char *dest,Elf32_Word *src, Elf32_Addr id_dest)
 }
 
 
-void renumerote_section(FILE *f_read, FILE *f_write,Elf32_Ehdr *elfHeaders, Elf32_Shdr *section_headers, ListeSymboles sym_tab,Str_Reloc str_reloc)
+void renumerote_section(FILE *f_read, 
+						FILE *f_write,
+						Elf32_Ehdr *elfHeaders, 
+						Elf32_Shdr *section_headers, 
+						ListeSymboles sym_tab,
+						Str_Reloc str_reloc
+						)
 {
-	int i;
+	int i,j;
+	int premier = 1;
 	int nbRel = 0; 
 	int nb_Sec_A_Traiter = 0;
 	int id_Sec_Cour = 0;
 	unsigned char *sec_Cour;
 	//Modification du Headers
-	
+
 	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers);
 	elfHeaders->e_shnum = elfHeaders->e_shnum - nb_Sec_A_Traiter;
 
 	//Modification table des symboles
-
+	j=0;
 	for(i=0;i<elfHeaders->e_shnum;i++)
 	{
 		if(section_headers[i].sh_type == SHT_REL)
 		{
 			nbRel++;
 		}
+		while(str_reloc.Sec_Rel[j] == i )
+		{
+			str_reloc.Sec_Rel[j] -= nbRel;
+			j++;
+		}
 		section_headers[i] = section_headers[i+nbRel];
+
+		
 	}
 
+	fwrite(elfHeaders,sizeof(Elf32_Ehdr),1,f_write);
 
-	fwrite(elfHeaders,sizeof(elfHeaders),1,f_write);
 
 	// Ecriture de la nouvelle section
-	if(str_reloc.nb_Rel>0)
-	{
-		sec_Cour = recuperer_section_num(f_read,*elfHeaders, section_headers, str_reloc.Sec_Rel[i]);
-		id_Sec_Cour = str_reloc.Sec_Rel[i];
-	}
-	
 
+	printf("Boucle\n");
+	printf("str_reloc.nb_Rel : %i", str_reloc.nb_Rel);
 	for(i=0;i<str_reloc.nb_Rel;i++)
 	{
+		printf("Debut : %i\n",i);
+
 		if(id_Sec_Cour != str_reloc.Sec_Rel[i])
 		{
 			// On appelle ce que fait la partie 8
-
 			//On ecrit dans le fichier
-			fwrite(sec_Cour,sizeof(sec_Cour),1,f_write);
-			free(sec_Cour);
+			for(j=id_Sec_Cour;j<= str_reloc.Sec_Rel[i]; j++)
+			{
+				sec_Cour = recuperer_section_num(f_read,*elfHeaders, section_headers, j);
+				fwrite(sec_Cour,section_headers[j].sh_size,1,f_write);
+			}
+
+			if(!premier)
+			{
+				
+
+				printf("On ecrit taille : %x\n",section_headers[id_Sec_Cour].sh_size);
+				fwrite(sec_Cour,section_headers[id_Sec_Cour].sh_size,1,f_write);
+			}
+			
+			
+			rewind(f_read);
 			sec_Cour = recuperer_section_num(f_read,*elfHeaders, section_headers, str_reloc.Sec_Rel[i]);
 			id_Sec_Cour = str_reloc.Sec_Rel[i];
+			printf("id_Sec_Cour : %i\n", id_Sec_Cour);
+			premier=0;
 			
 		}
 
 		CopieOctet(sec_Cour,&str_reloc.Rel[i].r_info,str_reloc.Rel[i].r_offset);
-
-
+		printf("Fin : %i\n",i);
 	}
 	// On appelle ce que fait la partie 8
-
+	
 	//On ecrit dans le fichier
-	fwrite(sec_Cour,sizeof(sec_Cour),1,f_write);
-	free(sec_Cour);
+	fwrite(sec_Cour,section_headers[id_Sec_Cour].sh_size,1,f_write);
+		
+	for(j=id_Sec_Cour+1;j<elfHeaders->e_shnum;j++)
+	{
+		sec_Cour = recuperer_section_num(f_read,*elfHeaders, section_headers, j);
+		fwrite(sec_Cour,section_headers[j].sh_size,1,f_write);
+	}
+
+
+
+
 }
 
 
@@ -90,7 +125,8 @@ int nbSecRel(Elf32_Ehdr *elfHeaders, Elf32_Shdr *section_headers)
 	int retour = 0;	
 	for(i=0; i<elfHeaders->e_shnum; i++)
 	{
-		if(section_headers->sh_type == SHT_REL)
+		printf("%i",i);
+		if(section_headers[i].sh_type == SHT_REL)
 		{
 			retour++;
 		}

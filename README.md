@@ -38,6 +38,10 @@ cette commande donne le même resultat que make
 
 -Dans la relocation, il semblerai que T et A soit toujours égal à 0 , est-ce normal , si oui à quoi sert cette operation ?
 
+-Question que faut'il modifier dans la table des symboles
+Que faut t'il modifier a partir de la table des realocation
+On peut modifier les symb .data .text fourni mais qu'en est t'il des main $a data_global , etc.... ?
+
 
 
 ##Mémo des commandes :  

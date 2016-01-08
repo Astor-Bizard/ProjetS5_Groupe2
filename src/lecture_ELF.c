@@ -8,6 +8,7 @@ Programme principal de la partie 1
 #include "lectureSH.h"
 #include "affichage_relocation.h"
 
+
 #define OPTION_ALL 					0x001f
 #define OPTION_FILE_HEADER			(1 << 0)
 #define OPTION_SECTION_HEADERS		(1 << 1)
