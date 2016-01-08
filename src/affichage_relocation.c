@@ -340,7 +340,7 @@ Str_Reloc affichage_relocation(FILE* f,
             && CurrentSectionName[3]=='l' )
 		{
             //printf("Nom de la section courante:%s n°%i\n",CurrentSectionName,i);
-			afficher_sectionR(f,table_section,header,i,SectionNames, &RETOUR, table_symbol, SymbolNames, int silent);
+			afficher_sectionR(f,table_section,header,i,SectionNames, &RETOUR, table_symbol, SymbolNames, silent);
 		}
         i++;
 	}
