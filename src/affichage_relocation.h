@@ -29,16 +29,16 @@ Str_Reloc affichage_relocation(FILE* f,Elf32_Ehdr header,Elf32_Shdr* table_secti
 //lit une suite d'octet dans un certain mode
 long long unsigned int lire_octets_charT(unsigned char *tableau, int hdr_mode, int debut, int nombre);
 
-// affiche le type de la relocation
+//affiche le type de la relocation
 void type_relocation(int info);
 
 // affiche le nom de la section de relocation
 void print_section(unsigned long long int addr,Elf32_Shdr* table_section,Elf32_Ehdr header, char* SectionNames);
 
-//affiche la valeur et le nom d'un symbol
+//affiche la valeur et le nom d'un symbole
 void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, Elf32_Shdr* table_section, char* SymbolNames, char* SectionNames);
 
-// affiche les infos de relocation Rel
+// affiche(ou pas) les infos d'une section .Rel
 void afficher_sectionR(FILE *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames,Str_Reloc *RETOUR, ListeSymboles table_symbol, char* SymbolNames, int silent);
 
 //affiche les infos de relocation Rela
