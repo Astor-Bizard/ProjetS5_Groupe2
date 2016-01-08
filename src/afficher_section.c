@@ -62,7 +62,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 	// On traduit la demande (string) en index dans la table
 	num_sh=index_Shdr(str,f,elfHeader,tabSH);
 	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
-		printf("Section absente !\n\n");
+		printf("Warning: Section '%s' was not dumped because it does not exist!\n",str);
 		return NULL;
 	}
 	else{

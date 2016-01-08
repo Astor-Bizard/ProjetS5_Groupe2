@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-Wall -Werror
 BUILD=build
 SRC=src
-EXEC=lecture_ELF
+EXEC=lecture_ELF modification_ELF
 
 lecture_ELF: $(BUILD)/lecture_ELF.o $(BUILD)/lecture_headers.o $(BUILD)/lectureSH.o $(BUILD)/afficher_section.o $(BUILD)/lectureST.o $(BUILD)/affichage_relocation.o
 	$(CC) $(CFLAGS) -o $@ $^

@@ -39,100 +39,100 @@ void type_relocation(int info)
     switch(info)
     {
         case 0:
-            printf("R_ARM_NONE");
+            printf("R_ARM_NONE        ");
             break;
         case 1:
-            printf("R_ARM_PC24");
+            printf("R_ARM_PC24        ");
             break;
         case 2:
-            printf("R_ARM_ABS32");
+            printf("R_ARM_ABS32       ");
             break;
         case 3:
-            printf("R_ARM_REL32");
+            printf("R_ARM_REL32       ");
             break;
         case 4:
-            printf("R_ARM_LDR_PC_G0");
+            printf("R_ARM_LDR_PC_G0   ");
             break;
         case 5:
-            printf("R_ARM_ABS16");
+            printf("R_ARM_ABS16       ");
             break;
         case 6:
-            printf("R_ARM_ABS12");
+            printf("R_ARM_ABS12       ");
             break;
         case 7:
-            printf("R_ARM_THM_ABS5");
+            printf("R_ARM_THM_ABS5    ");
             break;
         case 8:
-            printf("R_ARM_ABS8");
+            printf("R_ARM_ABS8        ");
             break;
         case 9:
-            printf("R_ARM_SBREL32");
+            printf("R_ARM_SBREL32     ");
             break;
         case 10:
-            printf("R_ARM_THM_CALL");
+            printf("R_ARM_THM_CALL    ");
             break;
         case 11:
-            printf("R_ARM_THM_PC8");
+            printf("R_ARM_THM_PC8     ");
             break;
         case 12:
-            printf("R_ARM_BREL_ADJ");
+            printf("R_ARM_BREL_ADJ    ");
             break;
         case 13:
-            printf("R_ARM_TLS_DESC");
+            printf("R_ARM_TLS_DESC    ");
             break;
         case 14:
-            printf("R_ARM_THM_SWI8");
+            printf("R_ARM_THM_SWI8    ");
             break;    
         case 15:
-            printf("R_ARM_XPC25");
+            printf("R_ARM_XPC25       ");
             break;
         case 16:
-            printf("R_ARM_THM_XPC22");
+            printf("R_ARM_THM_XPC22   ");
             break;
         case 17:
-            printf("R_ARM_DTPMOD32");
+            printf("R_ARM_DTPMOD32    ");
             break;
         case 18:
-            printf("R_ARM_TLS_DTPOFF32");
+            printf("R_ARM_TLS_DTPOFF3 ");
             break;
         case 19:
-            printf("R_ARM_TLS_TPOFF32");
+            printf("R_ARM_TLS_TPOFF32 ");
             break;
         case 20:
-            printf("R_ARM_COPY");
+            printf("R_ARM_COPY        ");
             break;
         case 21:
-            printf("R_ARM_GLOB_DAT");
+            printf("R_ARM_GLOB_DAT    ");
             break;
         case 22:
-            printf("R_ARM_JUMP_SLOT");
+            printf("R_ARM_JUMP_SLOT   ");
             break;
         case 23:
-            printf("R_ARM_RELATIVE");
+            printf("R_ARM_RELATIVE    ");
             break;
         case 24:
-            printf("R_ARM_GOTOFF32");
+            printf("R_ARM_GOTOFF32    ");
             break;
         case 25:
-            printf("R_ARM_BASE_PREL");
+            printf("R_ARM_BASE_PREL   ");
             break;
         case 26:
-            printf("R_ARM_GOT_PREL");
+            printf("R_ARM_GOT_PREL    ");
             break;
         case 27:
-            printf("R_ARM_PLT32");
+            printf("R_ARM_PLT32       ");
             break;
         case 28:
-            printf("R_ARM_CALL");
+            printf("R_ARM_CALL        ");
             break;
         case 29:
-            printf("R_ARM_JUMP24");
+            printf("R_ARM_JUMP24      ");
             break;
         case 30:
-            printf("R_ARM_THM_JUMP24");
+            printf("R_ARM_THM_JUMP24  ");
             break;
         default:
-            printf("Case: default");
+            printf("Case: default     ");
     }
 }
 
@@ -152,18 +152,18 @@ void print_section(unsigned long long int addr, Elf32_Shdr* table_section, Elf32
 void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, Elf32_Shdr* table_section, char* SymbolNames, char* SectionNames)
 {
     //printf("\t[%i]",sym);
-    printf("\t%08x ",table_symbol.symboles[sym].st_value);
+    printf("%08x   ",table_symbol.symboles[sym].st_value);
     //printf("\t%s",typeSymbole(table_symbol.symboles[sym].st_info & 0xf));
-    char* to_show;
+    //char to_show[42];
     if((table_symbol.symboles[sym].st_info & 0xf) != 3)
     {
-        to_show = getSymbolNameBis(SymbolNames, table_symbol.symboles[sym]);
+        printf("%s",getSymbolNameBis(SymbolNames, table_symbol.symboles[sym]));
     }
     else
     {
-        to_show = getSectionNameBis(SectionNames, table_section[table_symbol.symboles[sym].st_shndx]);
+        printf("%s",getSectionNameBis(SectionNames, table_section[table_symbol.symboles[sym].st_shndx]));
     }
-    printf("%s ",to_show);
+    //printf("%s",to_show);
 }
 
 //affiche une section de relocation
@@ -187,11 +187,11 @@ void afficher_sectionR(FILE *f,
     char *nom_section= getSectionNameBis(SectionNames,table_section[numS]);
     if(!silent)
     {
-    	printf("\nSection de relocalisation '%s' à l'adresse de décalage %08x contient %i entrées:\n",
+    	printf("\nRelocation section '%s' at offset 0x%x contains %i entries:\n",
                 nom_section,
                 table_section[numS].sh_offset,
     			(int) table_section[numS].sh_size/8);
-    	printf("  Décalage \t  Info \t\t  Type\t  Symbol N°:\t  Val.-sym\t  Type-symboles\n");
+    	printf(" Offset     Info    Type            Sym.Value  Sym. Name\n");
     }
 
     RETOUR->Rel = realloc(RETOUR->Rel,sizeof(Elf32_Rel)*(RETOUR->nb_Rel+(int) table_section[numS].sh_size/8));
@@ -206,7 +206,7 @@ void afficher_sectionR(FILE *f,
 
         if(!silent)
         {
-    		printf("%08llx\t%08llx\t",addr,info);
+    		printf("%08llx  %08llx ",addr,info);
             type_relocation(type);
             print_symbol(sym,table_symbol,header,table_section,SymbolNames, SectionNames);
             //print_section(addr, table_section, header, SectionNames); 
@@ -224,62 +224,6 @@ void afficher_sectionR(FILE *f,
 	}
 }
 
-//affiche une section de relocation_A
-/*
-void afficher_sectionRA(char *f,
-                        Elf32_Shdr* table_section,
-                        Elf32_Ehdr header,int numS, 
-                        char* SectionNames,Str_Reloc *RETOUR, 
-                        ListeSymboles table_symbol, 
-                        char* SymbolNames)
-{
-    int i;
-    unsigned char *section = recuperer_section_num(f,header,table_section, numS);
-    unsigned long long int addr;
-    unsigned long long int info;
-    unsigned long long int addend;
-    unsigned char type;
-    unsigned int sym;
-    
-    char *nom_section= getSectionNameBis(SectionNames,table_section[numS]);
-      
-   
-
-    printf("\nSection de relocalisation '%s' à l'adresse de décalage %08x contient %i entrées:\n",
-            nom_section,
-            table_section[numS].sh_offset,
-            (int) table_section[numS].sh_size/12);
-    printf("  Décalage \t  Info \t\t  Type\t  Val.-sym\t Noms-symboles\n");
-    for(i=0; i<(int) table_section[numS].sh_size/12; i++)
-    {
-        addr = lire_octets_charT(section, header.e_ident[EI_DATA], i*12, 4);
-        info = lire_octets_charT(section, header.e_ident[EI_DATA], i*12 +4,4);
-        addend = lire_octets_charT(section, header.e_ident[EI_DATA], i*12 +8,4);
-        
-        type = info;
-        sym = info >>8;
-
-        printf("%08llx\t%08llx\t",addr,info);
-        type_relocation(type);
-        if(print_symbol(sym,table_symbol,header,SymbolNames))
-            {
-                print_section(addr, table_section, header, SectionNames); 
-            }
-        //on affiche les infos.
-        printf("\n");
-        RETOUR->nb_Rela ++;
-        RETOUR->Rela = realloc(RETOUR->Rela,sizeof(Elf32_Rela)*(RETOUR->nb_Rela));
-        RETOUR->Rela[RETOUR->nb_Rela-1].r_offset = addr;
-        RETOUR->Rela[RETOUR->nb_Rela-1].r_info = info;
-        RETOUR->Rela[RETOUR->nb_Rela-1].r_addend = addend;
-        printf("Realloc 1 OK\n");
-        RETOUR->Sec_Rela = realloc(RETOUR->Sec_Rela,sizeof(int)*RETOUR->nb_Rela);
-        RETOUR->Sec_Rela[RETOUR->nb_Rela-1]=numS;
-        printf("Realloc 2 OK\n");
-    }
-    printf("\n");
-}
-*/
 // trouve toutes les sections de relocations et les affiche.
 Str_Reloc affichage_relocation(FILE* f,
     Elf32_Ehdr header,
@@ -295,7 +239,7 @@ Str_Reloc affichage_relocation(FILE* f,
     RETOUR.Sec_Rela=NULL;
     RETOUR.Sec_Rel=NULL;
 
-	int i=0;
+	int i=0,ok=0;
 	char* SectionNames;
     char* SymbolNames;
     char* CurrentSectionName;
@@ -322,7 +266,7 @@ Str_Reloc affichage_relocation(FILE* f,
         CurrentSectionName = SectionNames+table_section[i].sh_name;
 		// on vérifie toutes les sections
 		// si ce sont des sections de relocations:
-		if( CurrentSectionName[0]=='.' 
+		/*if( CurrentSectionName[0]=='.' 
 			&& CurrentSectionName[1]=='r' 
 			&& CurrentSectionName[2]=='e' 
 			&& CurrentSectionName[3]=='l' 
@@ -331,16 +275,18 @@ Str_Reloc affichage_relocation(FILE* f,
             //printf("Nom de la section courante:%s n°%i\n",CurrentSectionName,i);
 			//afficher_sectionRA(f,table_section,header,i,SectionNames, &RETOUR, table_symbol, SymbolNames);
 		}
-		else if (CurrentSectionName[0]=='.' 
+		else */if (CurrentSectionName[0]=='.' 
             && CurrentSectionName[1]=='r' 
             && CurrentSectionName[2]=='e' 
             && CurrentSectionName[3]=='l' )
 		{
             //printf("Nom de la section courante:%s n°%i\n",CurrentSectionName,i);
 			afficher_sectionR(f,table_section,header,i,SectionNames, &RETOUR, table_symbol, SymbolNames, silent);
+			ok=1;
 		}
         i++;
 	}
+	if(!ok && !silent) printf("\nThere are no relocations in this file.\n");
     return RETOUR;
 }
 
