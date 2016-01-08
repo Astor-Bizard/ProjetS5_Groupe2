@@ -176,7 +176,8 @@ void afficher_sectionR(FILE *f,
                         int numS, 
                         char* SectionNames,Str_Reloc *RETOUR, 
                         ListeSymboles table_symbol, 
-                        char* SymbolNames)
+                        char* SymbolNames,
+                        int silent)
 {
 	int i;
 	unsigned char *section;
