@@ -208,7 +208,7 @@ void afficher_sectionR(FILE *f,
         {
     		printf("%08llx\t%08llx\t",addr,info);
             type_relocation(type);
-            print_symbol(sym,table_symbol,header,SymbolNames);
+            print_symbol(sym,table_symbol,header,SymbolNames, SectionNames);
             //print_section(addr, table_section, header, SectionNames); 
             
             //on affiche les infos.
