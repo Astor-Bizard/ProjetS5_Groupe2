@@ -123,15 +123,14 @@ int main(int argc, char *argv[]) {
 
 	if(options & OPTION_HEX_DUMP) 
 	{
+		rewind(f);
 		if(hex_param == NULL) 
 		{
-			rewind(f);
 			afficher_section(f, elfHeaders, section_headers, 0, NULL);
 		}
 		else 
 		{
-			printf("Option '-x <number|name>'' is not working yet. Please use '-x' alone instead.\n");
-			//afficher_section(f, elfHeaders, section_headers, 0, hex_param);
+			afficher_section(f, elfHeaders, section_headers, 0, hex_param);
 		}
 	}
 
