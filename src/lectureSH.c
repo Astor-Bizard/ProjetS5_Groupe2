@@ -5,6 +5,7 @@ Lecture de la table des sections
 #include <stdlib.h>
 #include <stdio.h>
 #include <elf.h>
+#include <string.h>
 #include "lecture_headers.h"
 #include "lectureSH.h"
 
@@ -219,7 +220,8 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 		for(i=0; i<elfHeader.e_shnum; i++) {
 			type = sectionTypeString(shTable[i].sh_type);
 			nom = getSectionName(names, shTable[i].sh_name);
-			nom[17] = '\0';
+			if(strlen(nom)>17)
+				nom[17] = '\0';
 			printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, nom, type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, sectionFlagsTranslation(shTable[i].sh_flags), shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
 			free(nom);
 		}
