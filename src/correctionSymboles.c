@@ -102,6 +102,7 @@ ListeSymboles corrigerSymboles(FILE* oldFile, FILE* newFile, Elf32_Ehdr oldElfHe
 
 void ecrireNouveauxSymboles(FILE* newFile, Elf32_Ehdr newElfHeader, Elf32_Shdr* newSH, ListeSymboles newST, int silent) {
 	int i = 0;
+	uint32_t writingOffset;
 	char* newSectionNames = fetchSectionNames(newFile, newElfHeader, newSH);
 
 	while(strcmp(getSectionNameBis(newSectionNames, newSH[i]), ".symtab"))
