@@ -96,6 +96,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 				}
 				if(renvoi) section[i]='\0';
 				while(i%16!=0){
+					if(i%4==0) printf(" ");
 					printf("  ");
 					i++;
 				}
