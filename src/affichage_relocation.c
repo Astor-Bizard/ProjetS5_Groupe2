@@ -156,10 +156,10 @@ void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* S
     printf("\t%08x ",table_symbol.symboles[sym].st_value);
     //printf("\t%s",typeSymbole(table_symbol.symboles[sym].st_info & 0xf));
     char* to_show;
-    to_show = getSymbolNameBis(SymbolNames, table_symbol.symboles[sym]);
-    printf("arbre%s",to_show);
-    printf("%i",table_symbol.symboles[sym].st_name);
-    for(i=0; i<20;i++)
+    to_show = getSymbolName(SymbolNames, sym);
+    printf("Symbolname:%s ",to_show);
+    printf("Symbolname(strtab_addr):%i",table_symbol.symboles[sym].st_name);
+    for(i=0; i<64;i++)
     {
         printf("%c",SymbolNames[i]);
         if(i%8==0)
@@ -199,6 +199,7 @@ void afficher_sectionR(FILE *f,
 
     RETOUR->Rel = realloc(RETOUR->Rel,sizeof(Elf32_Rel)*(RETOUR->nb_Rel+(int) table_section[numS].sh_size/8));
     RETOUR->Sec_Rel = realloc(RETOUR->Sec_Rel,sizeof(int)*(RETOUR->nb_Rel+(int) table_section[numS].sh_size/8));
+
 	for(i=0; i<(int) table_section[numS].sh_size/8; i++)
 	{
 		addr = lire_octets_charT(section, header.e_ident[EI_DATA], i*8, 4);
@@ -316,7 +317,8 @@ Str_Reloc affichage_relocation(FILE* f,
         }
         i++;
     }
-    rewind(f);
+
+    printf("%i\n",Symbol_tab_section_number);
     SymbolNames = fetchSymbolNames(f, table_section,Symbol_tab_section_number);
 
     i=0;
