@@ -121,14 +121,12 @@ int main(int argc, char *argv[]) {
 	rewind(f);
 	section_headers = lectureSectionHeader(f, elfHeaders, (!(options & OPTION_SECTION_HEADERS)));
 
-
 	if(options & OPTION_HEX_DUMP) 
 	{
 		if(hex_param == NULL) 
 		{
-			f = fopen(fileName, "r");
+			rewind(f);
 			afficher_section(f, elfHeaders, section_headers, 0, NULL);
-			fclose(f);
 		}
 		else 
 		{
@@ -141,7 +139,7 @@ int main(int argc, char *argv[]) {
 	sym_tab = lectureSymbolTab(f, elfHeaders, section_headers, (!(options & OPTION_SYMS)));
 
 	rewind(f);
-	affichage_relocation(f, elfHeaders, section_headers, sym_tab,(!(options & OPTION_RELOCS)));
+	affichage_relocation(f, elfHeaders, section_headers, sym_tab, (!(options & OPTION_RELOCS)));
 	
 	fclose(f);
 
