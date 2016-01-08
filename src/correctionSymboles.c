@@ -10,12 +10,13 @@ Correction des symboles
 #include "lectureSH.h"
 #include "lectureST.h"
 
-ListeSymboles corrigerSymboles(FILE* oldFile, FILE* newFile, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader, Elf32_Shdr* originalSH, Elf32_Shdr* newSH, ListeSymboles oldST) {
+ListeSymboles corrigerSymboles(FILE* oldFile, FILE* newFile, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader, Elf32_Shdr* originalSH, Elf32_Shdr* newSH, ListeSymboles oldST, int silent) {
 	ListeSymboles newST;
 	int i, j;
 	char* originalName;
 	char* oldSectionNames = fetchSectionNames(oldFile, oldElfHeader, originalSH);
 	char* newSectionNames = fetchSectionNames(newFile, newElfHeader, newSH);
+	char* symbolNames;
 	unsigned char info;
 	unsigned char bind;
 	
@@ -32,6 +33,13 @@ ListeSymboles corrigerSymboles(FILE* oldFile, FILE* newFile, Elf32_Ehdr oldElfHe
 	{
 		printf("New symbol table '.symtab' contains %d entries:\n", oldST.nbSymboles);
 		printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
+
+		i = 0;
+		while(strcmp(getSectionNameBis(newSectionNames, newSH[i]), ".symtab"))
+		{
+			i++;
+		}
+		symbolNames = fetchSymbolNames(newFile, newSH, i);
 	}
 
 	for(j=0; j<oldST.nbSymboles; j++)
@@ -43,7 +51,7 @@ ListeSymboles corrigerSymboles(FILE* oldFile, FILE* newFile, Elf32_Ehdr oldElfHe
 
 		originalName = getSectionNameBis(oldSectionNames, originalSH[oldST.symboles[j].st_shndx]);
 		i = 0;
-		while (strcmp(originalName, getSectionNameBis(newSectionNames, newSH[i]))!=0 && i<elfHeader.e_shnum) 
+		while (strcmp(originalName, getSectionNameBis(newSectionNames, newSH[i]))!=0 && i<newElfHeader.e_shnum) 
 		{
 			i++;
 		}
@@ -65,11 +73,11 @@ ListeSymboles corrigerSymboles(FILE* oldFile, FILE* newFile, Elf32_Ehdr oldElfHe
 		{
 			if(newST.symboles[j].st_shndx == 0)
 			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, newST.symboles[j].st_value, newST.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newST.symboles[j].st_other), getSymbolNameBis(symbolNames,newST.symboles[j]));
+				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, newST.symboles[j].st_value, newST.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newST.symboles[j].st_other), getSymbolNameBis(symbolNames, newST.symboles[j]));
 			}
 			else
 			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, newST.symboles[j].st_value, newST.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newST.symboles[j].st_other), newST.symboles[j].st_shndx, getSymbolNameBis(symbolNames,newST.symboles[j]));
+				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, newST.symboles[j].st_value, newST.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newST.symboles[j].st_other), newST.symboles[j].st_shndx, getSymbolNameBis(symbolNames, newST.symboles[j]));
 			}
 		}
 		j++;
