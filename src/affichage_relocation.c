@@ -149,7 +149,7 @@ void print_section(unsigned long long int addr, Elf32_Shdr* table_section, Elf32
     }
 }
 
-void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* SymbolNames)
+void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* SymbolNames, char* SectionNames)
 {
     //printf("\t[%i]",sym);
     printf("\t%08x ",table_symbol.symboles[sym].st_value);
@@ -161,7 +161,7 @@ void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* S
     }
     else
     {
-        to_show = "C'est une section";
+        to_show = getSectionName(SectionNames, table_symbol.symboles[sym].st_shndx);
     }
     printf("%s ",to_show);
 }
@@ -314,7 +314,6 @@ Str_Reloc affichage_relocation(FILE* f,
         }
         i++;
     }
-
     SymbolNames = fetchSymbolNames(f, table_section,Symbol_tab_section_number);
 
     i=0;
