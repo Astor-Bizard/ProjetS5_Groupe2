@@ -15,3 +15,6 @@ Creation des premier fichier C pour lire le headers et afficher les differents i
 		Création d'un script de test automatique.
 		Adaptation de l'affichage conforme à arm-eabi-readelf.
 		On commence la phase 2.
+	
+	-08/01/16 : Cinquième jour de projet.
+		...
