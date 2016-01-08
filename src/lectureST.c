@@ -170,7 +170,7 @@ char* fetchSymbolNames(FILE* f, Elf32_Shdr* shTable, int symbolTabIndex)
 {
 	int i;
 
-	char* symbols = (char*) malloc(sizeof(char)*shTable[symbolTabIndex].sh_size);
+	char* symbols = (char*) malloc(sizeof(char)*shTable[symbolTabIndex+1].sh_size);
 	if (symbols==NULL) {
 		printf("Erreur lors de l'allocation initiale de la table des noms.");
 		return NULL;
