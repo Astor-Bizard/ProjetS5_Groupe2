@@ -7,6 +7,16 @@ Affichage d'une section specifique
 
 #define ASCII_0 48
 
+int is_digit(char c){
+	return (c>=ASCII_0 && c<=ASCII_0+9);
+}
+
+int is_number(char str[]){
+	int i=0;
+	while(is_digit(str[i]))i++;
+	return str[i]=='\0';
+}
+
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
 int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	int i,num_sh;
@@ -14,12 +24,17 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	names = fetchSectionNames(f,elfHeader,tabSH);
 	if(str[0]!='\0'){
 		// Cas nombre : on traduit le nombre (string) en int
-		if(str[0]>=ASCII_0 && str[0]<=ASCII_0+9){
-			num_sh = str[0]-ASCII_0;
-			for(i=1;str[i]!='\0';i++){
-				if(str[i]>=ASCII_0 && str[i]<=ASCII_0+9) num_sh = num_sh*10 + str[i]-ASCII_0;
+		i=0;
+		num_sh=0;
+		while(is_digit(str[i])){
+			num_sh = num_sh*10 + str[i]-ASCII_0;
+			i++;
+		}
+		if(str[i]=='\0'){
+			if(num_sh<elfHeader.e_shnum){
+				strcpy(str,getSectionNameBis(names,tabSH[num_sh]));
+				return num_sh;
 			}
-			if(num_sh>=0 && num_sh<elfHeader.e_shnum) strcpy(str,getSectionNameBis(names,tabSH[num_sh]));
 			else return -1;
 		}
 		// Cas nom : on le cherche dans la table str
@@ -27,7 +42,8 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 			num_sh=0;
 			while(num_sh<elfHeader.e_shnum && strcmp(str,getSectionNameBis(names,tabSH[num_sh]))) num_sh++;
 		}
-		return num_sh;
+		if(num_sh>=elfHeader.e_shnum) return -1;
+		else return num_sh;
 	}
 	else return -1;
 }
@@ -45,7 +61,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 
 	if(strOverride==NULL)
 	{
-		scanf("%s",str); 
+		scanf("%s",str);
 	}
 	else
 	{
@@ -58,31 +74,34 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 		str[i] = '\0';
 	}
 
-	printf("\n");
-	fseek(f,0,0);
+	rewind(f);
 	// On traduit la demande (string) en index dans la table
 	num_sh=index_Shdr(str,f,elfHeader,tabSH);
-	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
-		printf("Warning: Section '%s' was not dumped because it does not exist!\n",str);
+	if(num_sh==-1){
+		if(is_number(str)){
+			if(atoi(str)!=elfHeader.e_shnum) fprintf(stderr,"readelf: Warning: Section %s was not dumped because it does not exist!\n",str);
+		}
+		else fprintf(stderr,"readelf: Warning: Section '%s' was not dumped because it does not exist!\n",str);
 		return NULL;
 	}
 	else{
-		printf("Hex dump of section '%s':\n",str);
-		names = fetchSectionNames(f,elfHeader,tabSH);
-		for(i=0;i<elfHeader.e_shnum;i++){
-			sectionName=getSectionNameBis(names,tabSH[i]);
-			if(!strcmp(str,sectionName+4) && tabSH[i].sh_type==SHT_REL) printf(" NOTE: This section has relocations against it, but these have NOT been applied to this dump.\n");
-		}
-		// On se place
-		fseek(f,tabSH[num_sh].sh_offset,0);
 		if(renvoi) section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
 		if(section != NULL || !renvoi){
 			// On affiche le contenu de la section
 			if(tabSH[num_sh].sh_size==0){
-				printf("Section '%s' has no data to dump.",str);
+				printf("\nSection '%s' has no data to dump.\n",str);
 				if(renvoi) section[0]='\0';
+				return section;
 			}
 			else{
+				printf("\nHex dump of section '%s':\n",str);
+				names = fetchSectionNames(f,elfHeader,tabSH);
+				for(i=0;i<elfHeader.e_shnum;i++){
+					sectionName=getSectionNameBis(names,tabSH[i]);
+					if(!strcmp(str,sectionName+4) && tabSH[i].sh_type==SHT_REL) printf(" NOTE: This section has relocations against it, but these have NOT been applied to this dump.\n");
+				}
+				// On se place
+				fseek(f,tabSH[num_sh].sh_offset,0);
 				printf("  0x%08x ",0);
 				i=0;
 				while(i<tabSH[num_sh].sh_size){
@@ -108,10 +127,10 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 				}
 				printf(" %s",aff);
 			}
-			printf("\n\n\n");
+			printf("\n\n");
 		}
 		else{
-			printf("Erreur d'allocation\n\n");
+			fprintf(stderr,"Erreur d'allocation !\n");
 			exit(42);
 		}
 	}
@@ -140,7 +159,7 @@ unsigned char *recuperer_section_num(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *
 			section[i]='\0';
 		}
 		else{
-			printf("Erreur d'allocation\n\n");
+			fprintf(stderr,"Erreur d'allocation !\n");
 			exit(42);
 		}
 	}

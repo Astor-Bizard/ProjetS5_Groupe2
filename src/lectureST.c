@@ -41,7 +41,7 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 
 	if (!silent)
 	{
-		printf("Symbol table '.symtab' contains %d entries:\n",sectionSymbolTabSize/16);
+		printf("\nSymbol table '.symtab' contains %d entries:\n",sectionSymbolTabSize/16);
 		printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
 	}
 	

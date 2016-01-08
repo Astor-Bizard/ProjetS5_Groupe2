@@ -16,8 +16,13 @@ do
 	../../lecture_ELF -h $i >$test/lectureELF_$i.out
 	arm-eabi-readelf -S $i >>$test/readelf_$i.out
 	../../lecture_ELF -S $i >>$test/lectureELF_$i.out
-	arm-eabi-readelf --hex-dump=1 $i >>$test/readelf_$i.out
-	../../lecture_ELF -x 1 $i >>$test/lectureELF_$i.out
+	
+	for j in `seq 0 20`
+	do
+		arm-eabi-readelf --hex-dump=$j $i >>$test/readelf_$i.out 2>>$test/readelf_$i.out
+		../../lecture_ELF -x $j $i >>$test/lectureELF_$i.out 2>>$test/lectureELF_$i.out
+	done
+
 	arm-eabi-readelf -s $i >>$test/readelf_$i.out
 	../../lecture_ELF -s $i >>$test/lectureELF_$i.out
 	arm-eabi-readelf -r $i >>$test/readelf_$i.out
