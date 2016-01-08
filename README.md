@@ -4,7 +4,7 @@ Etape 1 : Jonathan (lecture_headers)(Fini)
 Etape 2 : Loic (lectureSH)(Fini)  
 Etape 3 : Astor (afficher_section)(Fini)  
 Etape 4 : Thai Binh (lectureST)(Fini)  
-Etape 5 : Gabriel (affichage_relocation)  
+Etape 5 : Gabriel (affichage_relocation)(Fini, reformatage de l'affichage en cours.) 
 
 Etape 6 : Jonathan (renum_section)  
 Etape 7 : Loic (correctionSymboles)  
