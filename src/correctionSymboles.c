@@ -10,15 +10,15 @@ Correction des symboles
 #include "lectureSH.h"
 #include "lectureST.h"
 
-void ecrire32b(FILE* f, int mode, uint32_t value) {
+size_t ecrire32b(FILE* f, int mode, uint32_t value) {
 	return fwrite(&value, 4, 1, f);
 }
 
-void ecrire16b(FILE* f, int mode, uint16_t value) {
+size_t ecrire16b(FILE* f, int mode, uint16_t value) {
 	return fwrite(&value, 2, 1, f);
 }
 
-void ecrire8b(FILE* f, int mode, uint8_t value) {
+size_t ecrire8b(FILE* f, int mode, uint8_t value) {
 	return fwrite(&value, 1, 1, f);
 }
 
