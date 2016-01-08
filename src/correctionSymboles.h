@@ -1,5 +1,5 @@
-#ifndef __AFF_SECTION__
-#define __AFF_SECTION__
+#ifndef __CORRIGER_SYMBOLES__
+#define __CORRIGER_SYMBOLES__
 
 #define ByteSwap16(n) (((((unsigned int) n) << 8) & 0xFF00) | ((((unsigned int) n) >> 8) & 0x00FF))
 #define ByteSwap32(n) (((((unsigned long) n) << 24) & 0xFF000000) | ((((unsigned long) n) <<  8) & 0x00FF0000) | ((((unsigned long) n) >>  8) & 0x0000FF00) | ((((unsigned long) n) >> 24) & 0x000000FF))
