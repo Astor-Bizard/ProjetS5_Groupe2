@@ -23,7 +23,7 @@ typedef struct
 }Str_Reloc;
 
 //Affiche les informations de relocation, et renvoie la structure de relocation
-Str_Reloc affichage_relocation(FILE* f,Elf32_Ehdr header,Elf32_Shdr* table_section, ListeSymboles table_symbol);
+Str_Reloc affichage_relocation(FILE* f,Elf32_Ehdr header,Elf32_Shdr* table_section, ListeSymboles table_symbol,int silent);
 
 
 //lit une suite d'octet dans un certain mode
@@ -39,7 +39,7 @@ void print_section(unsigned long long int addr,Elf32_Shdr* table_section,Elf32_E
 void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* SymbolNames);
 
 // affiche les infos de relocation Rel
-void afficher_sectionR(FILE *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames,Str_Reloc *RETOUR, ListeSymboles table_symbol, char* SymbolNames);
+void afficher_sectionR(FILE *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames,Str_Reloc *RETOUR, ListeSymboles table_symbol, char* SymbolNames, int silent);
 
 //affiche les infos de relocation Rela
 //void afficher_sectionRA(char *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames,Str_Reloc *RETOUR, ListeSymboles table_symbol, char* SymbolNames);
