@@ -38,6 +38,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 	int num_sh=0,i,j;
 	unsigned char c;
 	unsigned char *section;
+	char *names, *sectionName;
 	section=NULL;
 	unsigned char aff[17];
 	for(j=0;j<17;j++)aff[j]='\0';
@@ -67,6 +68,11 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 	}
 	else{
 		printf("Hex dump of section '%s':\n",str);
+		names = fetchSectionNames(f,elfHeader,tabSH);
+		for(i=0;i<elfHeader.e_shnum;i++){
+			sectionName=getSectionNameBis(names,tabSH[i]);
+			if(!strcmp(str,sectionName+4) && tabSH[i].sh_type==SHT_REL) printf(" NOTE: This section has relocations against it, but these have NOT been applied to this dump.\n");
+		}
 		// On se place
 		fseek(f,tabSH[num_sh].sh_offset,0);
 		if(renvoi) section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
