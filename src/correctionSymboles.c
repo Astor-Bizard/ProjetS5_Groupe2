@@ -55,6 +55,7 @@ ListeSymboles corrigerSymboles(FILE* oldFile, FILE* newFile, Elf32_Ehdr oldElfHe
 		{
 			i++;
 		}
+		free(originalName);
 		if (i==newElfHeader.e_shnum) 
 		{
 			printf("Erreur: Section introuvable dans le nouveau fichier.\n");

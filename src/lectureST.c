@@ -201,6 +201,7 @@ char* getSymbolName(char* symbols, uint32_t symbolIndex)
 		symbolName[i] = symbols[symbolIndex+i];
 		i++;
 	}
+	symbolName[i] = '\0';
 
 	return symbolName;
 }

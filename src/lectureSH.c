@@ -120,6 +120,7 @@ char* getSectionName(char* names, uint32_t nameIndex) {
 		sectionName[i] = names[nameIndex+i];
 		i++;
 	}
+	sectionName[i] = '\0';
 
 	return sectionName;
 }
