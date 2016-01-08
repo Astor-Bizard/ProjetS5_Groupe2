@@ -151,7 +151,7 @@ void print_section(unsigned long long int addr, Elf32_Shdr* table_section, Elf32
 
 void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* SymbolNames)
 {
-    int i;
+    //int i;
     //printf("\t[%i]",sym);
     printf("\t%08x ",table_symbol.symboles[sym].st_value);
     //printf("\t%s",typeSymbole(table_symbol.symboles[sym].st_info & 0xf));
@@ -159,14 +159,14 @@ void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* S
     to_show = getSymbolName(SymbolNames, sym);
     printf("Symbolname:%s ",to_show);
     printf("Symbolname(strtab_addr):%i",table_symbol.symboles[sym].st_name);
-    for(i=0; i<64;i++)
+    /*for(i=0; i<64;i++)
     {
         printf("%c",SymbolNames[i]);
         if(i%8==0)
             printf(" ");
         if(i%32==0)
             printf("\n");
-    }
+    }*/
 }
 
 //affiche une section de relocation
@@ -310,7 +310,7 @@ Str_Reloc affichage_relocation(FILE* f,
         CurrentSectionName = SectionNames+table_section[i].sh_name;
         // on vérifie toutes les sections
         // si ce sont des sections de relocations:
-        if( strcmp(".strtab",CurrentSectionName))
+        if( strcmp(".symtab",CurrentSectionName))
         {
             Symbol_tab_section_number=i;
             i=header.e_shnum;
@@ -319,7 +319,7 @@ Str_Reloc affichage_relocation(FILE* f,
     }
 
     printf("%i\n",Symbol_tab_section_number);
-    SymbolNames = fetchSymbolNames(f, table_section,Symbol_tab_section_number);
+    SymbolNames = fetchSymbolNames(f, table_section,Symbol_tab_section_number-1);
 
     i=0;
 	while(i<header.e_shnum)
