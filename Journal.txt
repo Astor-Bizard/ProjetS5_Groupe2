@@ -11,3 +11,7 @@ Creation des premier fichier C pour lire le headers et afficher les differents i
 		Réorganisation des fichiers.
 		On commence à lire et réfléchir à la phase 2.
 
+	-07/01/16 : Quatrième jour de projet.
+		Création d'un script de test automatique.
+		Adaptation de l'affichage conforme à arm-eabi-readelf.
+		On commence la phase 2.
