@@ -36,7 +36,7 @@ void type_relocation(int info);
 void print_section(unsigned long long int addr,Elf32_Shdr* table_section,Elf32_Ehdr header, char* SectionNames);
 
 //affiche la valeur et le nom d'un symbol
-void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* SymbolNames, char* SectionNames);
+void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, Elf32_Shdr* table_section, char* SymbolNames, char* SectionNames);
 
 // affiche les infos de relocation Rel
 void afficher_sectionR(FILE *f,Elf32_Shdr* table_section,Elf32_Ehdr header,int numS, char* SectionNames,Str_Reloc *RETOUR, ListeSymboles table_symbol, char* SymbolNames, int silent);

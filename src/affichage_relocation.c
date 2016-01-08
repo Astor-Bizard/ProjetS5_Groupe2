@@ -149,7 +149,7 @@ void print_section(unsigned long long int addr, Elf32_Shdr* table_section, Elf32
     }
 }
 
-void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* SymbolNames, char* SectionNames)
+void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, Elf32_Shdr* table_section, char* SymbolNames, char* SectionNames)
 {
     //printf("\t[%i]",sym);
     printf("\t%08x ",table_symbol.symboles[sym].st_value);
@@ -161,7 +161,7 @@ void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, char* S
     }
     else
     {
-        to_show = getSectionName(SectionNames, table_symbol.symboles[sym].st_shndx);
+        to_show = getSectionNameBis(SectionNames, table_section[table_symbol.symboles[sym].st_shndx]);
     }
     printf("%s ",to_show);
 }
@@ -208,7 +208,7 @@ void afficher_sectionR(FILE *f,
         {
     		printf("%08llx\t%08llx\t",addr,info);
             type_relocation(type);
-            print_symbol(sym,table_symbol,header,SymbolNames, SectionNames);
+            print_symbol(sym,table_symbol,header,table_section,SymbolNames, SectionNames);
             //print_section(addr, table_section, header, SectionNames); 
             
             //on affiche les infos.
