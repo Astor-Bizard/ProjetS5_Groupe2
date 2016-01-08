@@ -193,8 +193,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	}
 	
 	if (!silent) { 
-		//printf("Section Headers: \n");
-		//printf("  [Nr] Name               Type               Addr     Off    Size   ES Flg  Lk Inf Al\n");
+		printf("There are %d section headers, starting at offset 0x%x:\n\n",elfHeader.e_shnum,elfHeader.e_shoff);
 		printf("Section Headers:\n");
 		printf("  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al\n");
 	}
@@ -227,7 +226,6 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 		printf("  W (write), A (alloc), X (execute), M (merge), S (strings)\n");
 		printf("  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)\n");
 		printf("  O (extra OS processing required) o (OS specific), p (processor specific)\n");
-		printf("\n");
 	}
 
 	return shTable;

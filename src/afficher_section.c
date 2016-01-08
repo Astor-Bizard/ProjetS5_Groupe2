@@ -90,7 +90,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 					c=fgetc(f);
 					printf("%02x",c);
 					if(renvoi) section[i]=c;
-					if(c>=33 && c<=126) aff[i%16]=c;
+					if(c>=32 && c<=126) aff[i%16]=c;
 					else aff[i%16]='.';
 					i++;
 				}
@@ -102,7 +102,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 				}
 				printf(" %s",aff);
 			}
-			printf("\n\n");
+			printf("\n\n\n");
 		}
 		else{
 			printf("Erreur d'allocation\n\n");
