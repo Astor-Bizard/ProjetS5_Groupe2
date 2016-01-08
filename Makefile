@@ -21,7 +21,7 @@ $(BUILD)/afficher_section.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h $(SRC)/
 $(BUILD)/lectureST.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h $(SRC)/lectureST.h
 $(BUILD)/affichage_relocation.o: $(SRC)/lecture_headers.h $(SRC)/afficher_section.h $(SRC)/affichage_relocation.h $(SRC)/lectureST.h
 $(BUILD)/renum_section.o: $(SRC)/renum_section.h $(SRC)/afficher_section.h $(SRC)/lectureST.h $(SRC)/affichage_relocation.h
-
+$(BUILD)/liberation.o: $(SRC)/lectureST.h $(SRC)/lectureSH.h $(SRC)/affichage_relocation.h
 clean:
 	rm -f $(BUILD)/*.o $(EXEC) *~ $(SRC)/*~
 

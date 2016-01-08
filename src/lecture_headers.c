@@ -186,7 +186,7 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 		for(i=0;i<EI_NIDENT;i++) printf("%02x ",headers.e_ident[i]);
 		printf("\n  Class:                             ELF%d\n",headers.e_ident[EI_CLASS]*32);
 		printf("  Data:                              2's complement, ");
-		if (lec_Cour == L_ENDIAN) printf("little endian\n");
+		if (headers.e_ident[EI_DATA] == L_ENDIAN) printf("little endian\n");
 		else printf("big endian\n");
 
 		printf("  Version:                           %d (current)\n",headers.e_ident[EI_VERSION]);
@@ -247,7 +247,6 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 		else
 			printf("  Section header string table index: %d\n", headers.e_shstrndx);
 
-		printf("\n");
 	}
 
 	return headers;
