@@ -41,8 +41,8 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 
 	if (!silent)
 	{
-		printf("Symbol Table: \n");
-		printf("Num:    Value Size Type    Bind    Vis     Ndx Name\n");
+		printf("Symbol table '.symtab' contains %d entries:\n",sectionSymbolTabSize/16);
+		printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
 	}
 	
 	for(i = 0; i<sectionSymbolTabSize; i=i+16)
@@ -61,11 +61,11 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 		{
 			if(listeSymboles.symboles[j].st_shndx == 0)
 			{
-				printf("%3d: %08x %4d %-7s %-6s %-7s  UND %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), getSymbolNameBis(symbolNames,listeSymboles.symboles[j]));
+				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), getSymbolNameBis(symbolNames,listeSymboles.symboles[j]));
 			}
 			else
 			{
-				printf("%3d: %08x %4d %-7s %-6s %-7s  %3d %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), listeSymboles.symboles[j].st_shndx, getSymbolNameBis(symbolNames,listeSymboles.symboles[j]));
+				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), listeSymboles.symboles[j].st_shndx, getSymbolNameBis(symbolNames,listeSymboles.symboles[j]));
 			}
 		}
 		j++;
