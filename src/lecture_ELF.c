@@ -1,5 +1,5 @@
 /* 
-Crée le 5/01/2015 par Jonathan
+Créé le 5/01/2015 par Jonathan
 Programme principal de la partie 1
 */
 #include "lecture_headers.h"
@@ -116,13 +116,11 @@ int main(int argc, char *argv[]) {
 	if (!options)
 		options = OPTION_ALL;
 
-	f = fopen(fileName, "r");
 	elfHeaders = lecture_Headers(f, (!(options & OPTION_FILE_HEADER)));
-	fclose(f);
 
-	f = fopen(fileName, "r");
+	rewind(f);
 	section_headers = lectureSectionHeader(f, elfHeaders, (!(options & OPTION_SECTION_HEADERS)));
-	fclose(f);
+
 
 	if(options & OPTION_HEX_DUMP) 
 	{
@@ -139,16 +137,16 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	f = fopen(fileName, "r");
+	rewind(f);
 	sym_tab = lectureSymbolTab(f, elfHeaders, section_headers, (!(options & OPTION_SYMS)));
+
+	rewind(f);
+	affichage_relocation(f, elfHeaders, section_headers, sym_tab,(!(options & OPTION_RELOCS)));
+	
 	fclose(f);
 
-	if(options & OPTION_RELOCS) 
-	{
-		f = fopen(fileName, "r");
-		affichage_relocation(f, elfHeaders, section_headers, sym_tab);
-		fclose(f);
-	}
+
+	
 
 	return 0;
 }
