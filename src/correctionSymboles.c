@@ -10,6 +10,18 @@ Correction des symboles
 #include "lectureSH.h"
 #include "lectureST.h"
 
+void ecrire32b(FILE* f, int mode, uint32_t value) {
+	return fwrite(&value, 4, 1, f);
+}
+
+void ecrire16b(FILE* f, int mode, uint16_t value) {
+	return fwrite(&value, 2, 1, f);
+}
+
+void ecrire8b(FILE* f, int mode, uint8_t value) {
+	return fwrite(&value, 1, 1, f);
+}
+
 ListeSymboles corrigerSymboles(FILE* oldFile, FILE* newFile, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader, Elf32_Shdr* originalSH, Elf32_Shdr* newSH, ListeSymboles oldST, int silent) {
 	ListeSymboles newST;
 	int i, j;
@@ -81,10 +93,31 @@ ListeSymboles corrigerSymboles(FILE* oldFile, FILE* newFile, Elf32_Ehdr oldElfHe
 				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, newST.symboles[j].st_value, newST.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newST.symboles[j].st_other), newST.symboles[j].st_shndx, getSymbolNameBis(symbolNames, newST.symboles[j]));
 			}
 		}
-		j++;
 	}
 
 	newST.nbSymboles = j;
 
 	return newST;
+}
+
+void ecrireNouveauxSymboles(FILE* newFile, Elf32_Ehdr newElfHeader, Elf32_Shdr* newSH, ListeSymboles newST, int silent) {
+	int i = 0;
+	char* newSectionNames = fetchSectionNames(newFile, newElfHeader, newSH);
+
+	while(strcmp(getSectionNameBis(newSectionNames, newSH[i]), ".symtab"))
+	{
+		i++;
+	}
+	writingOffset = newSH[i].sh_offset;
+
+	fseek(newFile, writingOffset, 0);
+	for(i = 0; i<newST.nbSymboles; i++)
+	{
+		ecrire32b(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_name);
+		ecrire32b(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_value);
+		ecrire32b(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_size);
+		ecrire8b(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_info);
+		ecrire8b(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_other);
+		ecrire16b(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_shndx);
+	}
 }
