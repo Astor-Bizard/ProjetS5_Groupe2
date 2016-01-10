@@ -32,11 +32,18 @@ void CopieOctet(unsigned char *dest,Elf32_Word *src, Elf32_Addr id_dest);
 
 /*Compte le nombre de section de type Rel dans la structure section_headers*/
 
-int nbSecRel(Elf32_Ehdr *elfHeaders, Elf32_Shdr *section_headers);
+int nbSecRel(Elf32_Ehdr elfHeaders, Elf32_Shdr *section_headers);
 
 /* renumerote et corrige les section de type Rel ecrit le headers et les sections modifier ou non dans f_write*/
-Elf32_Shdr renumerote_section(FILE *f_read, FILE *f_write,Elf32_Ehdr *elfHeaders, Elf32_Shdr *section_headers, ListeSymboles sym_tab,Str_Reloc str_reloc);
-
+void renumerote_section(FILE *f_read, 
+						FILE *f_write,
+						Elf32_Ehdr elfHeaders, 
+						Elf32_Shdr *section_headers, 
+						ListeSymboles sym_tab,
+						Str_Reloc str_reloc,
+						Elf32_Ehdr *elfHeaders_mod, 
+						Elf32_Shdr *section_headers_mod
+						);
 
 
 

@@ -23,23 +23,24 @@ void CopieOctet(unsigned char *dest,Elf32_Word *src, Elf32_Addr id_dest)
 }
 
 
-Elf32_Shdr renumerote_section(FILE *f_read, 
+void renumerote_section(FILE *f_read, 
 						FILE *f_write,
-						Elf32_Ehdr *elfHeaders, 
+						Elf32_Ehdr elfHeaders, 
 						Elf32_Shdr *section_headers, 
 						ListeSymboles sym_tab,
-						Str_Reloc str_reloc
+						Str_Reloc str_reloc,
+						Elf32_Ehdr *elfHeaders_mod, 
+						Elf32_Shdr *section_headers_mod
 						)
 {
-	int i,j,k;
-	int premier = 1;
+	int i,k;
+	//int premier = 1;
 	int nbRel = 0; 
 	int nb_Sec_A_Traiter = 0;
-	int id_Sec_Cour = 0;
+	//int id_Sec_Cour = 0;
 	Table_Donnees tab_donnees;
-	unsigned char *sec_Cour;
+	//unsigned char *sec_Cour;
 	Elf32_Word OctetSupp = 0;
-	Elf32_Shdr section_headers_mod;
 
 
 	//Valeur de test a changer
@@ -53,7 +54,7 @@ Elf32_Shdr renumerote_section(FILE *f_read,
 	//.data = 0x1000
 	tab_donnees.table_Nom_Addr[1] = 0x29;
 
-	for(i=0;i<elfHeaders->e_shnum;i++)
+	for(i=0;i<elfHeaders.e_shnum;i++)
 	{
 		printf("Nom : %06x\n",section_headers[i].sh_name);
 	}
@@ -65,11 +66,13 @@ Elf32_Shdr renumerote_section(FILE *f_read,
 	//Modification du Headers
 
 	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers);
-	elfHeaders->e_shnum = elfHeaders->e_shnum - nb_Sec_A_Traiter;
+	elfHeaders_mod->e_shnum = elfHeaders.e_shnum - nb_Sec_A_Traiter;
+
+	section_headers_mod = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeaders.e_shnum);
 
 	//Modification table des sections
-	j=0;
-	for(i=0;i<elfHeaders->e_shnum;i++)
+	
+	for(i=0;i<elfHeaders.e_shnum;i++)
 	{
 		printf("Nom : %06x\n",section_headers[i].sh_name);
 		if(section_headers[i].sh_type == SHT_REL)
@@ -78,35 +81,40 @@ Elf32_Shdr renumerote_section(FILE *f_read,
 			nbRel++;
 			OctetSupp += section_headers[i].sh_size;
 			k=0;
-			while(tab_donnees.table_Nom_Addr[k] != section_headers[i-nbRel].sh_name && k < elfHeaders->e_shnum)
+			while(tab_donnees.table_Nom_Addr[k] != section_headers[i-1].sh_name && k < elfHeaders.e_shnum)
 			{
 				k++;
 			}
-			if(k == elfHeaders->e_shnum)
+			if(k == elfHeaders.e_shnum)
 			{
-				printf("Table (%x) non trouvé , erreur d'argument\n",section_headers[i-nbRel].sh_name);
+				printf("Table (%x) non trouvé , erreur d'argument\n",section_headers[i-1].sh_name);
 				exit(1);
 			}
 			else
 			{
-				section_headers[i-1].sh_addr = tab_donnees.table_Nom_Addr[k];
+				section_headers_mod[i-1].sh_addr = tab_donnees.table_Nom_Addr[k];
 			}
-		}
+/*		}
 		while(str_reloc.Sec_Rel[j] == i )
 		{
 			str_reloc.Sec_Rel[j] -= nbRel;
 			j++;
+		}*/
 		}
-		section_headers[i] = section_headers[i+nbRel];		
+		else
+		{
+			section_headers_mod[i] = section_headers[i];
+		}	
+				
 	}
 
-	elfHeaders->e_shoff -= (Elf32_Off) OctetSupp;
+	elfHeaders.e_shoff -= (Elf32_Off) OctetSupp;
 
-	fwrite(elfHeaders,sizeof(Elf32_Ehdr),1,f_write);
+	fwrite(&elfHeaders,sizeof(Elf32_Ehdr),1,f_write);
 
 
 	// Ecriture de la nouvelle section
-
+/*
 	printf("Boucle\n");
 	printf("str_reloc.nb_Rel : %i\n", str_reloc.nb_Rel);
 	for(i=0;i<str_reloc.nb_Rel;i++)
@@ -148,23 +156,22 @@ Elf32_Shdr renumerote_section(FILE *f_read,
 	//On ecrit dans le fichier
 	fwrite(sec_Cour,section_headers[id_Sec_Cour].sh_size,1,f_write);
 		
-	for(j=id_Sec_Cour+1;j<elfHeaders->e_shnum;j++)
+	for(j=id_Sec_Cour+1;j<elfHeaders.e_shnum;j++)
 	{
 		sec_Cour = recuperer_section_num(f_read,*elfHeaders, section_headers, j);
 		fwrite(sec_Cour,section_headers[j].sh_size,1,f_write);
 	}
-
-	return section_headers_mod;
+*/
 
 }
 
 
-int nbSecRel(Elf32_Ehdr *elfHeaders, Elf32_Shdr *section_headers)
+int nbSecRel(Elf32_Ehdr elfHeaders, Elf32_Shdr *section_headers)
 {
 	
 	int i;
 	int retour = 0;	
-	for(i=0; i<elfHeaders->e_shnum; i++)
+	for(i=0; i<elfHeaders.e_shnum; i++)
 	{
 		if(section_headers[i].sh_type == SHT_REL)
 		{
