@@ -23,7 +23,7 @@ void CopieOctet(unsigned char *dest,Elf32_Word *src, Elf32_Addr id_dest)
 }
 
 
-void renumerote_section(FILE *f_read, 
+Elf32_Shdr2 renumerote_section(FILE *f_read, 
 						FILE *f_write,
 						Elf32_Ehdr *elfHeaders, 
 						Elf32_Shdr *section_headers, 
@@ -76,13 +76,13 @@ void renumerote_section(FILE *f_read,
 			nbRel++;
 			OctetSupp += section_headers[i].sh_size;
 			k=0;
-			while(tab_donnees.table_Nom_Addr[k] != section_headers[i-1].sh_name && k < elfHeaders->e_shnum)
+			while(tab_donnees.table_Nom_Addr[k] != section_headers[i-nbRel].sh_name && k < elfHeaders->e_shnum)
 			{
 				k++;
 			}
 			if(k == elfHeaders->e_shnum)
 			{
-				printf("Table (%x) non trouvé , erreur d'argument\n",section_headers[i-1].sh_name);
+				printf("Table (%x) non trouvé , erreur d'argument\n",section_headers[i-nbRel].sh_name);
 				exit(1);
 			}
 			else
