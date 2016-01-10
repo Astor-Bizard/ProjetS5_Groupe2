@@ -69,6 +69,7 @@ void renumerote_section(FILE *f_read,
 	j=0;
 	for(i=0;i<elfHeaders->e_shnum;i++)
 	{
+		printf("Nom : %06x\n",section_headers[i].sh_name);
 		if(section_headers[i].sh_type == SHT_REL)
 		{
 			nbRel++;
