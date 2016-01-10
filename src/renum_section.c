@@ -64,11 +64,6 @@ void renumerote_section(FILE *f_read,
 	//.data = 0x1000
 	tab_donnees.table_Nom_Addr[1] = 0x29;
 
-	for(i=0;i<elfHeaders.e_shnum;i++)
-	{
-		printf("Nom : %06x\n",section_headers[i].sh_offset);
-	}
-
 	tab_donnees.table_Addr[0]=0x58;
 	tab_donnees.table_Addr[1]=0x1000;
 
@@ -87,13 +82,10 @@ void renumerote_section(FILE *f_read,
 	}
 
 	//Modification table des sections
-	printf("Début\n");
 	for(i=0;i<elfHeaders.e_shnum;i++)
 	{
-		printf("Nom : %06x\n",section_headers[i].sh_name);
 		if(section_headers[i].sh_type == SHT_REL)
 		{
-			printf("ICI\n");
 			nbRel++;
 			OctetSupp += section_headers[i].sh_size;
 			k=0;
@@ -122,7 +114,7 @@ void renumerote_section(FILE *f_read,
 	
 
 	fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
-	
+
 
 	// Ecriture de la nouvelle section
 /*

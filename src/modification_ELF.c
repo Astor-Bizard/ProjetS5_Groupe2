@@ -59,12 +59,7 @@ int main(int argc, char *argv[])
 
 	rewind(f_read);
 	str_reloc = affichage_relocation(f_read, Old_elfHeaders, Old_section_headers, sym_tab, SILENT);
-	/*
-	for(i=0;i<Old_elfHeaders.e_shnum;i++)
-	{
-		printf("Nom : %06x\n",Old_section_headers[i].sh_offset);
-	}
-	*/
+	
 	printf("-----Fin de la lecture de %s-----\n",argv[1]);
 	rewind(f_read);
 	renumerote_section(f_read,f_write,Old_elfHeaders, Old_section_headers,
