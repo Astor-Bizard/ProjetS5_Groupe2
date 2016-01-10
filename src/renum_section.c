@@ -31,33 +31,49 @@ void renumerote_section(FILE *f_read,
 						Str_Reloc str_reloc
 						)
 {
-	int i,j;
+	int i,j,k;
 	int premier = 1;
 	int nbRel = 0; 
 	int nb_Sec_A_Traiter = 0;
 	int id_Sec_Cour = 0;
+	Table_Donnees tab_donnees;
 	unsigned char *sec_Cour;
+	
+
+	//Valeur de test a changer
+	tab_donnees.nbSecRel = 2;
+	tab_donnees.table_Addr = malloc(sizeof(Elf32_Addr)*tab_donnees.nbSecRel);
+	tab_donnees.table_Nom_Addr = malloc(sizeof(Elf32_Word) * tab_donnees.nbSecRel); 
+
+	//tab_donnees.table_Nom_Addr[0] = ;
+	printf("Nom :  %x\n", section_headers[1].sh_name);
+	tab_donnees.table_Addr[0]=0x58;
+	tab_donnees.table_Addr[1]=0x1000;
+
+
 	//Modification du Headers
 
 	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers);
 	elfHeaders->e_shnum = elfHeaders->e_shnum - nb_Sec_A_Traiter;
 
-	//Modification table des symboles
+	//Modification table des sections
 	j=0;
 	for(i=0;i<elfHeaders->e_shnum;i++)
 	{
 		if(section_headers[i].sh_type == SHT_REL)
 		{
 			nbRel++;
+			for(k=0;k==3;k++)
+			{
+				nbRel++;
+			}
 		}
 		while(str_reloc.Sec_Rel[j] == i )
 		{
 			str_reloc.Sec_Rel[j] -= nbRel;
 			j++;
 		}
-		section_headers[i] = section_headers[i+nbRel];
-
-		
+		section_headers[i] = section_headers[i+nbRel];		
 	}
 
 	fwrite(elfHeaders,sizeof(Elf32_Ehdr),1,f_write);

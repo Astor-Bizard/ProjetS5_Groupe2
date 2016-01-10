@@ -13,6 +13,18 @@ Renumerote les section dans un ELF et la table des réimplantations
 #include "lectureST.h"
 #include "affichage_relocation.h"
 
+
+/*Struture pour stocker les different valeur passer en parametre
+*/
+
+typedef struct 
+{
+	int nbSecRel;
+	Elf32_Addr *table_Addr;
+	Elf32_Word *table_Nom_Addr;
+}Table_Donnees;
+
+
 /* Copie une chaine de 32 OCTETS dans une chaine source plus grande à partir de id_dest
 Fait pas le con Jimmy
 */
