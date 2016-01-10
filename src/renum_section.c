@@ -55,6 +55,7 @@ void renumerote_section(FILE *f_read,
 		printf("\nErreur lors de l'allocation initiale de tab_donnees.table_Nom_Addr.\n");
 		exit(1);
 	}
+	*elfHeaders_mod = elfHeaders;
 
 	//tab_donnees.table_Nom_Addr[0] = ;
 	//.text = 0x58
@@ -75,6 +76,7 @@ void renumerote_section(FILE *f_read,
 
 	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers);
 	printf("LA\n");
+	
 	elfHeaders_mod->e_shnum = elfHeaders.e_shnum - nb_Sec_A_Traiter;
 	
 	section_headers_mod = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeaders.e_shnum);
@@ -122,6 +124,10 @@ void renumerote_section(FILE *f_read,
 	}
 
 	elfHeaders_mod->e_shoff -= (Elf32_Off) OctetSupp;
+	if(elfHeaders_mod->e_shoff == elfHeaders.e_shoff)
+	{
+		printf("NON !\n");
+	}
 
 	fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
 
