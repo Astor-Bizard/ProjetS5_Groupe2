@@ -52,7 +52,7 @@ void renumerote_section(FILE *f_read,
 	}
 	tab_donnees.table_Nom_Addr = malloc(sizeof(Elf32_Word) * tab_donnees.nbSecRel); 
 	if (tab_donnees.table_Nom_Addr==NULL) {
-		printf("\nErreur lors de l'allocation initiale de tab_donnees.table_Addr.\n");
+		printf("\nErreur lors de l'allocation initiale de tab_donnees.table_Nom_Addr.\n");
 		exit(1);
 	}
 
@@ -77,9 +77,13 @@ void renumerote_section(FILE *f_read,
 	elfHeaders_mod->e_shnum = elfHeaders.e_shnum - nb_Sec_A_Traiter;
 
 	section_headers_mod = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeaders.e_shnum);
+	if (section_headers_mod==NULL) {
+		printf("\nErreur lors de l'allocation initiale de section_headers_mod.\n");
+		exit(1);
+	}
 
 	//Modification table des sections
-	
+	printf("Début\n");
 	for(i=0;i<elfHeaders.e_shnum;i++)
 	{
 		printf("Nom : %06x\n",section_headers[i].sh_name);
