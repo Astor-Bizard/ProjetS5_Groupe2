@@ -38,7 +38,7 @@ void renumerote_section(FILE *f_read,
 	int id_Sec_Cour = 0;
 	Table_Donnees tab_donnees;
 	unsigned char *sec_Cour;
-	
+	Elf32_Word OctetSupp = 0;
 
 	//Valeur de test a changer
 	tab_donnees.nbSecRel = 2;
@@ -46,8 +46,11 @@ void renumerote_section(FILE *f_read,
 	tab_donnees.table_Nom_Addr = malloc(sizeof(Elf32_Word) * tab_donnees.nbSecRel); 
 
 	//tab_donnees.table_Nom_Addr[0] = ;
-	printf("Nom :  %x\n", section_headers[1].sh_name);
-	printf("Nom :  %x\n", section_headers[3].sh_name);
+	//.text = 0x58
+	tab_donnees.table_Nom_Addr[0] = 0x1f;
+	//.data = 0x1000
+	tab_donnees.table_Nom_Addr[1] = 0x29;
+
 	tab_donnees.table_Addr[0]=0x58;
 	tab_donnees.table_Addr[1]=0x1000;
 
@@ -64,9 +67,20 @@ void renumerote_section(FILE *f_read,
 		if(section_headers[i].sh_type == SHT_REL)
 		{
 			nbRel++;
-			for(k=0;k==3;k++)
+			OctetSupp += section_headers[i].sh_size;
+			k=0;
+			while(tab_donnees.table_Nom_Addr[k] != section_headers[i].sh_name && k < elfHeaders->e_shnum)
 			{
-				nbRel++;
+				k++;
+			}
+			if(k == elfHeaders->e_shnum)
+			{
+				printf("Table (%x) non trouvé , erreur d'argument",tab_donnees.table_Nom_Addr[k]);
+				exit(1);
+			}
+			else
+			{
+				section_headers[i-1].sh_addr = tab_donnees.table_Nom_Addr[k];
 			}
 		}
 		while(str_reloc.Sec_Rel[j] == i )
@@ -76,6 +90,8 @@ void renumerote_section(FILE *f_read,
 		}
 		section_headers[i] = section_headers[i+nbRel];		
 	}
+
+	elfHeaders->e_shoff -= (Elf32_Off) OctetSupp;
 
 	fwrite(elfHeaders,sizeof(Elf32_Ehdr),1,f_write);
 
