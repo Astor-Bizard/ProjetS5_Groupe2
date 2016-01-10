@@ -75,7 +75,7 @@ void renumerote_section(FILE *f_read,
 			}
 			if(k == elfHeaders->e_shnum)
 			{
-				printf("Table (%x) non trouvé , erreur d'argument\n",tab_donnees.table_Nom_Addr[k]);
+				printf("Table (%x) non trouvé , erreur d'argument\n",section_headers[i].sh_name);
 				exit(1);
 			}
 			else
