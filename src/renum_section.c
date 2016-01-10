@@ -67,11 +67,8 @@ void renumerote_section(FILE *f_read,
 	tab_donnees.table_Addr[0]=0x58;
 	tab_donnees.table_Addr[1]=0x1000;
 
-	printf("ICI\n");
 	//Modification du Headers
-
 	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers);
-	printf("LA\n");
 	
 	elfHeaders_mod->e_shnum = elfHeaders.e_shnum - nb_Sec_A_Traiter;
 	
