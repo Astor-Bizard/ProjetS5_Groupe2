@@ -121,9 +121,9 @@ void renumerote_section(FILE *f_read,
 				
 	}
 
-	elfHeaders.e_shoff -= (Elf32_Off) OctetSupp;
+	elfHeaders_mod->e_shoff -= (Elf32_Off) OctetSupp;
 
-	fwrite(&elfHeaders,sizeof(Elf32_Ehdr),1,f_write);
+	fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
 
 
 	// Ecriture de la nouvelle section
