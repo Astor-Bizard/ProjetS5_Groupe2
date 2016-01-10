@@ -46,7 +46,15 @@ void renumerote_section(FILE *f_read,
 	//Valeur de test a changer
 	tab_donnees.nbSecRel = 2;
 	tab_donnees.table_Addr = malloc(sizeof(Elf32_Addr)*tab_donnees.nbSecRel);
+	if (tab_donnees.table_Addr==NULL) {
+		printf("\nErreur lors de l'allocation initiale de tab_donnees.table_Addr.\n");
+		exit(1);
+	}
 	tab_donnees.table_Nom_Addr = malloc(sizeof(Elf32_Word) * tab_donnees.nbSecRel); 
+	if (tab_donnees.table_Nom_Addr==NULL) {
+		printf("\nErreur lors de l'allocation initiale de tab_donnees.table_Addr.\n");
+		exit(1);
+	}
 
 	//tab_donnees.table_Nom_Addr[0] = ;
 	//.text = 0x58
