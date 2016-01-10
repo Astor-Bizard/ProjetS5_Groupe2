@@ -34,7 +34,9 @@ void CopieOctet(unsigned char *dest,Elf32_Word *src, Elf32_Addr id_dest);
 
 int nbSecRel(Elf32_Ehdr elfHeaders, Elf32_Shdr *section_headers);
 
-/* renumerote et corrige les section de type Rel ecrit le headers et les sections modifier ou non dans f_write*/
+/* renumerote et les section en supprimant les sections de type Rel ecrit et assigne 
+une adresse aux sections associéesrenvoi une nouveau elfHeaders et un nouveau section_headers
+ */
 void renumerote_section(FILE *f_read, 
 						FILE *f_write,
 						Elf32_Ehdr elfHeaders, 
