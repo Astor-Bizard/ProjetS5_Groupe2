@@ -8,7 +8,7 @@ lecture_ELF: $(BUILD)/lecture_ELF.o $(BUILD)/lecture_headers.o $(BUILD)/lectureS
 	$(CC) $(CFLAGS) -o $@ $^
 
 modification_ELF: $(BUILD)/modification_ELF.o $(BUILD)/lecture_headers.o $(BUILD)/lectureSH.o $(BUILD)/afficher_section.o $(BUILD)/lectureST.o $(BUILD)/affichage_relocation.o $(BUILD)/renum_section.o
-
+	$(CC) $(CFLAGS) -o $@ $^
 
 $(BUILD)/%.o: $(SRC)/%.c
 	mkdir -p $(BUILD)
