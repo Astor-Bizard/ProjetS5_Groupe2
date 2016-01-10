@@ -75,7 +75,7 @@ void renumerote_section(FILE *f_read,
 			}
 			if(k == elfHeaders->e_shnum)
 			{
-				printf("Table (%x) non trouvé , erreur d'argument",tab_donnees.table_Nom_Addr[k]);
+				printf("Table (%x) non trouvé , erreur d'argument\n",tab_donnees.table_Nom_Addr[k]);
 				exit(1);
 			}
 			else
@@ -99,7 +99,7 @@ void renumerote_section(FILE *f_read,
 	// Ecriture de la nouvelle section
 
 	printf("Boucle\n");
-	printf("str_reloc.nb_Rel : %i", str_reloc.nb_Rel);
+	printf("str_reloc.nb_Rel : %i\n", str_reloc.nb_Rel);
 	for(i=0;i<str_reloc.nb_Rel;i++)
 	{
 		printf("Debut : %i\n",i);
