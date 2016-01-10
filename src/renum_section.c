@@ -34,13 +34,14 @@ void renumerote_section(FILE *f_read,
 						)
 {
 	int i,k;
-	//int premier = 1;
+	
 	int nbRel = 0; 
 	int nb_Sec_A_Traiter = 0;
-	//int id_Sec_Cour = 0;
 	Table_Donnees tab_donnees;
-	//unsigned char *sec_Cour;
 	Elf32_Word OctetSupp = 0;
+	//unsigned char *sec_Cour;
+	//int premier = 1;
+	//int id_Sec_Cour = 0;
 
 
 	//Valeur de test a changer
@@ -109,12 +110,6 @@ void renumerote_section(FILE *f_read,
 			{
 				section_headers_mod[i-1].sh_addr = tab_donnees.table_Nom_Addr[k];
 			}
-/*		}
-		while(str_reloc.Sec_Rel[j] == i )
-		{
-			str_reloc.Sec_Rel[j] -= nbRel;
-			j++;
-		}*/
 		}
 		else
 		{
@@ -127,6 +122,7 @@ void renumerote_section(FILE *f_read,
 	
 
 	fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
+	
 
 	// Ecriture de la nouvelle section
 /*
