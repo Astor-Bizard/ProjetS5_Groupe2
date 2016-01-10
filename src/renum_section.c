@@ -75,7 +75,7 @@ void renumerote_section(FILE *f_read,
 
 	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers);
 	elfHeaders_mod->e_shnum = elfHeaders.e_shnum - nb_Sec_A_Traiter;
-
+	printf("LA\n");
 	section_headers_mod = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeaders.e_shnum);
 	if (section_headers_mod==NULL) {
 		printf("\nErreur lors de l'allocation initiale de section_headers_mod.\n");
