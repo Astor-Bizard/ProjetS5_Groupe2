@@ -123,14 +123,10 @@ void renumerote_section(FILE *f_read,
 				
 	}
 
-	elfHeaders_mod->e_shoff -= (Elf32_Off) OctetSupp;
-	if(elfHeaders_mod->e_shoff == elfHeaders.e_shoff)
-	{
-		printf("NON !\n");
-	}
+	elfHeaders_mod->e_shoff -=  OctetSupp;
+	
 
 	fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
-
 
 	// Ecriture de la nouvelle section
 /*
