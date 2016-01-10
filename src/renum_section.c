@@ -51,6 +51,11 @@ void renumerote_section(FILE *f_read,
 	//.data = 0x1000
 	tab_donnees.table_Nom_Addr[1] = 0x29;
 
+	for(i=0;i<elfHeaders->e_shnum;i++)
+	{
+		printf("Nom : %06x\n",section_headers[i].sh_name);
+	}
+
 	tab_donnees.table_Addr[0]=0x58;
 	tab_donnees.table_Addr[1]=0x1000;
 
