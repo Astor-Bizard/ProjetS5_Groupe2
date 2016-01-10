@@ -23,7 +23,7 @@ void CopieOctet(unsigned char *dest,Elf32_Word *src, Elf32_Addr id_dest)
 }
 
 
-void renumerote_section(FILE *f_read, 
+Elf32_Shdr renumerote_section(FILE *f_read, 
 						FILE *f_write,
 						Elf32_Ehdr *elfHeaders, 
 						Elf32_Shdr *section_headers, 
@@ -39,6 +39,8 @@ void renumerote_section(FILE *f_read,
 	Table_Donnees tab_donnees;
 	unsigned char *sec_Cour;
 	Elf32_Word OctetSupp = 0;
+	Elf32_Shdr section_headers_mod;
+
 
 	//Valeur de test a changer
 	tab_donnees.nbSecRel = 2;
@@ -152,7 +154,7 @@ void renumerote_section(FILE *f_read,
 		fwrite(sec_Cour,section_headers[j].sh_size,1,f_write);
 	}
 
-
+	return section_headers_mod;
 
 }
 
