@@ -72,6 +72,7 @@ void renumerote_section(FILE *f_read,
 		printf("Nom : %06x\n",section_headers[i].sh_name);
 		if(section_headers[i].sh_type == SHT_REL)
 		{
+			printf("ICI\n");
 			nbRel++;
 			OctetSupp += section_headers[i].sh_size;
 			k=0;
