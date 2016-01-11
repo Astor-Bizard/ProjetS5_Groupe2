@@ -182,6 +182,31 @@ char* sectionFlagsTranslation(uint32_t flags) {
 	return flagsString;
 }
 
+
+void afficherTableSections(f, elfHeader, shTable) {
+	char* type;
+	char* nom;
+
+	char* names = fetchSectionNames(f, elfHeader, shTable);
+
+	printf("There are %d section headers, starting at offset 0x%x:\n\n", elfHeader.e_shnum, elfHeader.e_shoff);
+	printf("Section Headers:\n");
+	printf("  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al\n");
+	
+	for(i=0; i<elfHeader.e_shnum; i++) {
+		type = sectionTypeString(shTable[i].sh_type);
+		nom = getSectionName(names, shTable[i].sh_name);
+		if(strlen(nom)>17)
+			nom[17] = '\0';
+		printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, nom, type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, sectionFlagsTranslation(shTable[i].sh_flags), shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+		free(nom);
+	}
+	printf("Key to Flags:\n");
+	printf("  W (write), A (alloc), X (execute), M (merge), S (strings)\n");
+	printf("  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)\n");
+	printf("  O (extra OS processing required) o (OS specific), p (processor specific)\n");
+}
+
 Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	int i;
 
@@ -207,32 +232,8 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	}
 
 	if (!silent) {
-		afficherSection(f, elfHeader, shTable);
+		afficherTableSections(f, elfHeader, shTable);
 	}
 
 	return shTable;
-}
-
-void afficherTableSections(f, elfHeader, shTable) {
-	char* type;
-	char* nom;
-
-	char* names = fetchSectionNames(f, elfHeader, shTable);
-
-	printf("There are %d section headers, starting at offset 0x%x:\n\n", elfHeader.e_shnum, elfHeader.e_shoff);
-	printf("Section Headers:\n");
-	printf("  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al\n");
-	
-	for(i=0; i<elfHeader.e_shnum; i++) {
-		type = sectionTypeString(shTable[i].sh_type);
-		nom = getSectionName(names, shTable[i].sh_name);
-		if(strlen(nom)>17)
-			nom[17] = '\0';
-		printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, nom, type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, sectionFlagsTranslation(shTable[i].sh_flags), shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
-		free(nom);
-	}
-	printf("Key to Flags:\n");
-	printf("  W (write), A (alloc), X (execute), M (merge), S (strings)\n");
-	printf("  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)\n");
-	printf("  O (extra OS processing required) o (OS specific), p (processor specific)\n");
 }
