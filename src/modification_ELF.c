@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 
 	rewind(f_read);
 	renumerote_section(f_read,f_write,Old_elfHeaders, Old_section_headers,
-		sym_tab,str_reloc, &New_elfHeaders, &New_section_headers,tab_donnees);
+		sym_tab,str_reloc, &New_elfHeaders, New_section_headers, tab_donnees);
 
 	free(tab_donnees.table_Addr);
 	free(tab_donnees.table_Num_Addr);
