@@ -32,6 +32,8 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 	char* originalName;
 	char* sectionNames = fetchSectionNames(oldFile, oldElfHeader, originalSH);
 	char* symbolNames;
+	char* newName;
+	char* nomSection;
 	unsigned char info;
 	unsigned char bind;
 	
@@ -52,10 +54,14 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 		printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
 
 		i = 0;
-		while(strcmp(getSectionNameBis(sectionNames, newSH[i]), ".symtab"))
+		nomSection = getSectionNameBis(sectionNames, newSH[i]);
+		while(strcmp(nomSection, ".symtab"))
 		{
+			free(nomSection);
 			i++;
+			nomSection = getSectionNameBis(sectionNames, newSH[i]);
 		}
+		free(nomSection);
 		symbolNames = fetchSymbolNames(oldFile, newSH, i);
 	}
 
@@ -70,10 +76,14 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 		// Recherche du nouvel id de la section du symbole courant
 		originalName = getSectionNameBis(sectionNames, originalSH[oldST.symboles[j].st_shndx]); // Nom de la section affiliée au symbole courant dans l'ancien fichier
 		i = 0;
-		while (strcmp(originalName, getSectionNameBis(sectionNames, newSH[i]))!=0 && i<newElfHeader.e_shnum) // Recherche de l'id de la section du même nom dans le nouveau fichier
+		newName = getSectionNameBis(sectionNames, newSH[i]);
+		while (strcmp(originalName, newName)!=0 && i<newElfHeader.e_shnum) // Recherche de l'id de la section du même nom dans le nouveau fichier
 		{
+			free(newName);
 			i++;
+			newName = getSectionNameBis(sectionNames, newSH[i]);
 		}
+		free(newName);
 		if (i==newElfHeader.e_shnum) 
 		{
 			printf("Erreur: Section introuvable dans le nouveau fichier.\n");
@@ -117,13 +127,18 @@ void ecrireNouveauxSymboles(FILE* newFile, Elf32_Ehdr newElfHeader, Elf32_Shdr* 
 	int i = 0;
 	uint32_t writingOffset;
 	char* newSectionNames = fetchSectionNames(newFile, newElfHeader, newSH);
+	char* nomSection;
 
 	printf("MARQUE 1\n");
 	// Recherche de la table des symboles dans le nouveau fichier pour récupérer son offset
-	while(strcmp(getSectionNameBis(newSectionNames, newSH[i]), ".symtab"))
+	nomSection = getSectionNameBis(newSectionNames, newSH[i]);
+	while(strcmp(nomSection, ".symtab"))
 	{
+		free(nomSection);
 		i++;
+		nomSection = getSectionNameBis(newSectionNames, newSH[i]);
 	}
+	free(nomSection);
 	writingOffset = newSH[i].sh_offset;
 
 	printf("MARQUE 2\n");
