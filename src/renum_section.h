@@ -21,7 +21,7 @@ typedef struct
 {
 	int nbSecRel;
 	Elf32_Addr *table_Addr;
-	char **table_Nom_Addr;
+	int *table_Num_Addr;
 }Table_Donnees;
 
 
