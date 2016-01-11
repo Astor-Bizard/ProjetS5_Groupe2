@@ -158,14 +158,14 @@ void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, Elf32_S
 		char *name;
     if((table_symbol.symboles[sym].st_info & 0xf) != 3)
     {
-				name=getSymbolNameBis(SymbolNames, table_symbol.symboles[sym]);
+	   name=getSymbolNameBis(SymbolNames, table_symbol.symboles[sym]);
     }
     else
     {
-				name=getSectionNameBis(SectionNames, table_section[table_symbol.symboles[sym].st_shndx]);
+		name=getSectionNameBis(SectionNames, table_section[table_symbol.symboles[sym].st_shndx]);
     }
-		printf("%s",name);
-		free(name);
+	printf("%s",name);
+	free(name);
 }
 
 //affiche une section de relocation
@@ -186,7 +186,7 @@ void afficher_sectionR(FILE *f,
     unsigned char type;
     unsigned int sym;
     
-    char *nom_section= getSectionNameBis(SectionNames,table_section[numS]);
+    char *nom_section = getSectionNameBis(SectionNames,table_section[numS]);
     if(!silent)
     {
     	printf("\nRelocation section '%s' at offset 0x%x contains %i entries:\n",
@@ -195,6 +195,7 @@ void afficher_sectionR(FILE *f,
     			(int) table_section[numS].sh_size/8);
     	printf(" Offset     Info    Type            Sym.Value  Sym. Name\n");
     }
+    free(nom_section);
 
     RETOUR->Rel = realloc(RETOUR->Rel,sizeof(Elf32_Rel)*(RETOUR->nb_Rel+(int) table_section[numS].sh_size/8));
     RETOUR->Sec_Rel = realloc(RETOUR->Sec_Rel,sizeof(int)*(RETOUR->nb_Rel+(int) table_section[numS].sh_size/8));
@@ -249,23 +250,24 @@ Str_Reloc affichage_relocation(FILE* f,
 
     while(i<header.e_shnum)
     {
-        CurrentSectionName = getSectionNameBis(SectionNames,table_section[i]);
+        CurrentSectionName = getSectionNameBis(SectionNames, table_section[i]);
         // on vérifie toutes les sections
         // si ce sont des sections de relocations:
-        if( !strcmp(".symtab",CurrentSectionName))
+        if(!strcmp(".symtab", CurrentSectionName))
         {
             Symbol_tab_section_number=i;
             i=header.e_shnum;
         }
         i++;
+        free(CurrentSectionName);
     }
-    SymbolNames = fetchSymbolNames(f, table_section,Symbol_tab_section_number);
+    SymbolNames = fetchSymbolNames(f, table_section, Symbol_tab_section_number);
 
     // on parcours les titres des sections pour trouver les sections de reallocation.
     i=0;
 	while(i<header.e_shnum)
 	{
-        CurrentSectionName = SectionNames+table_section[i].sh_name;
+        CurrentSectionName = SectionNames + table_section[i].sh_name;
 		// on vérifie toutes les sections
 		// si ce sont des sections de relocations:
 		/*if( CurrentSectionName[0]=='.' 
@@ -283,8 +285,8 @@ Str_Reloc affichage_relocation(FILE* f,
             && CurrentSectionName[3]=='l' )
 		{
             //printf("Nom de la section courante:%s n°%i\n",CurrentSectionName,i);
-			afficher_sectionR(f,table_section,header,i,SectionNames, &RETOUR, table_symbol, SymbolNames, silent);
-			ok=1;
+			afficher_sectionR(f, table_section, header, i, SectionNames, &RETOUR, table_symbol, SymbolNames, silent);
+			ok = 1;
 		}
         i++;
 	}
