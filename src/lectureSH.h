@@ -37,7 +37,7 @@ char* getSectionName(char* names, uint32_t nameIndex);
 * Récupère le nom d'une section en se basant sur son en-tête.
 * @param names La chaine de caractères contenant les nom de sections, récupérée au préalable avec 'fetchSectionNames(...)'
 * @param sectionHeader L'entête de la section dont on cherche le nom
-* @return La chaine de caractère correspondant au nom pointé par nameIndex
+* @return La chaine de caractère correspondant au nom de la section fournie
 */
 char* getSectionNameBis(char* names, Elf32_Shdr sectionHeader);
 
