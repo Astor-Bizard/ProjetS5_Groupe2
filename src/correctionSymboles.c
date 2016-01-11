@@ -35,8 +35,6 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 	unsigned char info;
 	unsigned char bind;
 	
-	printf("MARQUE 0\n");
-
 	// Allocation de la nouvelle table des symboles, de la même longueur de l'ancienne
 	newST.symboles = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*oldST.nbSymboles);
 	if(newST.symboles == NULL)
@@ -58,18 +56,14 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 
 		while(strcmp(getSectionNameBis(sectionNames, newSH[i]), ".symtab"))
 		{
-			printf("MARQUE 1:%d\n", i);
 			i++;
 		}
 		symbolNames = fetchSymbolNames(oldFile, newSH, i);
 	}
 
-	printf("MARQUE 2\n");
-
 	// Copie et correction de oldST vers newST
 	for(j=0; j<oldST.nbSymboles; j++)
 	{
-		printf("MARQUE 3a:%d\n", j);
 		newST.symboles[j].st_name = oldST.symboles[j].st_name;
 		newST.symboles[j].st_size = oldST.symboles[j].st_size;
 		newST.symboles[j].st_info = oldST.symboles[j].st_info;
@@ -111,17 +105,13 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 			}
 			free(nomSymbole);
 		}
-		printf("MARQUE 3b:%d\n", j);
 	}
 
 	newST.nbSymboles = j;
 
-	printf("MARQUE 4\n");
-
 	free(originalName);
 	free(sectionNames);
 	free(symbolNames);
-
 	return newST;
 }
 
@@ -130,7 +120,7 @@ void ecrireNouveauxSymboles(FILE* newFile, Elf32_Ehdr newElfHeader, Elf32_Shdr* 
 	uint32_t writingOffset;
 	char* newSectionNames = fetchSectionNames(newFile, newElfHeader, newSH);
 
-	printf("MARQUE 5\n");
+	printf("MARQUE 1\n");
 	// Recherche de la table des symboles dans le nouveau fichier pour récupérer son offset
 	while(strcmp(getSectionNameBis(newSectionNames, newSH[i]), ".symtab"))
 	{
@@ -138,23 +128,23 @@ void ecrireNouveauxSymboles(FILE* newFile, Elf32_Ehdr newElfHeader, Elf32_Shdr* 
 	}
 	writingOffset = newSH[i].sh_offset;
 
-	printf("MARQUE 6\n");
+	printf("MARQUE 2\n");
 
 	// Réecriture de la table des symboles dans le nouveau fichier.
 	fseek(newFile, writingOffset, 0);
 	for(i = 0; i<newST.nbSymboles; i++)
 	{
-		printf("MARQUE 7a:%d\n", i);
+		printf("MARQUE 3a:%d\n", i);
 		fwrite32(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_name);
 		fwrite32(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_value);
 		fwrite32(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_size);
 		fwrite8(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_info);
 		fwrite8(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_other);
 		fwrite16(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_shndx);
-		printf("MARQUE 7b:%d\n", i);
+		printf("MARQUE 3b:%d\n", i);
 	}
 
-	printf("MARQUE 8\n");
+	printf("MARQUE 4\n");
 
 	free(newSectionNames);
 }
