@@ -9,7 +9,7 @@
 #include "affichage_relocation.h"
 
 
-
+// lit une suite d'octet selon le mode dans un tableau d'octet
 long long unsigned int lire_octets_charT(unsigned char *tableau, 
     int hdr_mode, 
     int debut, 
@@ -34,6 +34,8 @@ long long unsigned int lire_octets_charT(unsigned char *tableau,
     return R;
 }
 
+
+// afficher le type de relocation
 void type_relocation(int info)
 {
     switch(info)
@@ -136,7 +138,7 @@ void type_relocation(int info)
     }
 }
 
-
+// affiche le nom d'une section qui commence à l'addresse addr
 void print_section(unsigned long long int addr, Elf32_Shdr* table_section, Elf32_Ehdr header, char* SectionNames)
 {
     int i;
@@ -149,6 +151,7 @@ void print_section(unsigned long long int addr, Elf32_Shdr* table_section, Elf32
     }
 }
 
+// affiche la valeur et le nom d'un symbol (ou la section correspondante si le symbol est une section)
 void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, Elf32_Shdr* table_section, char* SymbolNames, char* SectionNames)
 {
     printf("%08x   ",table_symbol.symboles[sym].st_value);
@@ -224,13 +227,14 @@ void afficher_sectionR(FILE *f,
 	free(section);
 }
 
-// trouve toutes les sections de relocations et les affiche.
+// trouve toutes les sections de relocations et les affiche (ou pas).
 Str_Reloc affichage_relocation(FILE* f,
     Elf32_Ehdr header,
     Elf32_Shdr* table_section, 
     ListeSymboles table_symbol,
     int silent)
 {
+    // initialisation
     Str_Reloc RETOUR;
     RETOUR.nb_Rel=0;
     RETOUR.Rel=NULL;
@@ -257,6 +261,7 @@ Str_Reloc affichage_relocation(FILE* f,
     }
     SymbolNames = fetchSymbolNames(f, table_section,Symbol_tab_section_number);
 
+    // on parcours les titres des sections pour trouver les sections de reallocation.
     i=0;
 	while(i<header.e_shnum)
 	{
@@ -285,7 +290,7 @@ Str_Reloc affichage_relocation(FILE* f,
 	}
 	if(!ok && !silent) printf("\nThere are no relocations in this file.\n");
 	free(SectionNames);
-  free(SymbolNames);
+    free(SymbolNames);
     return RETOUR;
 }
 
