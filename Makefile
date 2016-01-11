@@ -6,7 +6,7 @@ EXEC=lecture_ELF modification_ELF
 
 all : $(EXEC)
 
-lecture_ELF: $(BUILD)/lecture_ELF.o $(BUILD)/lecture_headers.o $(BUILD)/lectureSH.o $(BUILD)/afficher_section.o $(BUILD)/lectureST.o $(BUILD)/affichage_relocation.o
+lecture_ELF: $(BUILD)/lecture_ELF.o $(BUILD)/lecture_headers.o $(BUILD)/lectureSH.o $(BUILD)/afficher_section.o $(BUILD)/lectureST.o $(BUILD)/affichage_relocation.o $(BUILD)/liberation.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 modification_ELF: $(BUILD)/modification_ELF.o $(BUILD)/lecture_headers.o $(BUILD)/lectureSH.o $(BUILD)/afficher_section.o $(BUILD)/lectureST.o $(BUILD)/affichage_relocation.o $(BUILD)/renum_section.o $(BUILD)/correctionSymboles.o

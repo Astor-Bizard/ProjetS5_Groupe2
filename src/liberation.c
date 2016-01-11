@@ -9,15 +9,11 @@ void free_Elf32_Shdr(Elf32_Shdr *section_headers)
 	free(section_headers);
 }
 
-/*void free_ListeSymboles(ListeSymboles *sym_tab)
+void free_ListeSymboles(ListeSymboles *sym_tab)
 {
-	int i;
-	for(i=0;i<sym_tab.nbSymboles; i++)
-	{
-		free(&sym_tab.symboles[i]);
-	}
+	free(sym_tab->symboles);
 	free(sym_tab);
-}*/
+}
 
 void free_Str_Reloc(Str_Reloc *str_reloc)
 {

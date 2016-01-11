@@ -7,6 +7,7 @@ Programme principal de la partie 1
 #include "lectureST.h"
 #include "lectureSH.h"
 #include "affichage_relocation.h"
+#include "liberation.h"
 
 
 #define OPTION_ALL 					0x001f
@@ -35,7 +36,7 @@ void print_usage() {
 int main(int argc, char *argv[]) {
 	Elf32_Ehdr elfHeaders;
 	Elf32_Shdr *section_headers;
-	ListeSymboles sym_tab;
+	ListeSymboles *sym_tab;
 	char* fileName;
 	char* hex_param = NULL;
 	FILE* f;
@@ -136,14 +137,16 @@ int main(int argc, char *argv[]) {
 	}
 
 	rewind(f);
-	sym_tab = lectureSymbolTab(f, elfHeaders, section_headers, (!(options & OPTION_SYMS)));
+	sym_tab = malloc(sizeof(ListeSymboles));
+	*sym_tab = lectureSymbolTab(f, elfHeaders, section_headers, (!(options & OPTION_SYMS)));
 
 	rewind(f);
-	affichage_relocation(f, elfHeaders, section_headers, sym_tab, (!(options & OPTION_RELOCS)));
+	affichage_relocation(f, elfHeaders, section_headers, *sym_tab, (!(options & OPTION_RELOCS)));
 	
 	fclose(f);
-
-
+	
+	free_Elf32_Shdr(section_headers);
+	free_ListeSymboles(sym_tab);
 	
 
 	return 0;
