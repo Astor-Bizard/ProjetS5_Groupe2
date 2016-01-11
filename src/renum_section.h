@@ -21,7 +21,7 @@ typedef struct
 {
 	int nbSecRel;
 	Elf32_Addr *table_Addr;
-	Elf32_Word *table_Nom_Addr;
+	char **table_Nom_Addr;
 }Table_Donnees;
 
 
@@ -44,7 +44,8 @@ void renumerote_section(FILE *f_read,
 						ListeSymboles sym_tab,
 						Str_Reloc str_reloc,
 						Elf32_Ehdr *elfHeaders_mod, 
-						Elf32_Shdr *section_headers_mod
+						Elf32_Shdr *section_headers_mod,
+						Table_Donnees tab_donnees
 						);
 
 
