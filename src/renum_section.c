@@ -44,30 +44,6 @@ void renumerote_section(FILE *f_read,
 	//int premier = 1;
 	//int id_Sec_Cour = 0;
 
-
-	//Valeur de test a changer
-	/*tab_donnees.nbSecRel = 2;
-	tab_donnees.table_Addr = malloc(sizeof(Elf32_Addr)*tab_donnees.nbSecRel);
-	if (tab_donnees.table_Addr==NULL) {
-		printf("\nErreur lors de l'allocation initiale de tab_donnees.table_Addr.\n");
-		exit(1);
-	}
-	tab_donnees.table_Nom_Addr = malloc(sizeof(Elf32_Word) * tab_donnees.nbSecRel); 
-	if (tab_donnees.table_Nom_Addr==NULL) {
-		printf("\nErreur lors de l'allocation initiale de tab_donnees.table_Nom_Addr.\n");
-		exit(1);
-	}
-	*elfHeaders_mod = elfHeaders;
-
-	//tab_donnees.table_Nom_Addr[0] = ;
-	//.text = 0x58
-	tab_donnees.table_Nom_Addr[0] = 0x1f;
-	//.data = 0x1000
-	tab_donnees.table_Nom_Addr[1] = 0x29;
-
-	tab_donnees.table_Addr[0]=0x58;
-	tab_donnees.table_Addr[1]=0x1000;
-*/
 	//Modification du Headers
 	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers);
 	
@@ -90,7 +66,6 @@ void renumerote_section(FILE *f_read,
 			k= 0;
 			while(k < tab_donnees.nbSecRel && tab_donnees.table_Num_Addr[k] != (i-1))
 			{
-				
 				k++;
 			}
 			if(k == tab_donnees.nbSecRel)
@@ -115,12 +90,11 @@ void renumerote_section(FILE *f_read,
 
 
 	fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
-/*
+	
 	for(i=0;i<elfHeaders_mod->e_shnum;i++)
 	{
-		printf("[%2d] %08x", i, section_headers_mod[i].sh_addr);
+		printf("[%2d] %08x\n", i, section_headers_mod[i].sh_addr);
 	}
-*/
 	// Ecriture de la nouvelle section
 /*
 	printf("Boucle\n");
