@@ -2,8 +2,8 @@
 Creer le 5 janvier 2016 par Thai Binh
 Lecture de la table des symboles
 */
-#ifndef _LECTURESTH
-#define _LECTURESTH
+#ifndef _LECTURESTH_
+#define _LECTURESTH_
 
 typedef struct {
 	Elf32_Sym* symboles;

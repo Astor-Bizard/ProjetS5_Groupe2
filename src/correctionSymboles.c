@@ -99,14 +99,17 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 		{
 			info = 15 & newST.symboles[j].st_info;
 			bind = 15<<4 & newST.symboles[j].st_info;
+			char* nomSymbole = getSymbolNameBis(symbolNames, newST.symboles[j]);
+
 			if(newST.symboles[j].st_shndx == 0)
 			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, newST.symboles[j].st_value, newST.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newST.symboles[j].st_other), getSymbolNameBis(symbolNames, newST.symboles[j]));
+				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, newST.symboles[j].st_value, newST.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newST.symboles[j].st_other), nomSymbole);
 			}
 			else
 			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, newST.symboles[j].st_value, newST.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newST.symboles[j].st_other), newST.symboles[j].st_shndx, getSymbolNameBis(symbolNames, newST.symboles[j]));
+				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, newST.symboles[j].st_value, newST.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newST.symboles[j].st_other), newST.symboles[j].st_shndx, nomSymbole);
 			}
+			free(nomSymbole);
 		}
 		printf("MARQUE 3b:%d\n", j);
 	}
