@@ -11,7 +11,6 @@ ON REECRIE LE FICHIER
 
 */
 /* Copie une chaine de 32 OCTETS dans une chaine source plus grande à partir de id_dest
-Fait pas le con Jimmy
 */
 void CopieOctet(unsigned char *dest,Elf32_Word *src, Elf32_Addr id_dest)
 {
@@ -36,6 +35,7 @@ Elf32_Shdr *renumerote_section(FILE *f_read,
 	int nb_Sec_A_Traiter = 0;
 	Elf32_Word OctetSupp = 0;
 	Elf32_Shdr *section_headers_mod;
+	
 	//Modification du Headers
 	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers);
 	

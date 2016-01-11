@@ -52,3 +52,6 @@ On peut modifier les symb .data .text fourni mais qu'en est t'il des main $a dat
 > $ arm-eabi-as -o example4_as.o example4.s  
 
 > $ source ~/.envarm/setenvarm.sh  
+
+call/Jump 3 !!! endian
+abs32 4

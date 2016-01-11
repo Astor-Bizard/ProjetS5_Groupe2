@@ -81,13 +81,10 @@ int main(int argc, char *argv[])
 	rewind(f_read);
 	New_section_headers = renumerote_section(f_read,f_write,Old_elfHeaders, Old_section_headers,
 	 &New_elfHeaders, tab_donnees);
-
-	printf("New : %08x\n",New_section_headers[0].sh_size);
-
 	
 	afficher_headers(Old_elfHeaders);
 	afficher_headers(New_elfHeaders);
-	afficherTableSections(f_read,Old_elfHeaders,Old_section_headers);
+	afficherTableSections(f_read,New_elfHeaders,New_section_headers);
 
 	rewind(f_read);
 	corrigerSymboles(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);
