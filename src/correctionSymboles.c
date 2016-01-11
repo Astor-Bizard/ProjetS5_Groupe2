@@ -50,7 +50,7 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 	{
 		printf("New symbol table '.symtab' contains %d entries:\n", oldST.nbSymboles);
 		printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
-
+		printf("Bidule: %d\n", newSH[i].sh_name);
 		i = 0;
 		while(strcmp(getSectionNameBis(sectionNames, newSH[i]), ".symtab"))
 		{
