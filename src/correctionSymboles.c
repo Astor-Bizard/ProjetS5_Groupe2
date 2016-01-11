@@ -2,13 +2,7 @@
 Crée le 6 janvier 2016 par Loïc
 Correction des symboles
 */
-#include <stdlib.h>
-#include <stdio.h>
-#include <elf.h>
-#include <string.h>
-#include "lecture_headers.h"
-#include "lectureSH.h"
-#include "lectureST.h"
+#include "correctionSymboles.h"
 
 size_t fwrite32(FILE* f, int mode, uint32_t value) {
 	uint32_t bytes;
