@@ -101,10 +101,11 @@ char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 }
 
 char* getSectionName(char* names, uint32_t nameIndex) {
-	int i = 1;
+	int i = 0;
 
 	while(names[nameIndex+i] != '\0')
 		i++;
+	i++;
 
 	char* sectionName = (char*) malloc(sizeof(char)*i);
 	if (names==NULL) {
