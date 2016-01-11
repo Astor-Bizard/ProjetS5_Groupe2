@@ -43,7 +43,7 @@ void renumerote_section(FILE *f_read,
 
 
 	//Valeur de test a changer
-	tab_donnees.nbSecRel = 2;
+	/*tab_donnees.nbSecRel = 2;
 	tab_donnees.table_Addr = malloc(sizeof(Elf32_Addr)*tab_donnees.nbSecRel);
 	if (tab_donnees.table_Addr==NULL) {
 		printf("\nErreur lors de l'allocation initiale de tab_donnees.table_Addr.\n");
@@ -64,7 +64,7 @@ void renumerote_section(FILE *f_read,
 
 	tab_donnees.table_Addr[0]=0x58;
 	tab_donnees.table_Addr[1]=0x1000;
-
+*/
 	//Modification du Headers
 	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers);
 	
@@ -82,17 +82,12 @@ void renumerote_section(FILE *f_read,
 		if(section_headers[i].sh_type == SHT_REL)
 		{
 			OctetSupp += section_headers[i].sh_size;
-			k=0;
-			
-
-
-			/*while(tab_donnees.table_Nom_Addr[k] != section_headers[i-1].sh_name && k < elfHeaders.e_shnum)
+			k= 0;
+			while(tab_donnees.table_Num_Addr[k] != (i-1) && k < tab_donnees.nbSecRel)
 			{
 				k++;
 			}
-			*/
-			
-			if(k == elfHeaders.e_shnum)
+			if(k == tab_donnees.nbSecRel)
 			{
 				printf("Table (%x) non trouvé , erreur d'argument\n",section_headers[i-1].sh_name);
 				exit(1);
