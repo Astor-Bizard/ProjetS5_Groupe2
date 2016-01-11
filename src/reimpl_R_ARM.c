@@ -7,6 +7,9 @@ Réimplantation de type R_ARM
 
 #define TEXT 0
 #define DATA 1
+// TODO: a changer !!
+#define MAGIE1 0
+#define MAGIE3 1
 
 void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader,  Elf32_Shdr *tabSH, Str_Reloc tableReloc)
 {
@@ -21,8 +24,8 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	int i;
 	uint32_t addrSymbole;
 
-	partieText = malloc(sizeof(unsigned char)*tabSH[1].sh_size/16);
-	partieData = malloc(sizeof(unsigned char)*tabSH[3].sh_size/16);
+	partieText = malloc(sizeof(unsigned char)*tabSH[MAGIE1].sh_size/16);
+	partieData = malloc(sizeof(unsigned char)*tabSH[MAGIE3].sh_size/16);
 	for(i=0, i<tableDeDonnees.nbSecRel, i++)
 	{
 		if (i == TEXT)
@@ -81,7 +84,8 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	}
 	// Faut ajouter qqchose ici.
 	fseek(f, newElfHeader.e_ehsize, SEEK_SET);
-	fwrite(&partieText, sizeof(unsigned char), 1, f);
-	fwrite(&partieData, sizeof(unsigned char), 1, f);
-	
+	fwrite(&partieText, sizeof(unsigned char)*4, 1, f);
+	fwrite(&partieData, sizeof(unsigned char)*4, 1, f);
+	free(partieText);
+	free(partieData);
 }
