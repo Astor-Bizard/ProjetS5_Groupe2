@@ -21,8 +21,8 @@ int is_number(char str[]){
 int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	int i,num_sh;
 	char *names;
-	names = fetchSectionNames(f,elfHeader,tabSH);
 	if(str[0]!='\0'){
+		names = fetchSectionNames(f,elfHeader,tabSH);
 		// Cas nombre : on traduit le nombre (string) en int
 		i=0;
 		num_sh=0;
@@ -33,17 +33,17 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 		if(str[i]=='\0'){
 			if(num_sh<elfHeader.e_shnum){
 				strcpy(str,getSectionNameBis(names,tabSH[num_sh]));
-				return num_sh;
 			}
-			else return -1;
+			else num_sh=-1;
 		}
 		// Cas nom : on le cherche dans la table str
 		else{
 			num_sh=0;
 			while(num_sh<elfHeader.e_shnum && strcmp(str,getSectionNameBis(names,tabSH[num_sh]))) num_sh++;
 		}
-		if(num_sh>=elfHeader.e_shnum) return -1;
-		else return num_sh;
+		if(num_sh>=elfHeader.e_shnum) num_sh=-1;
+		free(names);
+		return num_sh;
 	}
 	else return -1;
 }
@@ -101,7 +101,9 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 				for(i=0;i<elfHeader.e_shnum;i++){
 					sectionName=getSectionNameBis(names,tabSH[i]);
 					if(!strcmp(str,sectionName+4) && tabSH[i].sh_type==SHT_REL) printf(" NOTE: This section has relocations against it, but these have NOT been applied to this dump.\n");
+					free(sectionName);
 				}
+				free(names);
 
 				// On se place
 				fseek(f,tabSH[num_sh].sh_offset,0);

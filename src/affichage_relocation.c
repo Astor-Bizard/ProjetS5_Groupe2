@@ -151,19 +151,18 @@ void print_section(unsigned long long int addr, Elf32_Shdr* table_section, Elf32
 
 void print_symbol(int sym, ListeSymboles table_symbol,Elf32_Ehdr header, Elf32_Shdr* table_section, char* SymbolNames, char* SectionNames)
 {
-    //printf("\t[%i]",sym);
     printf("%08x   ",table_symbol.symboles[sym].st_value);
-    //printf("\t%s",typeSymbole(table_symbol.symboles[sym].st_info & 0xf));
-    //char to_show[42];
+		char *name;
     if((table_symbol.symboles[sym].st_info & 0xf) != 3)
     {
-        printf("%s",getSymbolNameBis(SymbolNames, table_symbol.symboles[sym]));
+				name=getSymbolNameBis(SymbolNames, table_symbol.symboles[sym]);
     }
     else
     {
-        printf("%s",getSectionNameBis(SectionNames, table_section[table_symbol.symboles[sym].st_shndx]));
+				name=getSectionNameBis(SectionNames, table_section[table_symbol.symboles[sym].st_shndx]);
     }
-    //printf("%s",to_show);
+		printf("%s",name);
+		free(name);
 }
 
 //affiche une section de relocation
@@ -222,6 +221,7 @@ void afficher_sectionR(FILE *f,
         RETOUR->Rel[RETOUR->nb_Rel-1].r_info = info;
         RETOUR->Sec_Rel[RETOUR->nb_Rel-1]=numS;
 	}
+	free(section);
 }
 
 // trouve toutes les sections de relocations et les affiche.
@@ -284,6 +284,8 @@ Str_Reloc affichage_relocation(FILE* f,
         i++;
 	}
 	if(!ok && !silent) printf("\nThere are no relocations in this file.\n");
+	free(SectionNames);
+  free(SymbolNames);
     return RETOUR;
 }
 
