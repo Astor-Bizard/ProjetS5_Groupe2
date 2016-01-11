@@ -1,21 +1,15 @@
 /* Cree le 8/01/2015 par Jonathan
 Programme principal de la phase 2
 */
-
-
-
-
 #include "lecture_headers.h"
 #include "afficher_section.h"
 #include "lectureST.h"
 #include "lectureSH.h"
 #include "affichage_relocation.h"
 #include "renum_section.h"
-
+#include "correctionSymboles.h"
 
 #define SILENT 1 
-
-
 
 int main(int argc, char *argv[])
 {
@@ -33,9 +27,6 @@ int main(int argc, char *argv[])
 		printf("Erreur nombre d'argument :\n\tmodification_ELF fichier_Elf_lecture fichier_Elf_ecriture");
 	}
 
-
-
-
 	f_read = fopen(argv[1], "r");
 	if (f_read == NULL) {
 		printf("Fichier introuvable: %s\n", argv[1]);
@@ -48,13 +39,11 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 	
-
 	Old_elfHeaders = lecture_Headers(f_read, SILENT);
 	
 	rewind(f_read);
 	Old_section_headers = lectureSectionHeader(f_read, Old_elfHeaders, SILENT);
 	
-
 	rewind(f_read);
 	sym_tab = lectureSymbolTab(f_read, Old_elfHeaders, Old_section_headers, SILENT);
 
@@ -73,7 +62,6 @@ int main(int argc, char *argv[])
 		fclose(f_read);
 		return 0;
 	}
-
 	rewind(f_read);
 	newST = corrigerSymboles(f_read, f_write, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, !SILENT);
 
@@ -84,7 +72,6 @@ int main(int argc, char *argv[])
 		fclose(f_read);
 		return 0;
 	}
-
 	rewind(f_read);
 	ecrireNouveauxSymboles(f_write, New_elfHeaders, New_section_headers, newST);
 
@@ -92,6 +79,6 @@ int main(int argc, char *argv[])
 
 	fclose(f_read);
 	fclose(f_write);
-	
+
 	return 0;
 }
