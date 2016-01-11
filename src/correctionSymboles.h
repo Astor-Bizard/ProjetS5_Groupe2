@@ -51,7 +51,7 @@ size_t fwrite8(FILE* f, int mode, uint8_t value);
 * @param silent Si silent est à 1, aucun affichage ne sera produit en dehors des erreurs
 * @return La table des symboles corrigée
 */
-ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader, Elf32_Shdr* originalSH, Elf32_Shdr* newSH, ListeSymboles oldST, int silent);
+ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader, Elf32_Shdr* originalSH, Elf32_Shdr* newSH, ListeSymboles oldST, int silent);
 
 /*
 * Ecrit la table des symboles dans un fichier
@@ -60,6 +60,6 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 * @param newSH La table des en-têtes de sections du fichier
 * @param newST La table des symboles à écrire
 */
-void ecrireNouveauxSymboles(FILE* newFile, Elf32_Ehdr newElfHeader, Elf32_Shdr* newSH, ListeSymboles newST);
+void writeSymbolsToFile(FILE* newFile, Elf32_Ehdr newElfHeader, Elf32_Shdr* newSH, ListeSymboles newST);
 
 #endif
