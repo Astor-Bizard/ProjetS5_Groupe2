@@ -184,10 +184,11 @@ char* fetchSymbolNames(FILE* f, Elf32_Shdr* shTable, int symbolTabIndex)
 
 char* getSymbolName(char* symbols, uint32_t symbolIndex) 
 {
-	int i = 1;
+	int i = 0;
 
 	while(symbols[symbolIndex+i] != '\0')
 		i++;
+	i++;
 
 	char* symbolName = (char*) malloc(sizeof(char)*i);
 	if (symbols==NULL) {

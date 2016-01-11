@@ -22,7 +22,7 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	int numAddrText = NULL;
 	int numAddrData = NULL;
 	int i;
-	uint32_t addrSymbole;
+	unsigned char addrSymbole;
 
 	partieText = malloc(sizeof(unsigned char)*tabSH[MAGIE1].sh_size/16);
 	partieData = malloc(sizeof(unsigned char)*tabSH[MAGIE3].sh_size/16);
@@ -56,7 +56,7 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 				// T = 0
 				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", f, oldElfHeader, tabSH))
 				{
-					partieText[tableReloc.Rel[i].r_offset] = addrSymbole;
+					partieText[tableReloc.Rel[i].r_offset] = addrSymbole ;
 				}
 				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", f, oldElfHeader, tabSH))
 				{
