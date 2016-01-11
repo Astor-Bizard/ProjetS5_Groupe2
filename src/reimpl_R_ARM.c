@@ -42,7 +42,7 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 			case 5:
 			case 8:
 				// R_ARM_ABS*
-				// (S + A) | T , addresse du symbole + relocation, T = 1 si symbole est du type STT_FUNC
+				// (S + A) | T , addresse du symbole + relocation, T = 1 si symbole est du type STT_FUNC sinon 0
 				// S = valeur du symbole 
 				// A = addend de la relocalisation
 				// T = 0
@@ -70,7 +70,7 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 				}
 				break;
 			default:
-				printf("ERREUR DE LECTURE DE REL ! ! !! ! ! ! ! ! ! ! !\n");
+				printf("ERREUR DE LECTURE DE REL ! ! ! ! ! ! ! ! ! ! ! !\n");
 				break;
 		}
 	}
