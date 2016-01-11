@@ -37,6 +37,7 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 	
 	printf("MARQUE 0\n");
 
+	// Allocation de la nouvelle table des symboles, de la même longueur de l'ancienne
 	newST.symboles = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*oldST.nbSymboles);
 	if(newST.symboles == NULL)
 	{
@@ -46,6 +47,7 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 		return newST;
 	}
 
+	// Récupération des noms de symboles si on compte les afficher
 	if (!silent)
 	{
 		printf("New symbol table '.symtab' contains %d entries:\n", oldST.nbSymboles);
@@ -64,6 +66,7 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 
 	printf("MARQUE 2\n");
 
+	// Copie et correction de oldST vers newST
 	for(j=0; j<oldST.nbSymboles; j++)
 	{
 		printf("MARQUE 3a:%d\n", j);
@@ -72,13 +75,13 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 		newST.symboles[j].st_info = oldST.symboles[j].st_info;
 		newST.symboles[j].st_other = oldST.symboles[j].st_other;
 
-		originalName = getSectionNameBis(sectionNames, originalSH[oldST.symboles[j].st_shndx]);
+		// Recherche du nouvel id de la section du symbole courant
+		originalName = getSectionNameBis(sectionNames, originalSH[oldST.symboles[j].st_shndx]); // Nom de la section affiliée au symbole courant dans l'ancien fichier
 		i = 0;
-		while (strcmp(originalName, getSectionNameBis(sectionNames, newSH[i]))!=0 && i<newElfHeader.e_shnum) 
+		while (strcmp(originalName, getSectionNameBis(sectionNames, newSH[i]))!=0 && i<newElfHeader.e_shnum) // Recherche de l'id de la section du même nom dans le nouveau fichier
 		{
 			i++;
 		}
-		free(originalName);
 		if (i==newElfHeader.e_shnum) 
 		{
 			printf("Erreur: Section introuvable dans le nouveau fichier.\n");
@@ -88,13 +91,14 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 		}
 		newST.symboles[j].st_shndx = i;
 
+		// Nouvelle valeur du symbole = Ancienne valeur + Adresse de la section parente
 		newST.symboles[j].st_value = oldST.symboles[j].st_value + newSH[i].sh_addr;
 
-		info = 15 & newST.symboles[j].st_info;
-		bind = 15<<4 & newST.symboles[j].st_info;
-
+		// Affichage si necessaire
 		if (!silent)
 		{
+			info = 15 & newST.symboles[j].st_info;
+			bind = 15<<4 & newST.symboles[j].st_info;
 			if(newST.symboles[j].st_shndx == 0)
 			{
 				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, newST.symboles[j].st_value, newST.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newST.symboles[j].st_other), getSymbolNameBis(symbolNames, newST.symboles[j]));
@@ -111,6 +115,10 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 
 	printf("MARQUE 4\n");
 
+	free(originalName);
+	free(sectionNames);
+	free(symbolNames);
+
 	return newST;
 }
 
@@ -120,7 +128,7 @@ void ecrireNouveauxSymboles(FILE* newFile, Elf32_Ehdr newElfHeader, Elf32_Shdr* 
 	char* newSectionNames = fetchSectionNames(newFile, newElfHeader, newSH);
 
 	printf("MARQUE 5\n");
-
+	// Recherche de la table des symboles dans le nouveau fichier pour récupérer son offset
 	while(strcmp(getSectionNameBis(newSectionNames, newSH[i]), ".symtab"))
 	{
 		i++;
@@ -129,6 +137,7 @@ void ecrireNouveauxSymboles(FILE* newFile, Elf32_Ehdr newElfHeader, Elf32_Shdr* 
 
 	printf("MARQUE 6\n");
 
+	// Réecriture de la table des symboles dans le nouveau fichier.
 	fseek(newFile, writingOffset, 0);
 	for(i = 0; i<newST.nbSymboles; i++)
 	{
@@ -143,4 +152,6 @@ void ecrireNouveauxSymboles(FILE* newFile, Elf32_Ehdr newElfHeader, Elf32_Shdr* 
 	}
 
 	printf("MARQUE 8\n");
+
+	free(newSectionNames);
 }

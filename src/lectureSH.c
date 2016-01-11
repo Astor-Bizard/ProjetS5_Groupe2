@@ -185,6 +185,7 @@ char* sectionFlagsTranslation(uint32_t flags) {
 void afficherTableSections(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	char* type;
 	char* nom;
+	char* flags;
 	int i;
 
 	char* names = fetchSectionNames(f, elfHeader, shTable);
@@ -196,15 +197,20 @@ void afficherTableSections(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	for(i=0; i<elfHeader.e_shnum; i++) {
 		type = sectionTypeString(shTable[i].sh_type);
 		nom = getSectionName(names, shTable[i].sh_name);
+		flags = sectionFlagsTranslation(shTable[i].sh_flags);
+
 		if(strlen(nom)>17)
 			nom[17] = '\0';
 		printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, nom, type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, sectionFlagsTranslation(shTable[i].sh_flags), shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
 		free(nom);
+		free(flags);
 	}
 	printf("Key to Flags:\n");
 	printf("  W (write), A (alloc), X (execute), M (merge), S (strings)\n");
 	printf("  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)\n");
 	printf("  O (extra OS processing required) o (OS specific), p (processor specific)\n");
+
+	free(names);
 }
 
 Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
