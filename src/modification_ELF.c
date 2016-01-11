@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 
 	rewind(f_read);
 	renumerote_section(f_read,f_write,Old_elfHeaders, Old_section_headers,
-		sym_tab,str_reloc, &New_elfHeaders, New_section_headers,tab_donnees);
+		sym_tab,str_reloc, &New_elfHeaders, &New_section_headers,tab_donnees);
 
 	free(tab_donnees.table_Addr);
 	free(tab_donnees.table_Num_Addr);
@@ -87,9 +87,9 @@ int main(int argc, char *argv[])
 	rewind(f_read);
 	newST = corrigerSymboles(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);
 
-	rewind(f_read);
-	rewind(f_write);
-	ecrireNouveauxSymboles(f_write, New_elfHeaders, New_section_headers, newST);
+	//rewind(f_read);
+	//rewind(f_write);
+	//ecrireNouveauxSymboles(f_write, New_elfHeaders, New_section_headers, newST);
 
 	printf("-----Fin de l'ecriture dans %s-----\n",argv[2]);
 
