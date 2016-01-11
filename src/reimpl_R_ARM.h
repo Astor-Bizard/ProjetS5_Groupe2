@@ -2,8 +2,8 @@
 Creer le 6 janvier 2016 par Thai Binh
 Réimplantation de type R_ARM
 */
-#ifndef _REIMPLRARMH
-#define _REIMPLRARMH
+#ifndef __REIMPLRARMH__
+#define __REIMPLRARMH__
 
 #include <stdlib.h>
 #include <stdio.h>

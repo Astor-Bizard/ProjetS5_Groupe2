@@ -5,6 +5,9 @@ Réimplantation de type R_ARM
 
 #include "reimpl_R_ARM.h"
 
+#define TEXT 0
+#define DATA 1
+
 void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader,  Elf32_Shdr *tabSH, Str_Reloc tableReloc)
 {
 	// TODO: Faire tout
@@ -22,12 +25,12 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	partieData = malloc(sizeof(unsigned char)*tabSH[3].sh_size/16);
 	for(i=0, i<tableDeDonnees.nbSecRel, i++)
 	{
-		if (i==0)
+		if (i == TEXT)
 		{
 			addrText = tableDeDonnees.table_Addr[i];
 			numAddrText = tableDeDonnees.table_Num_Addr[i];
 		}
-		if (i==1)
+		if (i == DATA)
 		{
 			addrData = tableDeDonnees.table_Addr[i];
 			numAddrData = tableDeDonnees.table_Num_Addr[i];
@@ -77,7 +80,7 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 		}
 	}
 	// Faut ajouter qqchose ici.
-	fseek(f, 40, SEEK_SET);
+	fseek(f, newElfHeader.e_ehsize, SEEK_SET);
 	fwrite(&partieText, sizeof(unsigned char), 1, f);
 	fwrite(&partieData, sizeof(unsigned char), 1, f);
 	
