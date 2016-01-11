@@ -17,8 +17,8 @@ Réimplantation de type R_ARM
 #include "afficher_section.h"
 
 /*
-Fonction principale qui fera la reimplantation de tout les type R_ARM_ABS(8-16-32) et R_ARM_CALL et R_ARM_JUMP24
+Fonction principale qui fera la reimplantation de tout les types R_ARM_ABS(8-16-32) et R_ARM_CALL et R_ARM_JUMP24
 */
-char* reimplantation_R_ARM(char *chaineSection, Str_Reloc tableReloc, ListeSymboles listeDesSymboles);
+void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader,  Elf32_Shdr *tabSH, Str_Reloc tableReloc);
 
 #endif
