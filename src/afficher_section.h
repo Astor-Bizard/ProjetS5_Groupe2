@@ -10,9 +10,6 @@ Affichage d'une section specifique
 #include <string.h>
 #include <elf.h>
 
-int is_digit(char c);	// renvoie vrai si c est un chiffre
-int is_number(char str[])	// renvoie vrai si la chaine str est composée uniquement de chiffres
-
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
 int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH);
 
