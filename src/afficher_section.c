@@ -108,8 +108,8 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 				printf("\nHex dump of section '%s':\n",str);
 				names = fetchSectionNames(f,elfHeader,tabSH);
 				for(i=0;i<elfHeader.e_shnum;i++){
-					sectionName=getSectionNameBis(names,tabSH[i]);
-					if(!strcmp(str,sectionName+4) && tabSH[i].sh_type==SHT_REL) printf(" NOTE: This section has relocations against it, but these have NOT been applied to this dump.\n");
+					sectionName = getSectionNameBis(names,tabSH[i]);
+					if(strlen(sectionName)>4 && !strcmp(str, sectionName+4) && tabSH[i].sh_type==SHT_REL) printf(" NOTE: This section has relocations against it, but these have NOT been applied to this dump.\n");
 					free(sectionName);
 				}
 				free(names);
