@@ -16,7 +16,7 @@ Programme principal de la partie 1
 #define OPTION_HEADERS				0x0003
 #define OPTION_SYMS					(1 << 2)
 #define OPTION_RELOCS				(1 << 3)
-#define OPTION_HEX_DUMP				(1 << 4)
+#define OPTION_SECTION_DISPLAY		(1 << 4)
 #define OPTION_HELP					(1 << 5)
 
 void print_usage() {
@@ -35,10 +35,11 @@ void print_usage() {
 
 int main(int argc, char *argv[]) {
 	Elf32_Ehdr elfHeaders;
-	Elf32_Shdr *section_headers;
-	ListeSymboles sym_tab;
+	Elf32_Shdr *sectionsHeadersTable;
+	ListeSymboles symbolsTable;
+	Str_Reloc relocationTable;
 	char* fileName;
-	char* hex_param = NULL;
+	char* sectionToDisplay = NULL;
 	FILE* f;
 	int fileNamePos, i;
 	uint16_t options = 0;
@@ -89,9 +90,9 @@ int main(int argc, char *argv[]) {
 					options = options | OPTION_RELOCS;
 					break;
 				case 'x':
-					options = options | OPTION_HEX_DUMP;
+					options = options | OPTION_SECTION_DISPLAY;
 					if (i+1<argc && i+1!=fileNamePos && argv[i+1][0] != '-')
-						hex_param = argv[++i];
+						sectionToDisplay = argv[++i];
 					break;
 				case 'H':
 					print_usage();
@@ -120,31 +121,24 @@ int main(int argc, char *argv[]) {
 
 	elfHeaders = lecture_Headers(f, (!(options & OPTION_FILE_HEADER)));
 
-	rewind(f);
-	section_headers = lectureSectionHeader(f, elfHeaders, (!(options & OPTION_SECTION_HEADERS)));
+	sectionsHeadersTable = readSectionsHeadersFromFile(f, elfHeaders, (!(options & OPTION_SECTION_HEADERS)));
 
-	if(options & OPTION_HEX_DUMP) 
+	if(options & OPTION_SECTION_DISPLAY) 
 	{
-		rewind(f);
-		if(hex_param == NULL) 
-		{
-			afficher_section(f, elfHeaders, section_headers, 0, NULL);
-		}
+		if(sectionToDisplay == NULL)
+			afficher_section(f, elfHeaders, sectionsHeadersTable, 0, NULL);
 		else 
-		{
-			afficher_section(f, elfHeaders, section_headers, 0, hex_param);
-		}
+			afficher_section(f, elfHeaders, sectionsHeadersTable, 0, sectionToDisplay);
 	}
 
-	rewind(f);
-	sym_tab = lectureSymbolTab(f, elfHeaders, section_headers, (!(options & OPTION_SYMS)));
+	symbolsTable = lectureSymbolTab(f, elfHeaders, sectionsHeadersTable, (!(options & OPTION_SYMS)));
 
-	rewind(f);
-	free_Str_Reloc(affichage_relocation(f, elfHeaders, section_headers, sym_tab, (!(options & OPTION_RELOCS))));
+	relocationTable = affichage_relocation(f, elfHeaders, sectionsHeadersTable, symbolsTable, (!(options & OPTION_RELOCS)));
 
 	fclose(f);
-	free_Elf32_Shdr(section_headers);
-	free_ListeSymboles(sym_tab);
+	free_Str_Reloc(relocationTable);
+	free_Elf32_Shdr(sectionsHeadersTable);
+	free_ListeSymboles(symbolsTable);
 	
 	return 0;
 }

@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 	Old_elfHeaders = lecture_Headers(f_read, SILENT);
 	
 	rewind(f_read);
-	Old_section_headers = lectureSectionHeader(f_read, Old_elfHeaders, SILENT);
+	Old_section_headers = readSectionsHeadersFromFile(f_read, Old_elfHeaders, SILENT);
 	
 	rewind(f_read);
 	sym_tab = lectureSymbolTab(f_read, Old_elfHeaders, Old_section_headers, SILENT);
@@ -83,14 +83,14 @@ int main(int argc, char *argv[])
 	
 	afficher_headers(Old_elfHeaders);
 	afficher_headers(New_elfHeaders);
-	afficherTableSections(f_read, New_elfHeaders, New_section_headers);
+	displaySectionsHeaders(f_read, New_elfHeaders, New_section_headers);
 
 	rewind(f_read);
-	newST = corrigerSymboles(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);
+	newST = applySymbolsCorrections(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);
 
 	//rewind(f_read);
 	//rewind(f_write);
-	//ecrireNouveauxSymboles(f_write, New_elfHeaders, New_section_headers, newST);
+	//writeSymbolsToFile(f_write, New_elfHeaders, New_section_headers, newST);
 
 	printf("-----Fin de l'ecriture dans %s-----\n", argv[2]);
 

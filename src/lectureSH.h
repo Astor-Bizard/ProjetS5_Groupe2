@@ -14,24 +14,24 @@ Lecture de la table des sections
 * @param sh_type Un entier, généralement issu du champ du même nom d'un en-tête de section
 * @return Le nom du type
 */
-char* sectionTypeString(uint32_t sh_type);
+char* typeNameFromValue(uint32_t sh_type);
 
 /*
 * Récupère la table des nom des sections('.shstrtab') sous la forme d'une chaine. 
 * @param f Le fichier dans lequel se trouve les noms de sections, ouvert en lecture
 * @param elfHeader Le header du fichier en lecture
-* @param sectionsHeaders La table des en-têtes de sections du fichier en lecture
+* @param shTable La table des en-têtes de sections du fichier en lecture
 * @return Une chaine de caractères composée de plusieurs sous-chaines. Copie conforme de la section '.shstrtab'
 */
-char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* sectionsHeaders);
+char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable);
 
 /*
 * Récupère le nom d'une section en se basant sur le champ sh_name de son en-tête.
 * @param names La chaine de caractères contenant les nom de sections, récupérée au préalable avec 'fetchSectionNames(...)'
-* @param nameIndex L'index de depart de la sous-chaine du nom à récuperer. (correspond normalement à un champ sh_name)
-* @return La chaine de caractère correspondant au nom pointé par nameIndex
+* @param sh_name L'index de depart de la sous-chaine du nom à récuperer. (correspond normalement au champ sh_name d'un en-tête de section)
+* @return La chaine de caractère correspondant au nom pointé par sh_name
 */
-char* getSectionName(char* names, uint32_t nameIndex);
+char* getSectionName(char* names, uint32_t sh_name);
 
 /*
 * Récupère le nom d'une section en se basant sur son en-tête.
@@ -49,20 +49,20 @@ char* getSectionNameBis(char* names, Elf32_Shdr sectionHeader);
 char* sectionFlagsTranslation(uint32_t flags);
 
 /*
+* Affiche la liste des en-têtes de section.
+* @param f Le fichier ouvert en lecture
+* @param elfHeader Le header du fichier en lecture
+* @param shTable Le tableau des en-têtes de section
+*/
+void displaySectionsHeaders(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable);
+
+/*
 * Récupère la liste des en-têtes de section.
 * @param f Le fichier ouvert en lecture
 * @param elfHeader Le header du fichier en lecture
 * @param silent Si silent est à 1, aucun affichage ne sera produit en dehors des erreurs
 * @return Un tableau de Elf32_Shdr(en-tête de section) contenant tout les en-têtes de section du fichier f, dans le même ordre que ce dernier.
 */
-Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent);
-
-/*
-* Affiche la liste des en-têtes de section.
-* @param f Le fichier ouvert en lecture
-* @param elfHeader Le header du fichier en lecture
-* @param shTable Le tableau des en-têtes de section
-*/
-void afficherTableSections(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable);
+Elf32_Shdr* readSectionsHeadersFromFile(FILE *f, Elf32_Ehdr elfHeader, int silent);
 
 #endif

@@ -9,79 +9,79 @@ Lecture de la table des sections
 #include "lecture_headers.h"
 #include "lectureSH.h"
 
-char* sectionTypeString(uint32_t sh_type) {
-	char* typeString;
+char* typeNameFromValue(uint32_t sh_type) {
+	char* typeName;
 
 	switch(sh_type) {
 		case SHT_NULL:
-			typeString = "NULL";
+			typeName = "NULL";
 			break;
 		case SHT_PROGBITS:
-			typeString = "PROGBITS";
+			typeName = "PROGBITS";
 			break;
 		case SHT_SYMTAB:
-			typeString = "SYMTAB";
+			typeName = "SYMTAB";
 			break;
 		case SHT_STRTAB:
-			typeString = "STRTAB";
+			typeName = "STRTAB";
 			break;
 		case SHT_RELA:
-			typeString = "RELA";
+			typeName = "RELA";
 			break;
 		case SHT_HASH:
-			typeString = "HASH";
+			typeName = "HASH";
 			break;
 		case SHT_DYNAMIC:
-			typeString = "DYNAMIC";
+			typeName = "DYNAMIC";
 			break;
 		case SHT_NOTE:
-			typeString = "NOTE";
+			typeName = "NOTE";
 			break;
 		case SHT_NOBITS:
-			typeString = "NOBITS";
+			typeName = "NOBITS";
 			break;
 		case SHT_REL:
-			typeString = "REL";
+			typeName = "REL";
 			break;
 		case SHT_SHLIB:
-			typeString = "SHLIB";
+			typeName = "SHLIB";
 			break;
 		case SHT_DYNSYM:
-			typeString = "DYNSYM";
+			typeName = "DYNSYM";
 			break;
 		case SHT_LOPROC:
-			typeString = "LOPROC";
+			typeName = "LOPROC";
 			break;
 		case SHT_HIPROC:
-			typeString = "HIPROC";
+			typeName = "HIPROC";
 			break;
 		case SHT_LOUSER:
-			typeString = "LOUSER";
+			typeName = "LOUSER";
 			break;
 		case SHT_HIUSER:
-			typeString = "HIUSER";
+			typeName = "HIUSER";
 			break;
 		case SHT_ARM_EXIDX:
-			typeString = "ARM_EXIDX";
+			typeName = "ARM_EXIDX";
 			break;
 		case SHT_ARM_PREEMPTMAP:
-			typeString = "ARM_PREEMPTMAP";
+			typeName = "ARM_PREEMPTMAP";
 			break;
 		case SHT_ARM_ATTRIBUTES:
-			typeString = "ARM_ATTRIBUTES";
+			typeName = "ARM_ATTRIBUTES";
 			break;
 		case SHT_ARM_DEBUGOVERLAY:
-			typeString = "ARM_DEBUGOVERLAY";
+			typeName = "ARM_DEBUGOVERLAY";
 			break;
 		case SHT_ARM_OVERLAYSECTION:
-			typeString = "ARM_OVERLAYSECTION";
+			typeName = "ARM_OVERLAYSECTION";
 			break;
 		default:
-			typeString = "# ERR #";
+			typeName = "# ERR #";
 			break;
 	}
 
-	return typeString;
+	return typeName;
 }
 
 char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
@@ -100,10 +100,10 @@ char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	return names;
 }
 
-char* getSectionName(char* names, uint32_t nameIndex) {
+char* getSectionName(char* names, uint32_t sh_name) {
 	int i = 0;
 
-	while(names[nameIndex+i] != '\0')
+	while(names[sh_name+i] != '\0')
 		i++;
 	i++;
 
@@ -114,8 +114,8 @@ char* getSectionName(char* names, uint32_t nameIndex) {
 	}
 
 	i = 0;
-	while(names[nameIndex+i] != '\0') {
-		sectionName[i] = names[nameIndex+i];
+	while(names[sh_name+i] != '\0') {
+		sectionName[i] = names[sh_name+i];
 		i++;
 	}
 	sectionName[i] = '\0';
@@ -179,9 +179,10 @@ char* sectionFlagsTranslation(uint32_t flags) {
 	return flagsString;
 }
 
-void afficherTableSections(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
+void displaySectionsHeaders(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	int i;
-
+	char* sectionName;
+	char* flags;
 	char* names = fetchSectionNames(f, elfHeader, shTable);
 
 	printf("There are %d section headers, starting at offset 0x%x:\n\n", elfHeader.e_shnum, elfHeader.e_shoff);
@@ -189,14 +190,15 @@ void afficherTableSections(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	printf("  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al\n");
 	
 	for(i=0; i<elfHeader.e_shnum; i++) {
-		char* nom = getSectionName(names, shTable[i].sh_name);
-		char* flags = sectionFlagsTranslation(shTable[i].sh_flags);
+		sectionName = getSectionName(names, shTable[i].sh_name);
+		if(strlen(sectionName)>17)
+			sectionName[17] = '\0';
+		flags = sectionFlagsTranslation(shTable[i].sh_flags);
 
-		if(strlen(nom)>17)
-			nom[17] = '\0';
-		printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, nom, sectionTypeString(shTable[i].sh_type), shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+		printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, sectionName, typeNameFromValue(shTable[i].sh_type), shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+		
 		free(flags);
-		free(nom);
+		free(sectionName);
 	}
 	printf("Key to Flags:\n");
 	printf("  W (write), A (alloc), X (execute), M (merge), S (strings)\n");
@@ -206,7 +208,7 @@ void afficherTableSections(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	free(names);
 }
 
-Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
+Elf32_Shdr* readSectionsHeadersFromFile(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	int i;
 
 	// Allocation de la table des en-têtes de section
@@ -231,7 +233,7 @@ Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	}
 
 	if (!silent) {
-		afficherTableSections(f, elfHeader, shTable);
+		displaySectionsHeaders(f, elfHeader, shTable);
 	}
 
 	return shTable;
