@@ -3,13 +3,14 @@ CFLAGS=-Wall -Werror
 BUILD=build
 SRC=src
 EXEC=lecture_ELF modification_ELF
+DEPENDS=$(BUILD)/lecture_headers.o $(BUILD)/lectureSH.o $(BUILD)/afficher_section.o $(BUILD)/lectureST.o $(BUILD)/affichage_relocation.o $(BUILD)/liberation.o
 
 all : $(EXEC)
 
-lecture_ELF: $(BUILD)/lecture_ELF.o $(BUILD)/lecture_headers.o $(BUILD)/lectureSH.o $(BUILD)/afficher_section.o $(BUILD)/lectureST.o $(BUILD)/affichage_relocation.o $(BUILD)/liberation.o
+lecture_ELF: $(BUILD)/lecture_ELF.o $(DEPENDS)
 	$(CC) $(CFLAGS) -o $@ $^
 
-modification_ELF: $(BUILD)/modification_ELF.o $(BUILD)/lecture_headers.o $(BUILD)/lectureSH.o $(BUILD)/afficher_section.o $(BUILD)/lectureST.o $(BUILD)/affichage_relocation.o $(BUILD)/renum_section.o $(BUILD)/correctionSymboles.o
+modification_ELF: $(BUILD)/modification_ELF.o $(DEPENDS) $(BUILD)/renum_section.o $(BUILD)/correctionSymboles.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 $(BUILD)/%.o: $(SRC)/%.c
@@ -17,14 +18,6 @@ $(BUILD)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) -c $<
 	mv `basename $@` $(BUILD)
 
-$(BUILD)/lecture_ELF.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h $(SRC)/afficher_section.h $(SRC)/affichage_relocation.h $(SRC)/lectureST.h $(SRC)/liberation.h
-$(BUILD)/lectureSH.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h
-$(BUILD)/afficher_section.o: $(SRC)/lectureSH.h $(SRC)/afficher_section.h
-$(BUILD)/lectureST.o: $(SRC)/lecture_headers.h $(SRC)/lectureSH.h $(SRC)/lectureST.h
-$(BUILD)/affichage_relocation.o: $(SRC)/lecture_headers.h $(SRC)/afficher_section.h $(SRC)/affichage_relocation.h $(SRC)/lectureST.h
-$(BUILD)/renum_section.o: $(SRC)/renum_section.h $(SRC)/afficher_section.h $(SRC)/lectureST.h $(SRC)/affichage_relocation.h
-$(BUILD)/liberation.o: $(SRC)/lectureST.h $(SRC)/lectureSH.h $(SRC)/affichage_relocation.h
-$(BUILD)/correctionSymboles.o: $(SRC)/lectureST.h $(SRC)/lectureSH.h $(SRC)/lecture_headers.h $(SRC)/correctionSymboles.h
 clean:
 	rm -f $(BUILD)/*.o $(EXEC) *~ $(SRC)/*~
 
