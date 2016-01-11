@@ -140,10 +140,9 @@ int main(int argc, char *argv[]) {
 	sym_tab = lectureSymbolTab(f, elfHeaders, section_headers, (!(options & OPTION_SYMS)));
 
 	rewind(f);
-	affichage_relocation(f, elfHeaders, section_headers, sym_tab, (!(options & OPTION_RELOCS)));
-	
+	free_Str_Reloc(affichage_relocation(f, elfHeaders, section_headers, sym_tab, (!(options & OPTION_RELOCS))));
+
 	fclose(f);
-	
 	free_Elf32_Shdr(section_headers);
 	free_ListeSymboles(sym_tab);
 	
