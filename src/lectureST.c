@@ -19,10 +19,6 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 	int i=0;
 	int j=0;
 	ListeSymboles listeSymboles;
-	char* typeString;
-	char* bindString;
-	char* symbolString;
-	char* visionString;
 
 	while(strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab"))
 	{
@@ -45,41 +41,35 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 	
 	if (!silent)
 	{
-		printf("\nSymbol table '.symtab' contains %d entries:\n",sectionSymbolTabSize/16);
+		printf("\nSymbol table '.symtab' contains %d entries:\n", sectionSymbolTabSize/16);
 		printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
 	}
 
 	for(i = 0; i<sectionSymbolTabSize; i=i+16)
 	{
-		listeSymboles.symboles[j].st_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
-		listeSymboles.symboles[j].st_value = (Elf32_Addr) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
-		listeSymboles.symboles[j].st_size = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
-		listeSymboles.symboles[j].st_info = (unsigned char) lire_octets(elfHeader.e_ident[EI_DATA],f,1);
-		listeSymboles.symboles[j].st_other = (unsigned char) lire_octets(elfHeader.e_ident[EI_DATA],f,1);
-		listeSymboles.symboles[j].st_shndx = (uint16_t) lire_octets(elfHeader.e_ident[EI_DATA],f,2);
+		listeSymboles.symboles[j].st_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		listeSymboles.symboles[j].st_value = (Elf32_Addr) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		listeSymboles.symboles[j].st_size = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		listeSymboles.symboles[j].st_info = (unsigned char) lire_octets(elfHeader.e_ident[EI_DATA], f, 1);
+		listeSymboles.symboles[j].st_other = (unsigned char) lire_octets(elfHeader.e_ident[EI_DATA], f, 1);
+		listeSymboles.symboles[j].st_shndx = (uint16_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 2);
 
 		unsigned char info = 15 & listeSymboles.symboles[j].st_info;
 		unsigned char bind = 15<<4 & listeSymboles.symboles[j].st_info;
 
 		if (!silent)
 		{
-			typeString = typeSymbole(info);
-			bindString = bindSymbole(bind);
-			symbolString = getSymbolNameBis(symbolNames,listeSymboles.symboles[j]);
-			visionString = visionSymbole(listeSymboles.symboles[j].st_other);
+			char* symbolString = getSymbolNameBis(symbolNames,listeSymboles.symboles[j]);
 
 			if(listeSymboles.symboles[j].st_shndx == 0)
 			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeString, bindString, visionString, symbolString);
+				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), symbolString);
 			}
 			else
 			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeString, bindString, visionString, listeSymboles.symboles[j].st_shndx, symbolString);
+				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), listeSymboles.symboles[j].st_shndx, symbolString);
 			}
-			free(typeString);
-			free(bindString);
 			free(symbolString);
-			free(visionString);
 		}
 		j++;
 	}
