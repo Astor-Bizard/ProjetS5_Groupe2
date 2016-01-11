@@ -182,8 +182,7 @@ char* sectionFlagsTranslation(uint32_t flags) {
 	return flagsString;
 }
 
-
-void afficherTableSections(f, elfHeader, shTable) {
+void afficherTableSections(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	char* type;
 	char* nom;
 
