@@ -11,6 +11,9 @@ Programme principal de la phase 2
 
 #define SILENT 1 
 
+#define TEXT 0
+#define DATA 1
+
 int main(int argc, char *argv[])
 {
 	Elf32_Ehdr Old_elfHeaders;
@@ -20,6 +23,7 @@ int main(int argc, char *argv[])
 	ListeSymboles sym_tab;
 	ListeSymboles newST;
 	Str_Reloc str_reloc;
+	Table_Donnees tab_donnees;
 	
 	FILE *f_read, *f_write;
 	if(argc != 3)
@@ -51,9 +55,34 @@ int main(int argc, char *argv[])
 	str_reloc = affichage_relocation(f_read, Old_elfHeaders, Old_section_headers, sym_tab, SILENT);
 	
 	printf("-----Fin de la lecture de %s-----\n",argv[1]);
+
+	tab_donnees.nbSecRel = 2;
+	tab_donnees.table_Addr = malloc(sizeof(Elf32_Addr)*tab_donnees.nbSecRel);
+	if (tab_donnees.table_Addr==NULL) {
+		printf("\nErreur lors de l'allocation initiale de tab_donnees.table_Addr.\n");
+		exit(1);
+	}
+	tab_donnees.table_Num_Addr = malloc(sizeof(int)*tab_donnees.nbSecRel);
+	if (tab_donnees.table_Num_Addr==NULL) {
+		printf("\nErreur lors de l'allocation initiale de tab_donnees.table_Num_Addr.\n");
+		exit(1);
+	}
+
+	tab_donnees.table_Num_Addr[TEXT]=index_Shdr(".text",f_read,Old_elfHeaders,Old_section_headers);
+	tab_donnees.table_Num_Addr[DATA]=index_Shdr(".data",f_read,Old_elfHeaders,Old_section_headers);
+
+	//.text = 0x58
+	//.data = 0x1000
+
+	tab_donnees.table_Addr[TEXT]=0x58;
+	tab_donnees.table_Addr[DATA]=0x1000;
+
 	rewind(f_read);
 	renumerote_section(f_read,f_write,Old_elfHeaders, Old_section_headers,
-		sym_tab,str_reloc, &New_elfHeaders,&New_section_headers);
+		sym_tab,str_reloc, &New_elfHeaders,&New_section_headers,tab_donnees);
+
+	free(tab_donnees.table_Addr);
+	free(tab_donnees.table_Num_Addr);
 
 	fclose(f_write);
 	f_write = fopen(argv[2], "r");
