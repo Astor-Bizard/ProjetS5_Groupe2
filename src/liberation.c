@@ -14,9 +14,8 @@ void free_ListeSymboles(ListeSymboles sym_tab)
 	free(sym_tab.symboles);
 }
 
-void free_Str_Reloc(Str_Reloc *str_reloc)
+void free_Str_Reloc(Str_Reloc str_reloc)
 {
-	free(str_reloc->Rel);
-	free(str_reloc->Sec_Rel);
-	free(str_reloc);
+	free(str_reloc.Rel);
+	free(str_reloc.Sec_Rel);
 }

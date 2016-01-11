@@ -14,7 +14,7 @@ Libere les differente structure du programme
 
 void free_Elf32_Shdr(Elf32_Shdr *section_headers);
 void free_ListeSymboles(ListeSymboles sym_tab);
-void free_Str_Reloc(Str_Reloc *str_reloc);
+void free_Str_Reloc(Str_Reloc str_reloc);
 
 
 #endif
