@@ -42,4 +42,9 @@ Le fichier doit être ouvert en lecture, elfHeader doit être défini.
 */
 Elf32_Shdr* lectureSectionHeader(FILE *f, Elf32_Ehdr elfHeader, int silent);
 
+/*
+Affiche la liste des entetes de section.
+*/
+void afficherTableSections(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable);
+
 #endif
