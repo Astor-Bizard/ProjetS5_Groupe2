@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
 	Elf32_Ehdr New_elfHeaders;
 	Elf32_Shdr New_section_headers;
 	ListeSymboles sym_tab;
+	ListeSymboles newST;
 	Str_Reloc str_reloc;
 	
 	FILE *f_read, *f_write;
@@ -65,12 +66,32 @@ int main(int argc, char *argv[])
 	renumerote_section(f_read,f_write,Old_elfHeaders, Old_section_headers,
 		sym_tab,str_reloc, &New_elfHeaders,&New_section_headers);
 
+	fclose(f_write);
+	f_write = fopen(argv[2], "r");
+	if (f_write == NULL) {
+		printf("Fichier introuvable: %s\n", argv[2]);
+		fclose(f_read);
+		return 0;
+	}
 
+	rewind(f_read);
+	newST = corrigerSymboles(f_read, f_write, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, !SILENT);
 
-	
+	fclose(f_write);
+	f_write = fopen(argv[2], "w");
+	if (f_write == NULL) {
+		printf("Fichier introuvable: %s\n", argv[2]);
+		fclose(f_read);
+		return 0;
+	}
 
-
+	rewind(f_read);
+	ecrireNouveauxSymboles(f_write, New_elfHeaders, New_section_headers, newST);
 
 	printf("-----Fin de l'ecriture dans %s-----\n",argv[2]);
+
+	fclose(f_read);
+	fclose(f_write);
+	
 	return 0;
 }
