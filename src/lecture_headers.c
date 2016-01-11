@@ -6,7 +6,7 @@ Lecture d'un fichier elf et affichage du Header
 
 #include "lecture_headers.h"
 
-
+#define MEMORISER(N,E)	E = lire_octets(headers.e_ident[EI_DATA],f,N);
 
 long long int lire_octets(char mode, FILE *f, int nb_octet)
 {
@@ -31,28 +31,24 @@ long long int lire_octets(char mode, FILE *f, int nb_octet)
 Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 {
 	long long int lec_Cour = 0;
-	int octet_cour = 0;
 	Elf32_Ehdr headers;
 	headers.e_ident[EI_DATA]=(char) B_ENDIAN;
 	int i;
 
 	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
-	octet_cour += 4;
 
 	if (lec_Cour != 0x7f454c46)
 	{
-		printf("Erreur lecture_Header : 7f45 4c46 (%i)\n", octet_cour);
+		printf("Erreur lecture_Header : 7f45 4c46\n");
 		printf("Octets lus : %llx\n", lec_Cour);
 		exit(1);
 	}
 
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,1);
-	octet_cour++;
-
-	if (lec_Cour != 1 && lec_Cour != 2)
+	MEMORISER(1,headers.e_ident[EI_CLASS]);
+	if (headers.e_ident[EI_CLASS] != 1 && headers.e_ident[EI_CLASS] != 2)
 	{
-		printf("Erreur lecture_Header : Classe (%i)\n", octet_cour);
-		printf("Octets lus : %llx\n", lec_Cour);
+		printf("Erreur lecture_Header : Classe\n");
+		printf("Octets lus : %x\n", headers.e_ident[EI_CLASS]);
 		exit(1);
 	}
 
@@ -60,41 +56,33 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 	headers.e_ident[EI_MAG1]='E';
 	headers.e_ident[EI_MAG2]='L';
 	headers.e_ident[EI_MAG3]='F';
-	headers.e_ident[EI_CLASS]=lec_Cour;
 
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,1);
-	octet_cour++;
-
-	if (lec_Cour != 1 && lec_Cour != 2)
+	MEMORISER(1,headers.e_ident[EI_DATA]);
+	if (headers.e_ident[EI_DATA] != 1 && headers.e_ident[EI_DATA] != 2)
 	{
-		printf("Erreur lecture_Header : Data (%i)\n", octet_cour);
-		printf("Octets lus : %llx\n", lec_Cour);
+		printf("Erreur lecture_Header : Data\n");
+		printf("Octets lus : %x\n", headers.e_ident[EI_DATA]);
 		exit(1);
 	}
 
-	if (lec_Cour == 0x01)
+	if (headers.e_ident[EI_DATA] == 0x01)
 		headers.e_ident[EI_DATA] = (char) L_ENDIAN;
 	else
 		headers.e_ident[EI_DATA] = (char) B_ENDIAN;
 
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,1);
-	octet_cour++;
-	if(! (lec_Cour))
+	MEMORISER(1,headers.e_ident[EI_VERSION]);
+	if(! (headers.e_ident[EI_VERSION]))
 	{
-		printf("Erreur lecture_Header : Version header (%i)\n", octet_cour);
-		printf("Octets lus : %llx\n", lec_Cour);
+		printf("Erreur lecture_Header : Version header\n");
+		printf("Octets lus : %x\n", headers.e_ident[EI_VERSION]);
 		exit(1);
 	}
 
-	headers.e_ident[EI_VERSION]=lec_Cour;
-
 	lire_octets(headers.e_ident[EI_DATA],f,9);
-	for(i=octet_cour;i<EI_NIDENT;i++) headers.e_ident[i]=0x0;
-	octet_cour +=9;
+	for(i=7;i<EI_NIDENT;i++) headers.e_ident[i]=0x0;
 
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
-	octet_cour+=2;
-	switch(lec_Cour)
+	MEMORISER(2,headers.e_type);
+	switch(headers.e_type)
 	{
 		case 0:
 		case 1:
@@ -105,80 +93,39 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 		case 0xffff:
 			break;
 		default:
-			printf("Erreur lecture_Header : Type(%i)\n", octet_cour);
+			printf("Erreur lecture_Header : Type\n");
 			exit(1);
 	}
 
-	headers.e_type=lec_Cour;
+	MEMORISER(2,headers.e_machine);
 
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
-	octet_cour+=2;
-
-	headers.e_machine=lec_Cour;
-
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
-	octet_cour+=4;
-	if(! (lec_Cour))
+	MEMORISER(4,headers.e_version);
+	if(! (headers.e_version))
 	{
-		printf("Erreur lecture_Header : Version (%i)\n", octet_cour);
+		printf("Erreur lecture_Header : Version\n");
 		printf("Octets lus : %llx\n", lec_Cour);
 		exit(1);
 	}
 
-	headers.e_version=lec_Cour;
+	MEMORISER(4,headers.e_entry);
 
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
-	octet_cour+=4;
+	MEMORISER(4,headers.e_phoff);
 
-	headers.e_entry=lec_Cour;
+	MEMORISER(4,headers.e_shoff);
 
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
-	octet_cour+=4;
+	MEMORISER(4,headers.e_flags);
 
-	headers.e_phoff=lec_Cour;
+	MEMORISER(2,headers.e_ehsize);
 
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
-	octet_cour+=4;
+	MEMORISER(2,headers.e_phentsize);
 
-	headers.e_shoff=lec_Cour;
+	MEMORISER(2,headers.e_phnum);
 
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,4);
-	octet_cour+=4;
+	MEMORISER(2,headers.e_shentsize);
 
-	headers.e_flags=lec_Cour;
+	MEMORISER(2,headers.e_shnum);
 
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
-	octet_cour+=2;
-
-	headers.e_ehsize=lec_Cour;
-
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
-	octet_cour+=2;
-
-	headers.e_phentsize=lec_Cour;
-
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
-	octet_cour+=2;
-
-	headers.e_phnum=lec_Cour;
-
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
-	octet_cour+=2;
-	
-	headers.e_shentsize=lec_Cour;
-
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
-	octet_cour+=2;
-	
-	headers.e_shnum=lec_Cour;
-
-	lec_Cour = lire_octets(headers.e_ident[EI_DATA],f,2);
-	octet_cour+=2;
-	
-	if(!lec_Cour)
-		headers.e_shstrndx=SHN_UNDEF;
-	else
-		headers.e_shstrndx=lec_Cour;
+	MEMORISER(2,headers.e_shstrndx);
 
 	if(!silent)
 	{
