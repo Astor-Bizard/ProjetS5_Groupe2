@@ -201,9 +201,10 @@ void afficherTableSections(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 
 		if(strlen(nom)>17)
 			nom[17] = '\0';
-		printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, nom, type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, sectionFlagsTranslation(shTable[i].sh_flags), shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+		printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, nom, type, shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
 		free(nom);
 		free(flags);
+		free(type);
 	}
 	printf("Key to Flags:\n");
 	printf("  W (write), A (alloc), X (execute), M (merge), S (strings)\n");

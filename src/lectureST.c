@@ -19,6 +19,10 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 	int i=0;
 	int j=0;
 	ListeSymboles listeSymboles;
+	char* typeString;
+	char* bindString;
+	char* symbolString;
+	char* visionString;
 
 	while(strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab"))
 	{
@@ -38,13 +42,13 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 		listeSymboles.nbSymboles = 0;
 		return listeSymboles;
 	}
-
+	
 	if (!silent)
 	{
 		printf("\nSymbol table '.symtab' contains %d entries:\n",sectionSymbolTabSize/16);
 		printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
 	}
-	
+
 	for(i = 0; i<sectionSymbolTabSize; i=i+16)
 	{
 		listeSymboles.symboles[j].st_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA],f,4);
@@ -59,19 +63,31 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 
 		if (!silent)
 		{
+			typeString = typeSymbole(info);
+			bindString = bindSymbole(bind);
+			symbolString = getSymbolNameBis(symbolNames,listeSymboles.symboles[j]);
+			visionString = visionSymbole(listeSymboles.symboles[j].st_other);
+
 			if(listeSymboles.symboles[j].st_shndx == 0)
 			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), getSymbolNameBis(symbolNames,listeSymboles.symboles[j]));
+				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeString, bindString, visionString, symbolString);
 			}
 			else
 			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), listeSymboles.symboles[j].st_shndx, getSymbolNameBis(symbolNames,listeSymboles.symboles[j]));
+				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeString, bindString, visionString, listeSymboles.symboles[j].st_shndx, symbolString);
 			}
+			free(typeString);
+			free(bindString);
+			free(symbolString);
+			free(visionString);
 		}
 		j++;
 	}
 
 	listeSymboles.nbSymboles = j;
+
+	free(names);
+	free(symbolNames);
 
 	return listeSymboles;
 }
