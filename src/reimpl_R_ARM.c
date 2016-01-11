@@ -18,6 +18,8 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	int i;
 	uint32_t addrSymbole;
 
+	partieText = malloc(sizeof(unsigned char)*tabSH[1].sh_size/16);
+	partieData = malloc(sizeof(unsigned char)*tabSH[3].sh_size/16);
 	for(i=0, i<tableDeDonnees.nbSecRel, i++)
 	{
 		if (i==0)
@@ -74,5 +76,9 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 				break;
 		}
 	}
-
+	// Faut ajouter qqchose ici.
+	fseek(f, 40, SEEK_SET);
+	fwrite(&partieText, sizeof(unsigned char), 1, f);
+	fwrite(&partieData, sizeof(unsigned char), 1, f);
+	
 }
