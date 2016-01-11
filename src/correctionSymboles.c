@@ -52,8 +52,6 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 		printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
 
 		i = 0;
-		printf("Bidule: %d\n", newSH[i].sh_name);
-
 		while(strcmp(getSectionNameBis(sectionNames, newSH[i]), ".symtab"))
 		{
 			i++;
