@@ -36,7 +36,7 @@ void print_usage() {
 int main(int argc, char *argv[]) {
 	Elf32_Ehdr elfHeaders;
 	Elf32_Shdr *section_headers;
-	ListeSymboles *sym_tab;
+	ListeSymboles sym_tab;
 	char* fileName;
 	char* hex_param = NULL;
 	FILE* f;
@@ -137,8 +137,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	rewind(f);
-	sym_tab = malloc(sizeof(ListeSymboles));
-	*sym_tab = lectureSymbolTab(f, elfHeaders, section_headers, (!(options & OPTION_SYMS)));
+	sym_tab = lectureSymbolTab(f, elfHeaders, section_headers, (!(options & OPTION_SYMS)));
 
 	rewind(f);
 	affichage_relocation(f, elfHeaders, section_headers, *sym_tab, (!(options & OPTION_RELOCS)));
