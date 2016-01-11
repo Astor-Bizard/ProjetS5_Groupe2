@@ -185,6 +185,7 @@ char* sectionFlagsTranslation(uint32_t flags) {
 void afficherTableSections(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	char* type;
 	char* nom;
+	int i;
 
 	char* names = fetchSectionNames(f, elfHeader, shTable);
 
