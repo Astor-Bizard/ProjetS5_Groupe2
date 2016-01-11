@@ -35,7 +35,7 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 	unsigned char info;
 	unsigned char bind;
 	
-	printf("MARQUE 1\n");
+	printf("MARQUE 0\n");
 
 	newST.symboles = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*oldST.nbSymboles);
 	if(newST.symboles == NULL)
@@ -54,6 +54,7 @@ ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehd
 		i = 0;
 		while(strcmp(getSectionNameBis(sectionNames, newSH[i]), ".symtab"))
 		{
+			printf("MARQUE 1:%d\n", i);
 			i++;
 		}
 		symbolNames = fetchSymbolNames(oldFile, newSH, i);
