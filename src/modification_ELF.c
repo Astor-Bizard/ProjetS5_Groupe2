@@ -8,6 +8,7 @@ Programme principal de la phase 2
 #include "affichage_relocation.h"
 #include "renum_section.h"
 #include "correctionSymboles.h"
+#include "liberation.h"
 
 #define SILENT 1 
 
@@ -84,9 +85,6 @@ int main(int argc, char *argv[])
 	afficher_headers(Old_elfHeaders);
 	afficher_headers(New_elfHeaders);
 
-	free(tab_donnees.table_Addr);
-	free(tab_donnees.table_Num_Addr);
-
 	rewind(f_read);
 	corrigerSymboles(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);
 
@@ -98,6 +96,10 @@ int main(int argc, char *argv[])
 
 	fclose(f_read);
 	fclose(f_write);
+
+	free(tab_donnees.table_Addr);
+	free(tab_donnees.table_Num_Addr);
+	free_Str_Reloc(str_reloc);
 
 	return 0;
 }
