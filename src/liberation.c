@@ -16,19 +16,7 @@ void free_ListeSymboles(ListeSymboles sym_tab)
 
 void free_Str_Reloc(Str_Reloc *str_reloc)
 {
-	int i;
-	for(i=0;i<str_reloc->nb_Rel;i++)
-	{
-		free(&str_reloc->Rel[i]);
-		free(&str_reloc->Sec_Rel[i]);
-	}
-	for(i=0;i<str_reloc->nb_Rela;i++)
-	{
-		free(&str_reloc->Rela[i]);
-		free(&str_reloc->Sec_Rela[i]);
-	}
+	free(str_reloc->Rel);
+	free(str_reloc->Sec_Rel);
 	free(str_reloc);
 }
-
-
-

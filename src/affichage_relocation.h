@@ -15,11 +15,8 @@
 typedef struct 
 {
 	int nb_Rel;
-	int nb_Rela;
 	Elf32_Rel *Rel;
 	int *Sec_Rel;
-	Elf32_Rela *Rela;
-	int *Sec_Rela;
 }Str_Reloc;
 
 //Affiche les informations de relocation, et renvoie la structure de relocation

@@ -233,10 +233,7 @@ Str_Reloc affichage_relocation(FILE* f,
 {
     Str_Reloc RETOUR;
     RETOUR.nb_Rel=0;
-    RETOUR.nb_Rela=0;
     RETOUR.Rel=NULL;
-    RETOUR.Rela=NULL;
-    RETOUR.Sec_Rela=NULL;
     RETOUR.Sec_Rel=NULL;
 
 	int i=0,ok=0;
