@@ -41,6 +41,8 @@ void renumerote_section(FILE *f_read,
 	//Modification du Headers
 	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers);
 	
+	*elfHeaders_mod=elfHeaders;
+
 	elfHeaders_mod->e_shnum = elfHeaders.e_shnum - nb_Sec_A_Traiter;
 	
 	section_headers_mod = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeaders.e_shnum);
@@ -48,6 +50,8 @@ void renumerote_section(FILE *f_read,
 		printf("\nErreur lors de l'allocation initiale de section_headers_mod.\n");
 		exit(1);
 	}
+
+
 
 	//Modification table des sections
 	for(i=0;i<elfHeaders.e_shnum;i++)
@@ -79,8 +83,11 @@ void renumerote_section(FILE *f_read,
 
 	elfHeaders_mod->e_shoff -=  OctetSupp;
 
-
-	fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
+	if(elfHeaders_mod->e_shoff == elfHeaders.e_shoff)
+	{
+		printf("CONNARD\n");
+	}
+	fwrite(&elfHeaders,sizeof(Elf32_Ehdr),1,f_write);
 
 }
 
