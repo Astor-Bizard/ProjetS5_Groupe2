@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 	Elf32_Ehdr Old_elfHeaders;
 	Elf32_Shdr *Old_section_headers;
 	Elf32_Ehdr New_elfHeaders;
-	Elf32_Shdr *New_section_headers;
+	Elf32_Shdr *New_section_headers = NULL;
 	ListeSymboles sym_tab;
 	ListeSymboles newST;
 	Str_Reloc str_reloc;
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 
 	rewind(f_read);
 	renumerote_section(f_read,f_write,Old_elfHeaders, Old_section_headers,
-		sym_tab,str_reloc, &New_elfHeaders,&New_section_headers,tab_donnees);
+		sym_tab,str_reloc, &New_elfHeaders, New_section_headers,tab_donnees);
 
 	free(tab_donnees.table_Addr);
 	free(tab_donnees.table_Num_Addr);

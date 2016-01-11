@@ -37,6 +37,9 @@ void renumerote_section(FILE *f_read,
 	int i,k; 
 	int nb_Sec_A_Traiter = 0;
 	Elf32_Word OctetSupp = 0;
+	printf("Yo\n");
+	
+
 	//unsigned char *sec_Cour;
 	//int premier = 1;
 	//int id_Sec_Cour = 0;
@@ -79,12 +82,15 @@ void renumerote_section(FILE *f_read,
 	//Modification table des sections
 	for(i=0;i<elfHeaders.e_shnum;i++)
 	{
+		printf("ICI\n");
 		if(section_headers[i].sh_type == SHT_REL)
 		{
+			printf("la\n");
 			OctetSupp += section_headers[i].sh_size;
 			k= 0;
-			while(tab_donnees.table_Num_Addr[k] != (i-1) && k < tab_donnees.nbSecRel)
+			while(k < tab_donnees.nbSecRel && tab_donnees.table_Num_Addr[k] != (i-1))
 			{
+				
 				k++;
 			}
 			if(k == tab_donnees.nbSecRel)
@@ -106,10 +112,15 @@ void renumerote_section(FILE *f_read,
 	}
 
 	elfHeaders_mod->e_shoff -=  OctetSupp;
-	
+
 
 	fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
-
+/*
+	for(i=0;i<elfHeaders_mod->e_shnum;i++)
+	{
+		printf("[%2d] %08x", i, section_headers_mod[i].sh_addr);
+	}
+*/
 	// Ecriture de la nouvelle section
 /*
 	printf("Boucle\n");
