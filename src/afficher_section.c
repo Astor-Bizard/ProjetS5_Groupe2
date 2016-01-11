@@ -59,6 +59,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 	unsigned char aff[17];
 	for(j=0;j<17;j++)aff[j]='\0';
 
+	// Si on a une entrée, on l'utilise au lieu de demander au clavier
 	if(strOverride==NULL)
 	{
 		scanf("%s",str);
@@ -94,38 +95,49 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 				return section;
 			}
 			else{
+				// Initialisation de l'affichage, récupération du nom de la section
 				printf("\nHex dump of section '%s':\n",str);
 				names = fetchSectionNames(f,elfHeader,tabSH);
 				for(i=0;i<elfHeader.e_shnum;i++){
 					sectionName=getSectionNameBis(names,tabSH[i]);
 					if(!strcmp(str,sectionName+4) && tabSH[i].sh_type==SHT_REL) printf(" NOTE: This section has relocations against it, but these have NOT been applied to this dump.\n");
 				}
+
 				// On se place
 				fseek(f,tabSH[num_sh].sh_offset,0);
 				printf("  0x%08x ",0);
 				i=0;
+				// On affiche le contenu de la section
 				while(i<tabSH[num_sh].sh_size){
+
+					// Affichage de l'offset
 					if(i!=0){
 						if(i%16==0){
 							printf(" %s\n  0x%08x ",aff,i);
-							for(j=0;j<17;j++)aff[j]='\0';
+							for(j=0;j<17;j++)aff[j]='\0';	// Affichage non hexa
 						}
 						else if(i%4==0) printf(" ");
 					}
+
+					// Affichage hexa
 					c=fgetc(f);
 					printf("%02x",c);
 					if(renvoi) section[i]=c;
+
+					// Memorisation du caractère pour écriture non hexa
 					if(c>=32 && c<=126) aff[i%16]=c;
 					else aff[i%16]='.';
 					i++;
 				}
-				if(renvoi) section[i]='\0';
+				// Terminaison de l'affichage
 				while(i%16!=0){
 					if(i%4==0) printf(" ");
 					printf("  ");
 					i++;
 				}
 				printf(" %s",aff);
+
+				if(renvoi) section[i]='\0';
 			}
 			printf("\n\n");
 		}
@@ -137,7 +149,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 	return section;
 }
 
-// Affiche le contenu de la section numero num_sh. Renvoie ce contenu, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
+// Renvoie un pointeur sur le contenu de la section numero num_sh, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
 unsigned char *recuperer_section_num(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int num_sh){
 	int i;
 	unsigned char c;
@@ -151,7 +163,7 @@ unsigned char *recuperer_section_num(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *
 		fseek(f,tabSH[num_sh].sh_offset,0);
 		section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
 		if(section != NULL){
-			// On affiche le contenu de la section
+			// On mémorise le contenu de la section
 			for(i=0;i<tabSH[num_sh].sh_size;i++){
 				c=fgetc(f);
 				section[i]=c;
