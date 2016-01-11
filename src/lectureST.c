@@ -16,19 +16,21 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 	uint32_t sectionSymbolTabOffset;
 	char* names = fetchSectionNames(f, elfHeader, sectionHeader);
 	char* symbolNames;
-	int i=0;
-	int j=0;
+	int i = 0;
+	int j = 0;
 	ListeSymboles listeSymboles;
 
-	while(strcmp(getSectionNameBis(names,sectionHeader[i]), ".symtab"))
+	char* nomSection = getSectionNameBis(names, sectionHeader[i]);
+	while(strcmp(nomSection, ".symtab"))
 	{
+		free(nomSection);
 		i++;
+		nomSection = getSectionNameBis(names, sectionHeader[i]);
 	}
+	free(nomSection);
 	sectionSymbolTabSize = sectionHeader[i].sh_size;
 	sectionSymbolTabOffset = sectionHeader[i].sh_offset;
-	symbolNames = fetchSymbolNames(f,sectionHeader,i);
-
-	fseek(f,sectionSymbolTabOffset,SEEK_SET);
+	symbolNames = fetchSymbolNames(f, sectionHeader, i);
 
 	listeSymboles.symboles = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16));
 	if(listeSymboles.symboles == NULL)
@@ -36,6 +38,8 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 		printf("Erreur d'allocation\n");
 		listeSymboles.symboles = NULL;
 		listeSymboles.nbSymboles = 0;
+		free(names);
+		free(symbolNames);
 		return listeSymboles;
 	}
 	
@@ -45,6 +49,7 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 		printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
 	}
 
+	fseek(f, sectionSymbolTabOffset, SEEK_SET);
 	for(i = 0; i<sectionSymbolTabSize; i=i+16)
 	{
 		listeSymboles.symboles[j].st_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
@@ -59,7 +64,7 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 
 		if (!silent)
 		{
-			char* symbolString = getSymbolNameBis(symbolNames,listeSymboles.symboles[j]);
+			char* symbolString = getSymbolNameBis(symbolNames, listeSymboles.symboles[j]);
 
 			if(listeSymboles.symboles[j].st_shndx == 0)
 			{
