@@ -15,6 +15,10 @@ Renumerote les section dans un ELF et la table des réimplantations
 
 
 /*Struture pour stocker les different valeur passer en parametre
+nbSecRel = nombre de section de relocation
+A l'indice i
+table_Num_Addr[i] est l'indice de la section (DE LA 1ER STRUCTURE) à realouer     
+table_addr[i] est l'adresse correspondante
 */
 
 typedef struct 

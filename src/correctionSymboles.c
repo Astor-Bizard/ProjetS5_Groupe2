@@ -26,16 +26,17 @@ size_t fwrite8(FILE* f, int mode, uint8_t value) {
 	return fwrite(&value, 1, 1, f);
 }
 
-ListeSymboles corrigerSymboles(FILE* oldFile, FILE* newFile, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader, Elf32_Shdr* originalSH, Elf32_Shdr* newSH, ListeSymboles oldST, int silent) {
+ListeSymboles corrigerSymboles(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader, Elf32_Shdr* originalSH, Elf32_Shdr* newSH, ListeSymboles oldST, int silent) {
 	ListeSymboles newST;
 	int i, j;
 	char* originalName;
-	char* oldSectionNames = fetchSectionNames(oldFile, oldElfHeader, originalSH);
-	char* newSectionNames = fetchSectionNames(newFile, newElfHeader, newSH);
+	char* sectionNames = fetchSectionNames(oldFile, oldElfHeader, originalSH);
 	char* symbolNames;
 	unsigned char info;
 	unsigned char bind;
 	
+	printf("MARQUE 1\n");
+
 	newST.symboles = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*oldST.nbSymboles);
 	if(newST.symboles == NULL)
 	{
@@ -51,23 +52,26 @@ ListeSymboles corrigerSymboles(FILE* oldFile, FILE* newFile, Elf32_Ehdr oldElfHe
 		printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
 
 		i = 0;
-		while(strcmp(getSectionNameBis(newSectionNames, newSH[i]), ".symtab"))
+		while(strcmp(getSectionNameBis(sectionNames, newSH[i]), ".symtab"))
 		{
 			i++;
 		}
-		symbolNames = fetchSymbolNames(newFile, newSH, i);
+		symbolNames = fetchSymbolNames(oldFile, newSH, i);
 	}
+
+	printf("MARQUE 2\n");
 
 	for(j=0; j<oldST.nbSymboles; j++)
 	{
+		printf("MARQUE 3a:%d\n", j);
 		newST.symboles[j].st_name = oldST.symboles[j].st_name;
 		newST.symboles[j].st_size = oldST.symboles[j].st_size;
 		newST.symboles[j].st_info = oldST.symboles[j].st_info;
 		newST.symboles[j].st_other = oldST.symboles[j].st_other;
 
-		originalName = getSectionNameBis(oldSectionNames, originalSH[oldST.symboles[j].st_shndx]);
+		originalName = getSectionNameBis(sectionNames, originalSH[oldST.symboles[j].st_shndx]);
 		i = 0;
-		while (strcmp(originalName, getSectionNameBis(newSectionNames, newSH[i]))!=0 && i<newElfHeader.e_shnum) 
+		while (strcmp(originalName, getSectionNameBis(sectionNames, newSH[i]))!=0 && i<newElfHeader.e_shnum) 
 		{
 			i++;
 		}
@@ -97,9 +101,12 @@ ListeSymboles corrigerSymboles(FILE* oldFile, FILE* newFile, Elf32_Ehdr oldElfHe
 				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, newST.symboles[j].st_value, newST.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newST.symboles[j].st_other), newST.symboles[j].st_shndx, getSymbolNameBis(symbolNames, newST.symboles[j]));
 			}
 		}
+		printf("MARQUE 3b:%d\n", j);
 	}
 
 	newST.nbSymboles = j;
+
+	printf("MARQUE 4\n");
 
 	return newST;
 }
@@ -109,20 +116,28 @@ void ecrireNouveauxSymboles(FILE* newFile, Elf32_Ehdr newElfHeader, Elf32_Shdr* 
 	uint32_t writingOffset;
 	char* newSectionNames = fetchSectionNames(newFile, newElfHeader, newSH);
 
+	printf("MARQUE 5\n");
+
 	while(strcmp(getSectionNameBis(newSectionNames, newSH[i]), ".symtab"))
 	{
 		i++;
 	}
 	writingOffset = newSH[i].sh_offset;
 
+	printf("MARQUE 6\n");
+
 	fseek(newFile, writingOffset, 0);
 	for(i = 0; i<newST.nbSymboles; i++)
 	{
+		printf("MARQUE 7a:%d\n", i);
 		fwrite32(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_name);
 		fwrite32(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_value);
 		fwrite32(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_size);
 		fwrite8(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_info);
 		fwrite8(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_other);
 		fwrite16(newFile, newElfHeader.e_ident[EI_DATA], newST.symboles[i].st_shndx);
+		printf("MARQUE 7b:%d\n", i);
 	}
+
+	printf("MARQUE 8\n");
 }

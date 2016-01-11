@@ -84,24 +84,11 @@ int main(int argc, char *argv[])
 	free(tab_donnees.table_Addr);
 	free(tab_donnees.table_Num_Addr);
 
-	fclose(f_write);
-	f_write = fopen(argv[2], "r");
-	if (f_write == NULL) {
-		printf("Fichier introuvable: %s\n", argv[2]);
-		fclose(f_read);
-		return 0;
-	}
 	rewind(f_read);
-	newST = corrigerSymboles(f_read, f_write, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, !SILENT);
+	newST = corrigerSymboles(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);
 
-	fclose(f_write);
-	f_write = fopen(argv[2], "w");
-	if (f_write == NULL) {
-		printf("Fichier introuvable: %s\n", argv[2]);
-		fclose(f_read);
-		return 0;
-	}
 	rewind(f_read);
+	rewind(f_write);
 	ecrireNouveauxSymboles(f_write, New_elfHeaders, New_section_headers, newST);
 
 	printf("-----Fin de l'ecriture dans %s-----\n",argv[2]);
