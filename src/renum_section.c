@@ -23,21 +23,19 @@ void CopieOctet(unsigned char *dest,Elf32_Word *src, Elf32_Addr id_dest)
 }
 
 
-void renumerote_section(FILE *f_read, 
+Elf32_Shdr *renumerote_section(FILE *f_read, 
 						FILE *f_write,
 						Elf32_Ehdr elfHeaders, 
 						Elf32_Shdr *section_headers, 
-						ListeSymboles sym_tab,
-						Str_Reloc str_reloc,
 						Elf32_Ehdr *elfHeaders_mod, 
-						Elf32_Shdr *section_headers_mod,
 						Table_Donnees tab_donnees
 						)
 {
 	int i,k; 
+	int nbRec = 0;
 	int nb_Sec_A_Traiter = 0;
 	Elf32_Word OctetSupp = 0;
-
+	Elf32_Shdr *section_headers_mod;
 	//Modification du Headers
 	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers);
 	
@@ -58,7 +56,10 @@ void renumerote_section(FILE *f_read,
 	{
 		if(section_headers[i].sh_type == SHT_REL)
 		{
+			
+
 			OctetSupp += section_headers[i].sh_size;
+			nbRec++;
 			k= 0;
 			while(k < tab_donnees.nbSecRel && tab_donnees.table_Num_Addr[k] != (i-1))
 			{
@@ -66,28 +67,29 @@ void renumerote_section(FILE *f_read,
 			}
 			if(k == tab_donnees.nbSecRel)
 			{
-				printf("Table (%x) non trouvé , erreur d'argument\n",section_headers[i-1].sh_name);
+				printf("Table (%i) non trouvé , erreur d'argument\n",i-1);
 				exit(1);
 			}
 			else
 			{
-				section_headers_mod[i-1].sh_addr = tab_donnees.table_Addr[k];
+				printf("ICI\n");
+				section_headers_mod[i-nbRec].sh_addr = tab_donnees.table_Addr[k];
 			}
 		}
 		else
 		{
-			section_headers_mod[i] = section_headers[i];
+			
+			section_headers_mod[i-nbRec] = section_headers[i];
+
 		}	
 				
 	}
 
 	elfHeaders_mod->e_shoff -=  OctetSupp;
 
-	if(elfHeaders_mod->e_shoff == elfHeaders.e_shoff)
-	{
-		printf("NON\n");
-	}
 	fwrite(&elfHeaders,sizeof(Elf32_Ehdr),1,f_write);
+
+	return section_headers_mod;
 
 }
 

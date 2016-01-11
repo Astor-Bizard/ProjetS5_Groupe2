@@ -20,12 +20,12 @@ int main(int argc, char *argv[])
 	Elf32_Ehdr Old_elfHeaders;
 	Elf32_Shdr *Old_section_headers;
 	Elf32_Ehdr New_elfHeaders;
-	Elf32_Shdr *New_section_headers = NULL;
+	Elf32_Shdr *New_section_headers;
 	ListeSymboles sym_tab;
 	//ListeSymboles newST;
 	Str_Reloc str_reloc;
 	Table_Donnees tab_donnees;
-	
+
 	FILE *f_read, *f_write;
 	if(argc != 3)
 	{
@@ -79,11 +79,15 @@ int main(int argc, char *argv[])
 	tab_donnees.table_Addr[DATA]=0x1000;
 
 	rewind(f_read);
-	renumerote_section(f_read,f_write,Old_elfHeaders, Old_section_headers,
-		sym_tab,str_reloc, &New_elfHeaders, New_section_headers, tab_donnees);
+	New_section_headers = renumerote_section(f_read,f_write,Old_elfHeaders, Old_section_headers,
+	 &New_elfHeaders, tab_donnees);
 
+	printf("New : %08x\n",New_section_headers[0].sh_size);
+
+	
 	afficher_headers(Old_elfHeaders);
 	afficher_headers(New_elfHeaders);
+	afficherTableSections(f_read,Old_elfHeaders,Old_section_headers);
 
 	rewind(f_read);
 	corrigerSymboles(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);

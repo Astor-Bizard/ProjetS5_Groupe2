@@ -41,14 +41,11 @@ int nbSecRel(Elf32_Ehdr elfHeaders, Elf32_Shdr *section_headers);
 /* renumerote et les section en supprimant les sections de type Rel ecrit et assigne 
 une adresse aux sections associéesrenvoi une nouveau elfHeaders et un nouveau section_headers
  */
-void renumerote_section(FILE *f_read, 
+Elf32_Shdr *renumerote_section(FILE *f_read, 
 						FILE *f_write,
 						Elf32_Ehdr elfHeaders, 
 						Elf32_Shdr *section_headers, 
-						ListeSymboles sym_tab,
-						Str_Reloc str_reloc,
 						Elf32_Ehdr *elfHeaders_mod, 
-						Elf32_Shdr *section_headers_mod,
 						Table_Donnees tab_donnees
 						);
 
