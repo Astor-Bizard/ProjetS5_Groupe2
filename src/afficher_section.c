@@ -20,7 +20,8 @@ int is_number(char str[]){
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
 int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	int i,num_sh;
-	char *names;
+	char *names, *name;
+	int different;
 	if(str[0]!='\0'){
 		names = fetchSectionNames(f,elfHeader,tabSH);
 		// Cas nombre : on traduit le nombre (string) en int
@@ -32,14 +33,22 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 		}
 		if(str[i]=='\0'){
 			if(num_sh<elfHeader.e_shnum){
-				strcpy(str,getSectionNameBis(names,tabSH[num_sh]));
+				name=getSectionNameBis(names,tabSH[num_sh]);
+				strcpy(str,name);
+				free(name);
 			}
 			else num_sh=-1;
 		}
 		// Cas nom : on le cherche dans la table str
 		else{
 			num_sh=0;
-			while(num_sh<elfHeader.e_shnum && strcmp(str,getSectionNameBis(names,tabSH[num_sh]))) num_sh++;
+			different=1;
+			while(num_sh<elfHeader.e_shnum && different){
+				name=getSectionNameBis(names,tabSH[num_sh]);
+				different=strcmp(str,name);
+				free(name);
+				num_sh++;
+			}
 		}
 		if(num_sh>=elfHeader.e_shnum) num_sh=-1;
 		free(names);
