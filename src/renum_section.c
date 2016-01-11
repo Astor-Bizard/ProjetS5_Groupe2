@@ -56,8 +56,6 @@ Elf32_Shdr *renumerote_section(FILE *f_read,
 	{
 		if(section_headers[i].sh_type == SHT_REL)
 		{
-			
-
 			OctetSupp += section_headers[i].sh_size;
 			nbRec++;
 			k= 0;
@@ -78,11 +76,8 @@ Elf32_Shdr *renumerote_section(FILE *f_read,
 		}
 		else
 		{
-			
 			section_headers_mod[i-nbRec] = section_headers[i];
-
-		}	
-				
+		}			
 	}
 
 	elfHeaders_mod->e_shoff -=  OctetSupp;
@@ -90,7 +85,6 @@ Elf32_Shdr *renumerote_section(FILE *f_read,
 	fwrite(&elfHeaders,sizeof(Elf32_Ehdr),1,f_write);
 
 	return section_headers_mod;
-
 }
 
 

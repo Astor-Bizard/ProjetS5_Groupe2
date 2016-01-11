@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 	Elf32_Ehdr New_elfHeaders;
 	Elf32_Shdr *New_section_headers;
 	ListeSymboles sym_tab;
-	//ListeSymboles newST;
+	ListeSymboles newST;
 	Str_Reloc str_reloc;
 	Table_Donnees tab_donnees;
 
@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	tab_donnees.table_Num_Addr[TEXT]=index_Shdr(".text",f_read,Old_elfHeaders,Old_section_headers);
-	tab_donnees.table_Num_Addr[DATA]=index_Shdr(".data",f_read,Old_elfHeaders,Old_section_headers);
+	tab_donnees.table_Num_Addr[TEXT]=index_Shdr(".text", f_read, Old_elfHeaders, Old_section_headers);
+	tab_donnees.table_Num_Addr[DATA]=index_Shdr(".data", f_read, Old_elfHeaders, Old_section_headers);
 
 	//.text = 0x58
 	//.data = 0x1000
@@ -79,21 +79,20 @@ int main(int argc, char *argv[])
 	tab_donnees.table_Addr[DATA]=0x1000;
 
 	rewind(f_read);
-	New_section_headers = renumerote_section(f_read,f_write,Old_elfHeaders, Old_section_headers,
-	 &New_elfHeaders, tab_donnees);
+	New_section_headers = renumerote_section(f_read,f_write, Old_elfHeaders, Old_section_headers, &New_elfHeaders, tab_donnees);
 	
 	afficher_headers(Old_elfHeaders);
 	afficher_headers(New_elfHeaders);
-	afficherTableSections(f_read,New_elfHeaders,New_section_headers);
+	afficherTableSections(f_read, New_elfHeaders, New_section_headers);
 
 	rewind(f_read);
-	corrigerSymboles(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);
+	newST = corrigerSymboles(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);
 
 	//rewind(f_read);
 	//rewind(f_write);
 	//ecrireNouveauxSymboles(f_write, New_elfHeaders, New_section_headers, newST);
 
-	printf("-----Fin de l'ecriture dans %s-----\n",argv[2]);
+	printf("-----Fin de l'ecriture dans %s-----\n", argv[2]);
 
 	fclose(f_read);
 	fclose(f_write);
@@ -101,6 +100,11 @@ int main(int argc, char *argv[])
 	free(tab_donnees.table_Addr);
 	free(tab_donnees.table_Num_Addr);
 	free_Str_Reloc(str_reloc);
+
+	free_Elf32_Shdr(Old_section_headers);
+	free_Elf32_Shdr(New_section_headers);
+	free_ListeSymboles(sym_tab);
+	free_ListeSymboles(newST);
 
 	return 0;
 }
