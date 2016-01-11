@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 	Elf32_Ehdr Old_elfHeaders;
 	Elf32_Shdr *Old_section_headers;
 	Elf32_Ehdr New_elfHeaders;
-	Elf32_Shdr New_section_headers;
+	Elf32_Shdr *New_section_headers;
 	ListeSymboles sym_tab;
 	ListeSymboles newST;
 	Str_Reloc str_reloc;
