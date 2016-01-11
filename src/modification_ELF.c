@@ -81,6 +81,9 @@ int main(int argc, char *argv[])
 	renumerote_section(f_read,f_write,Old_elfHeaders, Old_section_headers,
 		sym_tab,str_reloc, &New_elfHeaders, New_section_headers, tab_donnees);
 
+	afficher_headers(Old_elfHeaders);
+	afficher_headers(New_elfHeaders);
+
 	free(tab_donnees.table_Addr);
 	free(tab_donnees.table_Num_Addr);
 

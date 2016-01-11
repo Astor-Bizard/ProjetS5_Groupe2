@@ -85,7 +85,7 @@ void renumerote_section(FILE *f_read,
 
 	if(elfHeaders_mod->e_shoff == elfHeaders.e_shoff)
 	{
-		printf("CONNARD\n");
+		printf("NON\n");
 	}
 	fwrite(&elfHeaders,sizeof(Elf32_Ehdr),1,f_write);
 

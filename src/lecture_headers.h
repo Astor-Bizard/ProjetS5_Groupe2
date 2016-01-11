@@ -25,4 +25,6 @@ et lit toute la partie Headers du fichier. Si silent!=0 aucun affichage produit 
 */
 Elf32_Ehdr lecture_Headers(FILE *f, int silent);
 
+void afficher_headers(Elf32_Ehdr headers);
+
 #endif

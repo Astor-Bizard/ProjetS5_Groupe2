@@ -182,73 +182,80 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 
 	if(!silent)
 	{
-		printf("ELF Header:\n  Magic:   ");
-		for(i=0;i<EI_NIDENT;i++) printf("%02x ",headers.e_ident[i]);
-		printf("\n  Class:                             ELF%d\n",headers.e_ident[EI_CLASS]*32);
-		printf("  Data:                              2's complement, ");
-		if (headers.e_ident[EI_DATA] == L_ENDIAN) printf("little endian\n");
-		else printf("big endian\n");
-
-		printf("  Version:                           %d (current)\n",headers.e_ident[EI_VERSION]);
-
-		printf("  OS/ABI:                            ");
-		if(headers.e_machine==40)
-			printf("UNIX - System V\n");
-		else
-			printf("Machine numero : %d (incompatible)", headers.e_machine);
-
-		printf("  ABI Version:                       0\n");
-
-		printf("  Type:                              ");
-		switch(headers.e_type)
-		{
-			case 0:
-				printf("NONE (No file type)\n");
-				break;
-			case 1:
-				printf("REL (Relocatable file)\n");
-				break;
-			case 2:
-				printf("EXEC (Executable)\n");
-				break;
-			case 3:
-				printf("DYN (Shared object file)\n");
-				break;
-			case 4:
-				printf("CORE (Core file)\n");
-				break;
-			case 0xff00:
-				printf("LOPROC (Processor-specific)\n");
-				break;
-			case 0xffff:
-				printf("HIPROC (Processor-specific)\n");
-				break;
-		}
-		printf("  Machine:                           ARM\n");
-		printf("  Version:                           0x%x\n",headers.e_version);
-		printf("  Entry point address:               0x%x\n",headers.e_entry);
-
-		printf("  Start of program headers:          %u (bytes into file)\n",headers.e_phoff);
-
-		printf("  Start of section headers:          %u (bytes into file)\n",headers.e_shoff);
-
-		printf("  Flags:                             0x%x",headers.e_flags);
-		if(headers.e_flags==0x5000000) printf(", Version5 EABI");
-		printf("\n");
-
-		printf("  Size of this header:               %d (bytes)\n", headers.e_ehsize);
-		printf("  Size of program headers:           %d (bytes)\n", headers.e_phentsize);
-		printf("  Number of program headers:         %d\n", headers.e_phnum);
-		printf("  Size of section headers:           %d (bytes)\n", headers.e_shentsize);
-		printf("  Number of section headers:         %d\n", headers.e_shnum);
-
-		if(headers.e_shstrndx==SHN_UNDEF)
-			printf("  Section header string table index: SHN_UNDEF\n");
-		else
-			printf("  Section header string table index: %d\n", headers.e_shstrndx);
-
+		afficher_headers(headers);
 	}
 
 	return headers;
+
+}
+
+
+void afficher_headers(Elf32_Ehdr headers)
+{
+	int i;
+	printf("ELF Header:\n  Magic:   ");
+	for(i=0;i<EI_NIDENT;i++) printf("%02x ",headers.e_ident[i]);
+	printf("\n  Class:                             ELF%d\n",headers.e_ident[EI_CLASS]*32);
+	printf("  Data:                              2's complement, ");
+	if (headers.e_ident[EI_DATA] == L_ENDIAN) printf("little endian\n");
+	else printf("big endian\n");
+
+	printf("  Version:                           %d (current)\n",headers.e_ident[EI_VERSION]);
+
+	printf("  OS/ABI:                            ");
+	if(headers.e_machine==40)
+		printf("UNIX - System V\n");
+	else
+		printf("Machine numero : %d (incompatible)", headers.e_machine);
+
+	printf("  ABI Version:                       0\n");
+
+	printf("  Type:                              ");
+	switch(headers.e_type)
+	{
+		case 0:
+			printf("NONE (No file type)\n");
+			break;
+		case 1:
+			printf("REL (Relocatable file)\n");
+			break;
+		case 2:
+			printf("EXEC (Executable)\n");
+			break;
+		case 3:
+			printf("DYN (Shared object file)\n");
+			break;
+		case 4:
+			printf("CORE (Core file)\n");
+			break;
+		case 0xff00:
+			printf("LOPROC (Processor-specific)\n");
+			break;
+		case 0xffff:
+			printf("HIPROC (Processor-specific)\n");
+			break;
+	}
+	printf("  Machine:                           ARM\n");
+	printf("  Version:                           0x%x\n",headers.e_version);
+	printf("  Entry point address:               0x%x\n",headers.e_entry);
+
+	printf("  Start of program headers:          %u (bytes into file)\n",headers.e_phoff);
+
+	printf("  Start of section headers:          %u (bytes into file)\n",headers.e_shoff);
+
+	printf("  Flags:                             0x%x",headers.e_flags);
+	if(headers.e_flags==0x5000000) printf(", Version5 EABI");
+	printf("\n");
+
+	printf("  Size of this header:               %d (bytes)\n", headers.e_ehsize);
+	printf("  Size of program headers:           %d (bytes)\n", headers.e_phentsize);
+	printf("  Number of program headers:         %d\n", headers.e_phnum);
+	printf("  Size of section headers:           %d (bytes)\n", headers.e_shentsize);
+	printf("  Number of section headers:         %d\n", headers.e_shnum);
+
+	if(headers.e_shstrndx==SHN_UNDEF)
+		printf("  Section header string table index: SHN_UNDEF\n");
+	else
+		printf("  Section header string table index: %d\n", headers.e_shstrndx);
 
 }
