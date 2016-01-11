@@ -10,11 +10,7 @@ Lecture de la table des sections
 #include "lectureSH.h"
 
 char* sectionTypeString(uint32_t sh_type) {
-	char* typeString =  (char*) malloc(sizeof(char)*10);
-	if (typeString==NULL) {
-		printf("\nErreur lors de l'allocation d'une chaine de type.\n");
-		return NULL;
-	}
+	char* typeString;
 
 	switch(sh_type) {
 		case SHT_NULL:
@@ -193,10 +189,12 @@ void afficherTableSections(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
 	
 	for(i=0; i<elfHeader.e_shnum; i++) {
 		char* nom = getSectionName(names, shTable[i].sh_name);
+		char* flags = sectionFlagsTranslation(shTable[i].sh_flags);
 
 		if(strlen(nom)>17)
 			nom[17] = '\0';
-		printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, nom, sectionTypeString(shTable[i].sh_type), shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, sectionFlagsTranslation(shTable[i].sh_flags), shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+		printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, nom, sectionTypeString(shTable[i].sh_type), shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+		free(flags);
 		free(nom);
 	}
 	printf("Key to Flags:\n");

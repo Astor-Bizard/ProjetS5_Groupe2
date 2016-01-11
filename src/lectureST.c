@@ -84,11 +84,7 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 
 char* typeSymbole(unsigned char info)
 {
-	char* typeSymbole =  (char*) malloc(sizeof(char)*10);
-	if (typeSymbole==NULL) {
-		printf("Erreur lors de l'allocation d'une chaine de type.");
-		return NULL;
-	}
+	char* typeSymbole;
 
 	switch(info)
 	{
@@ -122,11 +118,7 @@ char* typeSymbole(unsigned char info)
 
 char* bindSymbole(unsigned char bind)
 {
-	char* bindSymbole =  (char*) malloc(sizeof(char)*10);
-	if (bindSymbole==NULL) {
-		printf("Erreur lors de l'allocation d'une chaine de type.");
-		return NULL;
-	}
+	char* bindSymbole;
 
 	switch(bind>>4)
 	{
@@ -154,11 +146,7 @@ char* bindSymbole(unsigned char bind)
 
 char* visionSymbole(unsigned char vis)
 {
-	char* visSymbole =  (char*) malloc(sizeof(char)*10);
-	if (visSymbole==NULL) {
-		printf("Erreur lors de l'allocation d'une chaine de type.");
-		return NULL;
-	}
+	char* visSymbole;
 
 	switch(vis)
 	{
