@@ -17,4 +17,5 @@ Creation des premier fichier C pour lire le headers et afficher les differents i
 		On commence la phase 2.
 	
 	-08/01/16 : Cinquième jour de projet.
-		...
+		L'étape 5 est finie, la phase 1 est donc terminée.
+		On continue la phase 2 (étapes 6 à 9).
