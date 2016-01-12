@@ -209,7 +209,7 @@ SectionsHeadersList readSectionsHeadersFromFile(FILE *f, Elf32_Ehdr elfHeader, i
 	int i;
 	SectionsHeadersList shList;
 	shList.size = elfHeader.e_shnum;
-	
+
 	// Allocation de la table des en-têtes de section
 	shList.headers = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*shList.size);
 	if (shList.headers==NULL) {
@@ -224,16 +224,16 @@ SectionsHeadersList readSectionsHeadersFromFile(FILE *f, Elf32_Ehdr elfHeader, i
 
 	fseek(f, elfHeader.e_shoff, 0);
 	for(i=0; i<shList.size; i++) {
-		shList.headers[i].sh_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shList.headers[i].sh_type = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shList.headers[i].sh_flags = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shList.headers[i].sh_addr = (Elf32_Addr) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shList.headers[i].sh_offset = (Elf32_Off) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shList.headers[i].sh_size = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shList.headers[i].sh_link = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shList.headers[i].sh_info = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shList.headers[i].sh_addralign = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shList.headers[i].sh_entsize = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i]->sh_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i]->sh_type = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i]->sh_flags = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i]->sh_addr = (Elf32_Addr) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i]->sh_offset = (Elf32_Off) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i]->sh_size = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i]->sh_link = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i]->sh_info = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i]->sh_addralign = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i]->sh_entsize = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
 	}
 
 	if (!silent) {
