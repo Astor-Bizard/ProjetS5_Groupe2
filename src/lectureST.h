@@ -29,6 +29,12 @@ typedef struct {
 ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList, int silent);
 
 /*
+* Fonction qui affiche une liste de symboles
+* @param listeSymboles La liste de symboles à afficher
+*/
+void afficherTableSymboles(ListeSymboles listeSymboles);
+
+/*
 Fonction qui retourne la chaine de caractère qui correspond au type du symbole donné en parametre
 * @param info Octet définissant le type du symbole 
 * @return Chaine de caractère qui correspond au type du symbole donné en parametre

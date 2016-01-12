@@ -8,10 +8,8 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLis
 {
 	uint32_t sectionSymbolTabSize;
 	uint32_t sectionSymbolTabOffset;
-	char* symbolString;
 	int i = 0;
 	int j = 0;
-	unsigned char bind, info;
 	ListeSymboles listeSymboles;
 
 	char* nomSection = getSectionNameBis(shList.names, shList.headers[i]);
@@ -35,12 +33,6 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLis
 		return listeSymboles;
 	}
 	listeSymboles.names = fetchSymbolNames(f, shList, i);
-	
-	if (!silent)
-	{
-		printf("\nSymbol table '.symtab' contains %d entries:\n", sectionSymbolTabSize/16);
-		printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
-	}
 
 	fseek(f, sectionSymbolTabOffset, SEEK_SET);
 	for(i = 0; i<sectionSymbolTabSize; i=i+16)
@@ -51,29 +43,41 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLis
 		listeSymboles.symboles[j].st_info = (unsigned char) lire_octets(elfHeader.e_ident[EI_DATA], f, 1);
 		listeSymboles.symboles[j].st_other = (unsigned char) lire_octets(elfHeader.e_ident[EI_DATA], f, 1);
 		listeSymboles.symboles[j].st_shndx = (uint16_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 2);
+		j++;
+	}
+	listeSymboles.nbSymboles = j;
 
+	if (!silent)
+		afficherTableSymboles(ListeSymboles listeSymboles);
+
+	return listeSymboles;
+}
+
+void afficherTableSymboles(ListeSymboles listeSymboles) {
+	char* symbolString;
+	unsigned char bind, info;
+	int j;
+
+	printf("\nSymbol table '.symtab' contains %d entries:\n", listeSymboles);
+	printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
+
+	for(j=0; j<listeSymboles.nbSymboles; j++)
+	{
 		info = 15 & listeSymboles.symboles[j].st_info;
 		bind = 15<<4 & listeSymboles.symboles[j].st_info;
 
-		if (!silent)
+		symbolString = getSymbolNameBis(listeSymboles.names, listeSymboles.symboles[j]);
+
+		if(listeSymboles.symboles[j].st_shndx == 0)
 		{
-			symbolString = getSymbolNameBis(listeSymboles.names, listeSymboles.symboles[j]);
-
-			if(listeSymboles.symboles[j].st_shndx == 0)
-			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), symbolString);
-			}
-			else
-			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), listeSymboles.symboles[j].st_shndx, symbolString);
-			}
-			free(symbolString);
+			printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), symbolString);
 		}
-		j++;
+		else
+		{
+			printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), listeSymboles.symboles[j].st_shndx, symbolString);
+		}
+		free(symbolString);
 	}
-
-	listeSymboles.nbSymboles = j;
-	return listeSymboles;
 }
 
 char* typeSymbole(unsigned char info)
