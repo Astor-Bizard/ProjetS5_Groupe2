@@ -12,8 +12,8 @@ Réimplantation de type R_ARM
 
 void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, SectionsHeadersList tabSH, Str_Reloc tableReloc)
 {
-	int indexText = index_Shdr(".text", f, oldElfHeader, tabSH.headers);
-	int indexData = index_Shdr(".data", f, oldElfHeader, tabSH.headers);
+	int indexText = index_Shdr(".text", oldElfHeader, tabSH.headers);
+	int indexData = index_Shdr(".data", oldElfHeader, tabSH.headers);
 	unsigned char *partieText = recuperer_section_num(f, oldElfHeader, tabSH.headers, indexText);
 	unsigned char *partieData = recuperer_section_num(f, oldElfHeader, tabSH.headers, indexData);
 	unsigned char info;
@@ -70,12 +70,12 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 				// S = valeur du symbole 
 				// A = addend de la relocalisation
 				// T = 0
-				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", f, oldElfHeader, tabSH.headers))
+				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", oldElfHeader, tabSH.headers))
 				{
 					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
 					partieText[tableReloc.Rel[i].r_offset] = addrSymbole + (uint16_t)lire_octets(oldElfHeader.e_ident[EI_DATA],f,2);
 				}
-				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", f, oldElfHeader, tabSH.headers))
+				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", oldElfHeader, tabSH.headers))
 				{
 					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
 					partieData[tableReloc.Rel[i].r_offset] = addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2);
@@ -86,12 +86,12 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 				// R_ARM_CALL & R_ARM_JUMP24
 				// ((S+A) | T) - P
 				// P correspond au qqchose dérivé de r_offset du REL (en clair faut juste redécaler sur offset)
-				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", f, oldElfHeader, tabSH.headers))
+				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", oldElfHeader, tabSH.headers))
 				{
 					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
 					partieText[tableReloc.Rel[i].r_offset] = (addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[i].r_offset;
 				}
-				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", f, oldElfHeader, tabSH.headers))
+				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", oldElfHeader, tabSH.headers))
 				{
 					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
 					partieData[tableReloc.Rel[i].r_offset] = (addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[i].r_offset;

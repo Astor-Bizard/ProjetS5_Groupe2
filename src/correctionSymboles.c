@@ -69,7 +69,7 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 
 		// Recherche du nouvel id de la section du symbole courant
 		originalName = getSectionNameBis(oldSHList.names, oldSHList.headers[oldSymbolsTable.symboles[j].st_shndx]); 
-		newSymbolsTable.symboles[j].st_shndx = index_Shdr(originalName, newFile, newElfHeader, newSHList);
+		newSymbolsTable.symboles[j].st_shndx = index_Shdr(originalName, newElfHeader, newSHList);
 		free(originalName);
 
 		// Nouvelle valeur du symbole = Ancienne valeur + Adresse de la section parente
@@ -105,7 +105,7 @@ void writeSymbolsToFile(FILE* file, Elf32_Ehdr elfHeader, SectionsHeadersList sh
 
 	printf("MARQUE 1\n");
 	// Recherche de la table des symboles dans le nouveau fichier pour récupérer son offset
-	i = index_Shdr(".symtab", file, elfHeader, shList);
+	i = index_Shdr(".symtab", elfHeader, shList);
 	writingOffset = shList.headers[i].sh_offset;
 
 	printf("MARQUE 2\n");
