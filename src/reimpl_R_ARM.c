@@ -25,14 +25,14 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	int i;
 	unsigned char addrSymbole;
 
-	partieText = malloc(sizeof(unsigned char)*tabSH[indexText].sh_size/16);
+	partieText = malloc(sizeof(unsigned char)*(tabSH[indexText].sh_size/16));
 
 	if(partieText == NULL)
 	{
 		printf("ERREUR sur l'allocation de la section .text\n");
 		return;
 	}
-	partieData = malloc(sizeof(unsigned char)*tabSH[indexData].sh_size/16);
+	partieData = malloc(sizeof(unsigned char)*(tabSH[indexData].sh_size/16));
 	if(partieData == NULL)
 	{
 		printf("ERREUR sur l'allocation de la section .data\n");
@@ -98,15 +98,15 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 				}
 				break;
 			default:
-				printf("ERREUR DE LECTURE DE REL ! ! ! ! ! ! ! ! ! ! ! !\n");
+				printf("Ce n'est pas du type R_ARM_ABS*, ni R_ARM_JUMP24, ou ni R_ARM_CALL\n");
 				break;
 		}
 	}
 	// Ecriture sur le fichier
 	fseek(f, addrText, SEEK_SET);
-	fwrite(&partieText, sizeof(unsigned char)*4, 1, f);
+	fwrite(&partieText, sizeof(unsigned char)*(tabSH[indexText].sh_size/16), 1, f);
 	fseek(f, addrData, SEEK_SET);
-	fwrite(&partieData, sizeof(unsigned char)*4, 1, f);
+	fwrite(&partieData, sizeof(unsigned char)*(tabSH[indexData].sh_size/16), 1, f);
 	free(partieText);
 	free(partieData);
 }
