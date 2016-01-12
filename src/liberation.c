@@ -20,7 +20,7 @@ void free_Str_Reloc(Str_Reloc str_reloc)
 	free(str_reloc.Sec_Rel);
 }
 
-void free_Tab_Donnees(Tab_Donnees tab_donnees)
+void free_Tab_Donnees(Table_Donnees tab_donnees)
 {
 	free(tab_donnees.table_Addr);
 	free(tab_donnees.table_Num_Addr);
