@@ -89,80 +89,80 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 
 char* typeSymbole(unsigned char info)
 {
-	char* typeSymbole;
+	char* typeSymboleChar;
 
 	switch(info)
 	{
 		case STT_NOTYPE:
-			typeSymbole = "NOTYPE";
+			typeSymboleChar = "NOTYPE";
 			break;
 		case STT_OBJECT:
-			typeSymbole = "OBJECT";
+			typeSymboleChar = "OBJECT";
 			break;
 		case STT_FUNC:
-			typeSymbole = "FUNC";
+			typeSymboleChar = "FUNC";
 			break;
 		case STT_SECTION:
-			typeSymbole = "SECTION";
+			typeSymboleChar = "SECTION";
 			break;
 		case STT_FILE:
-			typeSymbole = "FILE";
+			typeSymboleChar = "FILE";
 			break;
 		case STT_LOPROC:
-			typeSymbole = "LOPROC";
+			typeSymboleChar = "LOPROC";
 			break;
 		case STT_HIPROC:
-			typeSymbole = "HIPROC";
+			typeSymboleChar = "HIPROC";
 			break;
 		default:
-			typeSymbole = "# ERR #";
+			typeSymboleChar = "# ERR #";
 			break;
 	}
-	return typeSymbole;
+	return typeSymboleChar;
 }
 
 char* bindSymbole(unsigned char bind)
 {
-	char* bindSymbole;
+	char* bindSymboleChar;
 
 	switch(bind>>4)
 	{
 		case STB_LOCAL:
-			bindSymbole = "LOCAL";
+			bindSymboleChar = "LOCAL";
 			break;
 		case STB_GLOBAL:
-			bindSymbole = "GLOBAL";
+			bindSymboleChar = "GLOBAL";
 			break;
 		case STB_WEAK:
-			bindSymbole = "WEAK";
+			bindSymboleChar = "WEAK";
 			break;
 		case STB_LOPROC:
-			bindSymbole = "LOPROC";
+			bindSymboleChar = "LOPROC";
 			break;
 		case STB_HIPROC:
-			bindSymbole = "HIPROC";
+			bindSymboleChar = "HIPROC";
 			break;
 		default:
-			bindSymbole = "# ERR #";
+			bindSymboleChar = "# ERR #";
 			break;
 	}
-	return bindSymbole;
+	return bindSymboleChar;
 }
 
 char* visionSymbole(unsigned char vis)
 {
-	char* visSymbole;
+	char* visionSymboleChar;
 
 	switch(vis)
 	{
 		case 0:
-			visSymbole = "DEFAULT";
+			visionSymboleChar = "DEFAULT";
 			break;
 		default:
-			visSymbole = "# ERR #";
+			visionSymboleChar = "# ERR #";
 			break;
 	}
-	return visSymbole;
+	return visionSymboleChar;
 }
 
 char* fetchSymbolNames(FILE* f, Elf32_Shdr* shTable, int symbolTabIndex) 
