@@ -31,7 +31,6 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 			addrSymbole = (255<<8 & tableReloc.Rel[j].r_info)>>8;
 			section = recuperer_section_num(f, oldElfHeader, tabSH, i);
 			addrDest = tableDeDonnees.table_Addr[i];
-			section = malloc(sizeof(unsigned char)*(tabSH.headers[i].sh_size/16));
 			switch(info)
 			{
 				case 2:
