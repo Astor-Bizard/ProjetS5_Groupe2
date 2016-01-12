@@ -12,7 +12,6 @@ Réimplantation de type R_ARM
 
 void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader,  Elf32_Shdr *tabSH, Str_Reloc tableReloc)
 {
-	// TODO: Faire tout
 	int indexText = index_Shdr(".text", f, oldElfHeader, tabSH);
 	int indexData = index_Shdr(".data", f, oldElfHeader, tabSH);
 	unsigned char *partieText = recuperer_section_num(f, oldElfHeader, tabSH, indexText);
