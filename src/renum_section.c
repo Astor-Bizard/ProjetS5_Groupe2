@@ -22,22 +22,22 @@ void CopieOctet(unsigned char *dest,Elf32_Word *src, Elf32_Addr id_dest)
 }
 
 
-Elf32_Shdr *renumerote_section(FILE *f_read, 
+SectionsHeadersList renumerote_section(FILE *f_read, 
 						FILE *f_write,
 						Elf32_Ehdr elfHeaders, 
-						Elf32_Shdr *section_headers, 
+						SectionsHeadersList section_headers, 
 						Elf32_Ehdr *elfHeaders_mod,
 						Table_Donnees tab_donnees
 						)
 {
 	int i,k; 
-	int nbRec;
+	int nbRec, nbSecVide;
 	int nb_Sec_A_Traiter = 0;
 	Elf32_Word OctetSupp = 0;
-	Elf32_Shdr *section_headers_mod;
+	SectionsHeadersList section_headers_mod;
 	
 	//Modification du Headers
-	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers);
+	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers.headers);
 	
 	*elfHeaders_mod=elfHeaders;
 
@@ -48,10 +48,11 @@ Elf32_Shdr *renumerote_section(FILE *f_read,
 			elfHeaders_mod->e_shstrndx--;
 		}
 	}
+
 	
-	section_headers_mod = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeaders.e_shnum);
-	if (section_headers_mod==NULL) {
-		printf("\nErreur lors de l'allocation initiale de section_headers_mod.\n");
+	section_headers_mod.headers = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeaders.e_shnum);
+	if (section_headers_mod.headers==NULL) {
+		printf("\nErreur lors de l'allocation initiale de section_headers_mod.headers.\n");
 		exit(1);
 	}
 
@@ -63,44 +64,71 @@ Elf32_Shdr *renumerote_section(FILE *f_read,
 	nbRec=0;
 	for(i=0;i<elfHeaders.e_shnum;i++)
 	{
-		if(section_headers[i].sh_type != SHT_REL)
+		if(section_headers.headers[i].sh_type != SHT_REL)
 		{
-			section_headers_mod[i-nbRec] = section_headers[i];
+			section_headers_mod.headers[i-nbRec] = section_headers.headers[i];
 		}
 		else nbRec++;
 	}
 
+	//Application des modifications de relocation et
 	nbRec=0;
-	//Application des modifications de relocation
 	for(i=0;i<elfHeaders.e_shnum;i++)
 	{
-		if(section_headers[i].sh_type == SHT_REL)
+		if(section_headers.headers[i].sh_type == SHT_REL)
 		{
-			OctetSupp += section_headers[i].sh_size;
+			OctetSupp += section_headers.headers[i].sh_size;
 			nbRec++;
 			k= 0;
-			while(k < tab_donnees.nbSecRel && tab_donnees.table_Num_Addr[k] != i)
+			while(k < tab_donnees.nbSecRel && tab_donnees.table_Num_Addr[k] !=  section_headers.headers[i].sh_info)
 			{
 				k++;
 			}
 			if(k == tab_donnees.nbSecRel)
 			{
-				printf("Table (%i) non trouvée , erreur d'argument\n",i);
+				printf("Table (%i) non trouvée , erreur d'argument\n",section_headers.headers[i].sh_info);
 				exit(1);
 			}
 			else
 			{
-				section_headers_mod[i-nbRec].sh_addr += tab_donnees.table_Addr[k]+section_headers_mod[i-nbRec].sh_offset;
+				section_headers_mod.headers[i-nbRec].sh_addr = tab_donnees.table_Addr[k];
 			}
 		}
 	}
+	// Decalage des offset et suppresion des sections vide 
+	nbSecVide = 0;
+	printf("\n");
+	for(i=1;i<elfHeaders_mod->e_shnum;i++)
+	{
+		if(section_headers_mod.headers[i].sh_addr == 0)
+		{
+			if(section_headers_mod.headers[i].sh_type == SHT_NOBITS)
+			{
+				nbSecVide ++;
+			}
+			else
+			{
+				section_headers_mod.headers[i-nbSecVide] = section_headers_mod.headers[i];
+				section_headers_mod.headers[i-nbSecVide].sh_offset = section_headers_mod.headers[i-nbSecVide-1].sh_offset + section_headers_mod.headers[i-nbSecVide-1].sh_size; 
+				printf("Offset = %06x + %06x\n",section_headers_mod.headers[i-nbSecVide-1].sh_offset,section_headers_mod.headers[i-nbSecVide-1].sh_size );
+				
+			}
+		}
+		else
+		{
+			section_headers_mod.headers[i].sh_offset = section_headers_mod.headers[i].sh_addr; 
+		}
+	}
+	// on remet à jour la taille de la table des sections
+	elfHeaders_mod->e_shnum -= nbSecVide;
+
 
 	elfHeaders_mod->e_shoff -=  OctetSupp;
 
 	//fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
-	//fwrite(section_headers_mod,sizeof(Elf32_Shdr),elfHeaders_mod->e_shnum,f_write);
+	//fwrite(section_headers_mod.headers,sizeof(Elf32_Shdr),elfHeaders_mod->e_shnum,f_write);
 
-	return section_headers_mod;
+	return section_headers_mod.headers;
 }
 
 
