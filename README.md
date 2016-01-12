@@ -25,10 +25,7 @@ Etape 9 :
 R_ARM_CALL <=> R_ARM_JUMP24
 
 ##Questions :
-- Comment faire fonctionner le simulatueur?! 
-Erreurs:
-./sample_run.sh: 2: ./sample_run.sh: arm_simulator: not found
-./sample_run.sh: 4: ./sample_run.sh: ARM_runner_example: not found
+- Comment faire fonctionner le simulatueur?!(Solved: Export Path ci dessus)
 
 
 -Utilité du numero de la machine  
