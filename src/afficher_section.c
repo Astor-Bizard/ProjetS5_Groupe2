@@ -17,12 +17,11 @@ int is_number(char str[]){
 }
 
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
-int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
+int index_Shdr(char str[], Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
 	int i,num_sh;
 	char *name;
 	int different;
 	if(str[0]!='\0'){
-		rewind(f);
 		// Cas nombre : on traduit le nombre (string) en int
 		i=0;
 		num_sh=0;
@@ -82,7 +81,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLi
 	}
 
 	// On traduit la demande (string) en index dans la table
-	num_sh=index_Shdr(str,f,elfHeader,shList);
+	num_sh=index_Shdr(str,elfHeader,shList);
 	if(num_sh==-1){
 		if(is_number(str)){
 			if(atoi(str)!=elfHeader.e_shnum) fprintf(stderr,"readelf: Warning: Section %s was not dumped because it does not exist!\n",str);
@@ -164,7 +163,7 @@ unsigned char *recuperer_section_num(FILE *f, Elf32_Ehdr elfHeader, SectionsHead
 	}
 	else{
 		// On se place
-		fseek(f, shList.headers[num_sh].sh_offset, 0);
+		fseek(f,shList.headers[num_sh].sh_offset,0);
 		section=malloc(sizeof(unsigned char)*(shList.headers[num_sh].sh_size+1));
 		if(section != NULL){
 			// On mémorise le contenu de la section

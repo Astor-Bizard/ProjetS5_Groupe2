@@ -12,7 +12,7 @@ Affichage d'une section specifique
 #include "lectureSH.h"
 
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
-int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList);
+int index_Shdr(char str[], Elf32_Ehdr elfHeader, SectionsHeadersList shList);
 
 // Affiche le contenu d'une section désignée par nom ou numéro. Renvoie un pointeur sur ce contenu si renvoi non nul (la libération est à la charge de l'utilisateur), NULL si la section n'existe pas ou si renvoi=0. 'strOverride' remplace l'entrée manuelle de nom/id de section si il est différent de NULL.
 unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList, int renvoi, char* strOverride);
