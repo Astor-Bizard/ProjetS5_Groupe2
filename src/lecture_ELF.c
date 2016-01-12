@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
 
 	fclose(f);
 	free_Str_Reloc(relocationTable);
-	free_SectionsHeadersList(sectionsHeadersTable);
+	free_SectionsHeadersList(shList);
 	free_ListeSymboles(symbolsTable);
 	
 	return 0;
