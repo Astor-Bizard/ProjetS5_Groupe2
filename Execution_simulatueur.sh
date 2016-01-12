@@ -23,10 +23,10 @@ then
 	arm_simulator $arg_simulator &
 	sleep 1
 	## se connecter au simulatueur > arm_simoluator_interface
+	## Envoyer le code au simulatueur (dans l'interface sim)
+	## run le simulatueur (dans l'interface sim)
+	ARM_runner_exec $1 6666
 
-	## Envoyer le code au simulatueur 
-
-	## run le simulatueur (selon les arguments)
 else
 	echo Arguments de la forme: [NOM_FICHIER(.o)] [Flags de arm_simulator]...
 fi
