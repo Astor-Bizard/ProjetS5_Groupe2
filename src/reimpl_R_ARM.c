@@ -23,7 +23,7 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	for(i=0; i<tableDeDonnees.nbSecRel; i++)
 	{
 		printf("Section %d nb rel : %d section dans rel : %d \n",i, tableReloc.nb_Rel, tableReloc.Sec_Rel[j]);
-		valeurSecRel = Sec_Rel[j];
+		valeurSecRel = tableReloc.Sec_Rel[j];
 		while(j<tableReloc.nb_Rel && valeurSecRel==tableReloc.Sec_Rel[j])
 		{
 			printf("Reloc %d\n",j);
