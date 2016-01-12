@@ -19,3 +19,8 @@ Creation des premier fichier C pour lire le headers et afficher les differents i
 	-08/01/16 : Cinquième jour de projet.
 		L'étape 5 est finie, la phase 1 est donc terminée.
 		On continue la phase 2 (étapes 6 à 9).
+
+	-11/01/16 : Sixième jour de projet.
+		Nettoyage des erreurs mémoire via valgrind.
+		Audit de code, réécriture de certaines parties du code qui étaient très sales.
+		On continue la phase 2, on progresse.
