@@ -12,95 +12,63 @@ Réimplantation de type R_ARM
 
 void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, SectionsHeadersList tabSH, Str_Reloc tableReloc)
 {
-	int indexText = index_Shdr(".text", oldElfHeader, tabSH);
-	int indexData = index_Shdr(".data", oldElfHeader, tabSH);
-	unsigned char *partieText = recuperer_section_num(f, oldElfHeader, tabSH, indexText);
-	unsigned char *partieData = recuperer_section_num(f, oldElfHeader, tabSH, indexData);
+	int indexSection;
+	//index_Shdr(".text", oldElfHeader, tabSH);
+
+	unsigned char *section;
+
+	//recuperer_section_num(f, oldElfHeader, tabSH, indexText);
 	unsigned char info;
-	Elf32_Addr addrText = NULL;
-	Elf32_Addr addrData = NULL;
 	int numAddrText = NULL;
-	int i;
+	int i, j;
 	unsigned char addrSymbole;
 
-	partieText = malloc(sizeof(unsigned char)*(tabSH.headers[indexText].sh_size/16));
+	Elf32_Addr addrDest;
 
-	if(partieText == NULL)
-	{
-		printf("ERREUR sur l'allocation de la section .text\n");
-		return;
-	}
-	partieData = malloc(sizeof(unsigned char)*(tabSH.headers[indexData].sh_size/16));
-	if(partieData == NULL)
-	{
-		printf("ERREUR sur l'allocation de la section .data\n");
-		return;
-	}
 
 	for(i=0; i<tableDeDonnees.nbSecRel; i++)
 	{
-		if (i == TEXT)
+		while(j<tableReloc.nb_Rel && i==tableReloc.Sec_Rel[j])
 		{
-			addrText = tableDeDonnees.table_Addr[i];
+
+			info = 255 & tableReloc.Rel[j].r_info;
+			addrSymbole = (255<<8 & tableReloc.Rel[j].r_info)>>8;
+			section = recuperer_section_num(f, oldElfHeader, tabSH, i);
+			addrDest = tableDeDonnees.table_Addr[i];
+			section = malloc(sizeof(unsigned char)*(tabSH.headers[i].sh_size/16));
+			switch(info)
+			{
+				case 2:
+				case 5:
+				case 8:
+					// R_ARM_ABS*
+					// (S + A) | T , addresse du symbole + relocation, T = 1 si symbole est du type STT_FUNC sinon 0
+					// S = valeur du symbole 
+					// A = addend de la relocalisation
+					// T = 0
+					fseek(f, addrDest+tableReloc.Rel[j].r_offset, SEEK_SET);
+					partieText[tableReloc.Rel[j].r_offset] = addrSymbole + (uint16_t)lire_octets(oldElfHeader.e_ident[EI_DATA],f,2);
+					j++;
+					break;					
+				case 28:
+				case 29:
+					// R_ARM_CALL & R_ARM_JUMP24
+					// ((S+A) | T) - P
+					// P correspond au qqchose dérivé de r_offset du REL (en clair faut juste redécaler sur offset)
+					fseek(f, addrDest+tableReloc.Rel[j].r_offset, SEEK_SET);
+					partieText[tableReloc.Rel[j].r_offset] = (addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[j].r_offset;
+					j++;
+					break;
+				default:
+					printf("Ce n'est pas du type R_ARM_ABS*, ni R_ARM_JUMP24, ou ni R_ARM_CALL\n");
+					j++;
+					break;
+			}
 		}
-		if (i == DATA)
-		{
-			addrData = tableDeDonnees.table_Addr[i];
-		}
+		// Ecriture sur le fichier
+		(f, addrDest, SEEK_SET);
+		fwrite(section, sizeof(unsigned char)*(tabSH.headers[i].sh_size/16), 1, f);
+		free(section);
 	}
 
-	
-	for (i=0; i<tableReloc.nb_Rel; i++)
-	{
-		info = 255 & tableReloc.Rel[i].r_info;
-		addrSymbole = (255<<8 & tableReloc.Rel[i].r_info)>>8;
-		switch(info)
-		{
-			case 2:
-			case 5:
-			case 8:
-				// R_ARM_ABS*
-				// (S + A) | T , addresse du symbole + relocation, T = 1 si symbole est du type STT_FUNC sinon 0
-				// S = valeur du symbole 
-				// A = addend de la relocalisation
-				// T = 0
-				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", oldElfHeader, tabSH))
-				{
-					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
-					partieText[tableReloc.Rel[i].r_offset] = addrSymbole + (uint16_t)lire_octets(oldElfHeader.e_ident[EI_DATA],f,2);
-				}
-				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", oldElfHeader, tabSH))
-				{
-					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
-					partieData[tableReloc.Rel[i].r_offset] = addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2);
-				}
-				break;
-			case 28:
-			case 29:
-				// R_ARM_CALL & R_ARM_JUMP24
-				// ((S+A) | T) - P
-				// P correspond au qqchose dérivé de r_offset du REL (en clair faut juste redécaler sur offset)
-				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", oldElfHeader, tabSH))
-				{
-					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
-					partieText[tableReloc.Rel[i].r_offset] = (addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[i].r_offset;
-				}
-				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", oldElfHeader, tabSH))
-				{
-					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
-					partieData[tableReloc.Rel[i].r_offset] = (addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[i].r_offset;
-				}
-				break;
-			default:
-				printf("Ce n'est pas du type R_ARM_ABS*, ni R_ARM_JUMP24, ou ni R_ARM_CALL\n");
-				break;
-		}
-	}
-	// Ecriture sur le fichier
-	fseek(f, addrText, SEEK_SET);
-	fwrite(partieText, sizeof(unsigned char)*(tabSH.headers[indexText].sh_size/16), 1, f);
-	fseek(f, addrData, SEEK_SET);
-	fwrite(partieData, sizeof(unsigned char)*(tabSH.headers[indexData].sh_size/16), 1, f);
-	free(partieText);
-	free(partieData);
 }
