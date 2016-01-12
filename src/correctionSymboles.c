@@ -66,7 +66,7 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 			continue;
 		}
 		// Nouvelle valeur du symbole = Ancienne valeur + Adresse de la section parente
-		newSymbolsTable.symboles[j-d].st_value = oldSymbolsTable.symboles[j].st_value + newSHList.headers[i].sh_addr;
+		newSymbolsTable.symboles[j-d].st_value = oldSymbolsTable.symboles[j].st_value + newSHList.headers[newSymbolsTable.symboles[j-d].st_shndx].sh_addr;
 	}
 	newSymbolsTable.nbSymboles = j-d;
 
