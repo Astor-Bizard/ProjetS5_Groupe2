@@ -11,10 +11,11 @@ Libere les differente structure du programme
 #include "lectureST.h"
 #include "lectureSH.h"
 #include "affichage_relocation.h"
+#include "renum_section.h"
 
 void free_Elf32_Shdr(Elf32_Shdr *section_headers);
 void free_ListeSymboles(ListeSymboles sym_tab);
 void free_Str_Reloc(Str_Reloc str_reloc);
-
+void free_Tab_Donnees(Tab_Donnees tab_donnees);
 
 #endif
