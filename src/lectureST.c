@@ -48,7 +48,7 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLis
 	listeSymboles.nbSymboles = j;
 
 	if (!silent)
-		afficherTableSymboles(ListeSymboles listeSymboles);
+		afficherTableSymboles(listeSymboles);
 
 	return listeSymboles;
 }
