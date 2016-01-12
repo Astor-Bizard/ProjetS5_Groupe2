@@ -56,11 +56,10 @@ char* sectionFlagsTranslation(uint32_t flags);
 
 /*
 * Affiche la liste des en-têtes de section.
-* @param f Le fichier ouvert en lecture
-* @param elfHeader Le header du fichier en lecture
+* @param elfHeader Le header du fichier
 * @param shList La liste des en-têtes de section
 */
-void displaySectionsHeaders(FILE* f, Elf32_Ehdr elfHeader, SectionsHeadersList shList);
+void displaySectionsHeaders(Elf32_Ehdr elfHeader, SectionsHeadersList shList);
 
 /*
 * Récupère la liste des en-têtes de section.

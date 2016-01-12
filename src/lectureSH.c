@@ -179,16 +179,16 @@ char* sectionFlagsTranslation(uint32_t flags) {
 	return flagsString;
 }
 
-void displaySectionsHeaders(FILE* f, Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
+void displaySectionsHeaders(Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
 	int i;
 	char* sectionName;
 	char* flags;
 
-	printf("There are %d section headers, starting at offset 0x%x:\n\n", elfHeader.e_shnum, elfHeader.e_shoff);
+	printf("There are %d section headers, starting at offset 0x%x:\n\n", shList.size, elfHeader.e_shoff);
 	printf("Section Headers:\n");
 	printf("  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al\n");
 	
-	for(i=0; i<elfHeader.e_shnum; i++) {
+	for(i=0; i<shList.size; i++) {
 		sectionName = getSectionName(shList.names, shList.headers[i].sh_name);
 		if(strlen(sectionName)>17)
 			sectionName[17] = '\0';
@@ -208,9 +208,10 @@ void displaySectionsHeaders(FILE* f, Elf32_Ehdr elfHeader, SectionsHeadersList s
 SectionsHeadersList readSectionsHeadersFromFile(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	int i;
 	SectionsHeadersList shList;
-
+	shList.size = elfHeader.e_shnum;
+	
 	// Allocation de la table des en-têtes de section
-	shList.headers = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeader.e_shnum);
+	shList.headers = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*shList.size);
 	if (shList.headers==NULL) {
 		printf("\nErreur lors de l'allocation initiale de shList.headers.\n");
 		shList.names = NULL;
@@ -222,7 +223,7 @@ SectionsHeadersList readSectionsHeadersFromFile(FILE *f, Elf32_Ehdr elfHeader, i
 	shList.names = fetchSectionNames(f, elfHeader, shList);
 
 	fseek(f, elfHeader.e_shoff, 0);
-	for(i=0; i<elfHeader.e_shnum; i++) {
+	for(i=0; i<shList.size; i++) {
 		shList.headers[i].sh_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
 		shList.headers[i].sh_type = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
 		shList.headers[i].sh_flags = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
@@ -234,10 +235,9 @@ SectionsHeadersList readSectionsHeadersFromFile(FILE *f, Elf32_Ehdr elfHeader, i
 		shList.headers[i].sh_addralign = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
 		shList.headers[i].sh_entsize = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
 	}
-	shList.size = i;
 
 	if (!silent) {
-		displaySectionsHeaders(f, elfHeader, shList);
+		displaySectionsHeaders(elfHeader, shList);
 	}
 
 	return shList;
