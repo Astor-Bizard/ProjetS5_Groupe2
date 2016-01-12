@@ -97,7 +97,6 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 	}
 	// Decalage des offset et suppresion des sections vide 
 	nbSecVide = 0;
-	printf("\n");
 	for(i=1;i<elfHeaders_mod->e_shnum;i++)
 	{
 		if(section_headers_mod.headers[i].sh_addr == 0)
@@ -110,7 +109,7 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 			{
 				section_headers_mod.headers[i-nbSecVide] = section_headers_mod.headers[i];
 				section_headers_mod.headers[i-nbSecVide].sh_offset = section_headers_mod.headers[i-nbSecVide-1].sh_offset + section_headers_mod.headers[i-nbSecVide-1].sh_size; 
-				printf("Offset = %06x + %06x\n",section_headers_mod.headers[i-nbSecVide-1].sh_offset,section_headers_mod.headers[i-nbSecVide-1].sh_size );
+
 				
 			}
 		}
@@ -120,10 +119,24 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 		}
 	}
 	// on remet à jour la taille de la table des sections
+	
 	elfHeaders_mod->e_shnum -= nbSecVide;
-
-
 	elfHeaders_mod->e_shoff -=  OctetSupp;
+
+
+	// copie et maj des anciens valeurs de la struture section_headers 
+	section_headers_mod.size = elfHeaders_mod->e_shnum;
+	
+	section_headers_mod.names = malloc(sizeof(char)*section_headers.headers[elfHeaders.e_shstrndx].sh_size);
+	if (section_headers_mod.names==NULL) {
+		printf("\nErreur lors de l'allocation initiale de section_headers_mod.headers.\n");
+		exit(1);
+	}
+	for(i=0;i<section_headers.headers[elfHeaders.e_shstrndx].sh_size;i++)
+	{
+		section_headers_mod.names[i] = section_headers.names[i];
+	}
+	
 
 	//fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
 	//fwrite(section_headers_mod.headers,sizeof(Elf32_Shdr),elfHeaders_mod->e_shnum,f_write);

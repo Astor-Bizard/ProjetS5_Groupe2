@@ -13,7 +13,6 @@ Renumerote les section dans un ELF et la table des réimplantations
 #include "lectureST.h"
 #include "affichage_relocation.h"
 
-
 /*Struture pour stocker les different valeur passer en parametre
 nbSecRel = nombre de section de relocation
 A l'indice i
