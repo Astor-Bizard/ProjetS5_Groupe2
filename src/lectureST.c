@@ -2,12 +2,6 @@
 Creer le 5 janvier 2016 par Thai Binh
 Lecture de la table des symboles
 */
-#include <stdlib.h>
-#include <stdio.h>
-#include <elf.h>
-#include <string.h>
-#include "lecture_headers.h"
-#include "lectureSH.h"
 #include "lectureST.h"
 
 ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList, int silent)
