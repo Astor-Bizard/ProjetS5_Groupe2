@@ -104,9 +104,9 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	}
 	// Ecriture sur le fichier
 	fseek(f, addrText, SEEK_SET);
-	fwrite(&partieText, sizeof(unsigned char)*(tabSH[indexText].sh_size/16), 1, f);
+	fwrite(partieText, sizeof(unsigned char)*(tabSH[indexText].sh_size/16), 1, f);
 	fseek(f, addrData, SEEK_SET);
-	fwrite(&partieData, sizeof(unsigned char)*(tabSH[indexData].sh_size/16), 1, f);
+	fwrite(partieData, sizeof(unsigned char)*(tabSH[indexData].sh_size/16), 1, f);
 	free(partieText);
 	free(partieData);
 }
