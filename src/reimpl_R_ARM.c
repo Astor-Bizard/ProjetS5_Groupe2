@@ -7,16 +7,16 @@ Réimplantation de type R_ARM
 
 #define TEXT 0
 #define DATA 1
-// TODO: a changer !!
-#define MAGIE1 1
-#define MAGIE3 3
+
 //void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader,  Elf32_Shdr *tabSH, Str_Reloc tableReloc)
 
 void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader,  Elf32_Shdr *tabSH, Str_Reloc tableReloc)
 {
 	// TODO: Faire tout
-	unsigned char *partieText = recuperer_section_num(f, oldElfHeader, tabSH, index_Shdr(".text", f, oldElfHeader, tabSH));
-	unsigned char *partieData = recuperer_section_num(f, oldElfHeader, tabSH, index_Shdr(".data", f, oldElfHeader, tabSH));
+	int indexText = index_Shdr(".text", f, oldElfHeader, tabSH);
+	int indexData = index_Shdr(".data", f, oldElfHeader, tabSH);
+	unsigned char *partieText = recuperer_section_num(f, oldElfHeader, tabSH, indexText);
+	unsigned char *partieData = recuperer_section_num(f, oldElfHeader, tabSH, indexData);
 	unsigned char info;
 	Elf32_Addr addrText = NULL;
 	Elf32_Addr addrData = NULL;
@@ -26,14 +26,14 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	int i;
 	unsigned char addrSymbole;
 
-	partieText = malloc(sizeof(unsigned char)*tabSH[MAGIE1].sh_size/16);
+	partieText = malloc(sizeof(unsigned char)*tabSH[indexText].sh_size/16);
 
 	if(partieText == NULL)
 	{
 		printf("ERREUR sur l'allocation de la section .text\n");
 		return;
 	}
-	partieData = malloc(sizeof(unsigned char)*tabSH[MAGIE3].sh_size/16);
+	partieData = malloc(sizeof(unsigned char)*tabSH[indexData].sh_size/16);
 	if(partieData == NULL)
 	{
 		printf("ERREUR sur l'allocation de la section .data\n");
