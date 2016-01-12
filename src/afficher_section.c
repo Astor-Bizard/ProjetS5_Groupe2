@@ -18,13 +18,12 @@ int is_number(char str[]){
 }
 
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
-int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
+int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
 	int i,num_sh;
-	char *names, *name;
+	char *name;
 	int different;
 	if(str[0]!='\0'){
 		rewind(f);
-		names = fetchSectionNames(f,elfHeader,tabSH);
 		// Cas nombre : on traduit le nombre (string) en int
 		i=0;
 		num_sh=0;
@@ -34,8 +33,8 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 		}
 		if(str[i]=='\0'){
 			if(num_sh<elfHeader.e_shnum){
-				name=getSectionNameBis(names,tabSH[num_sh]);
-				strcpy(str,name);
+				name=getSectionNameBis(shList.names, shList.headers[num_sh]);
+				strcpy(str, name);
 				free(name);
 			}
 			else num_sh=-1;
@@ -46,20 +45,19 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 			different=1;
 			while(num_sh<elfHeader.e_shnum-1 && different){
 				num_sh++;
-				name=getSectionNameBis(names,tabSH[num_sh]);
-				different=strcmp(str,name);
+				name=getSectionNameBis(shList.names, shList.headers[num_sh]);
+				different=strcmp(str, name);
 				free(name);
 			}
 		}
 		if(different) num_sh=-1;
-		free(names);
 		return num_sh;
 	}
 	else return -1;
 }
 
 // Affiche le contenu d'une section désignée par nom ou numéro. Renvoie ce contenu, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
-unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int renvoi, char* strOverride){
+unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList, int renvoi, char* strOverride) {
 	char str[42];
 	int num_sh=0,i,j;
 	unsigned char c;
@@ -85,7 +83,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 	}
 
 	// On traduit la demande (string) en index dans la table
-	num_sh=index_Shdr(str,f,elfHeader,tabSH);
+	num_sh=index_Shdr(str,f,elfHeader,shList);
 	if(num_sh==-1){
 		if(is_number(str)){
 			if(atoi(str)!=elfHeader.e_shnum) fprintf(stderr,"readelf: Warning: Section %s was not dumped because it does not exist!\n",str);
@@ -94,10 +92,10 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 		return NULL;
 	}
 	else{
-		if(renvoi) section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
+		if(renvoi) section=malloc(sizeof(unsigned char)*(shList.headers[num_sh].sh_size+1));
 		if(section != NULL || !renvoi){
 			// On affiche le contenu de la section
-			if(tabSH[num_sh].sh_size==0){
+			if(shList.headers[num_sh].sh_size==0){
 				printf("\nSection '%s' has no data to dump.\n",str);
 				if(renvoi) section[0]='\0';
 				return section;
@@ -105,17 +103,17 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 			else{
 				// Initialisation de l'affichage, récupération du nom de la section
 				printf("\nHex dump of section '%s':\n",str);
-				for(i=0;i<elfHeader.e_shnum;i++){
-					if(tabSH[i].sh_info==num_sh && tabSH[i].sh_type==SHT_REL)
+				for(i=0; i<elfHeader.e_shnum; i++){
+					if(shList.headers[i].sh_info==num_sh && shList.headers[i].sh_type==SHT_REL)
 						printf(" NOTE: This section has relocations against it, but these have NOT been applied to this dump.\n");
 				}
 
 				// On se place
-				fseek(f,tabSH[num_sh].sh_offset,0);
+				fseek(f,shList.headers[num_sh].sh_offset,0);
 				printf("  0x%08x ",0);
 				i=0;
 				// On affiche le contenu de la section
-				while(i<tabSH[num_sh].sh_size){
+				while(i<shList.headers[num_sh].sh_size){
 
 					// Affichage de l'offset
 					if(i!=0){
@@ -157,7 +155,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 }
 
 // Renvoie un pointeur sur le contenu de la section numero num_sh, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
-unsigned char *recuperer_section_num(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH, int num_sh){
+unsigned char *recuperer_section_num(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList, int num_sh) {
 	int i;
 	unsigned char c;
 	unsigned char *section;
@@ -167,11 +165,11 @@ unsigned char *recuperer_section_num(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *
 	}
 	else{
 		// On se place
-		fseek(f,tabSH[num_sh].sh_offset,0);
-		section=malloc(sizeof(unsigned char)*(tabSH[num_sh].sh_size+1));
+		fseek(f, shList.headers[num_sh].sh_offset, 0);
+		section=malloc(sizeof(unsigned char)*(shList.headers[num_sh].sh_size+1));
 		if(section != NULL){
 			// On mémorise le contenu de la section
-			for(i=0;i<tabSH[num_sh].sh_size;i++){
+			for(i=0;i<shList.headers[num_sh].sh_size;i++){
 				c=fgetc(f);
 				section[i]=c;
 			}
