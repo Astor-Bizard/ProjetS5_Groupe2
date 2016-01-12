@@ -10,12 +10,13 @@ PHASE 1 TERMINEE - Tests example compris
 
 Etape 6 : Jonathan (renum_section)(Fini en théorie)  
 Etape 7 : Loic (correctionSymboles)(Fini ?)  
-Etape 8-9 : Thai Binh (reimpl_R_ARM)(Fini en théorie)
+Etape 8-9 : Thai Binh (reimpl_R_ARM)(Fini en théorie)  
 Etape 10 : Gabriel
 
 #A savoir :
-Ajoutez cette ligne dans votre .bashrc :  
+Ajoutez ces lignes dans votre .bashrc :  
 > source ~/.envarm/setenvarm.sh >/dev/null
+> source <chemin vers le projet>/elf_linker-1.0/
 
 Etape 8 :  
 R_ARM_ABS* = 32,16,8 uniquement
