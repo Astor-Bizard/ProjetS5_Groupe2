@@ -20,8 +20,6 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	Elf32_Addr addrText = NULL;
 	Elf32_Addr addrData = NULL;
 	int numAddrText = NULL;
-	// TODO:utile ?
-	//int numAddrData = NULL;
 	int i;
 	unsigned char addrSymbole;
 
@@ -44,14 +42,10 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 		if (i == TEXT)
 		{
 			addrText = tableDeDonnees.table_Addr[i];
-			// TODO:utile ?
-			//numAddrText = tableDeDonnees.table_Num_Addr[i];
 		}
 		if (i == DATA)
 		{
 			addrData = tableDeDonnees.table_Addr[i];
-			// TODO:utile ?
-			//numAddrData = tableDeDonnees.table_Num_Addr[i];
 		}
 	}
 
