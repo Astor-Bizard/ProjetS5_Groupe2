@@ -145,7 +145,7 @@ void print_section(unsigned long long int addr, SectionsHeadersList liste_sectio
     {
         if(liste_sections.headers[i].sh_offset <= addr && addr <= liste_sections.headers[i].sh_offset + liste_sections.headers[i].sh_size)
         {
-            printf("%s", liste_sections.names + liste_sections.haeders[i].sh_name);
+            printf("%s", liste_sections.names + liste_sections.headers[i].sh_name);
         }
     }
 }
