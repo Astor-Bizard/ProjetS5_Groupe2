@@ -27,7 +27,7 @@ size_t fwrite8(FILE* f, int mode, uint8_t value) {
 }
 
 ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader, SectionsHeadersList oldSHList, SectionsHeadersList newSHList, ListeSymboles oldSymbolsTable, int silent) {
-	int i, j;
+	int i, j, d;
 	char* originalName;
 	char* symbolName;
 	unsigned char info, bind;
@@ -50,7 +50,7 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 	// Copie et correction de oldSymbolsTable vers newSymbolsTable
 	i = index_Shdr(".symtab", oldElfHeader, oldSHList);
 	newSymbolsTable.names = fetchSymbolNames(oldFile, oldSHList, i);
-
+	d = 0;
 	for(j=0; j<oldSymbolsTable.nbSymboles; j++)
 	{
 		newSymbolsTable.symboles[j-d].st_name = oldSymbolsTable.symboles[j].st_name;
