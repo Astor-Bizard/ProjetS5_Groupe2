@@ -8,14 +8,14 @@ Réimplantation de type R_ARM
 #define TEXT 0
 #define DATA 1
 
-//void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader,  Elf32_Shdr *tabSH, Str_Reloc tableReloc)
+//void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader,  SectionsHeadersList tabSH, Str_Reloc tableReloc)
 
-void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, Elf32_Shdr *tabSH, Str_Reloc tableReloc)
+void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, SectionsHeadersList tabSH, Str_Reloc tableReloc)
 {
-	int indexText = index_Shdr(".text", f, oldElfHeader, tabSH);
-	int indexData = index_Shdr(".data", f, oldElfHeader, tabSH);
-	unsigned char *partieText = recuperer_section_num(f, oldElfHeader, tabSH, indexText);
-	unsigned char *partieData = recuperer_section_num(f, oldElfHeader, tabSH, indexData);
+	int indexText = index_Shdr(".text", f, oldElfHeader, tabSH.headers);
+	int indexData = index_Shdr(".data", f, oldElfHeader, tabSH.headers);
+	unsigned char *partieText = recuperer_section_num(f, oldElfHeader, tabSH.headers, indexText);
+	unsigned char *partieData = recuperer_section_num(f, oldElfHeader, tabSH.headers, indexData);
 	unsigned char info;
 	Elf32_Addr addrText = NULL;
 	Elf32_Addr addrData = NULL;
@@ -25,14 +25,14 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	int i;
 	unsigned char addrSymbole;
 
-	partieText = malloc(sizeof(unsigned char)*(tabSH[indexText].sh_size/16));
+	partieText = malloc(sizeof(unsigned char)*(tabSH.headers[indexText].sh_size/16));
 
 	if(partieText == NULL)
 	{
 		printf("ERREUR sur l'allocation de la section .text\n");
 		return;
 	}
-	partieData = malloc(sizeof(unsigned char)*(tabSH[indexData].sh_size/16));
+	partieData = malloc(sizeof(unsigned char)*(tabSH.headers[indexData].sh_size/16));
 	if(partieData == NULL)
 	{
 		printf("ERREUR sur l'allocation de la section .data\n");
@@ -70,12 +70,12 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 				// S = valeur du symbole 
 				// A = addend de la relocalisation
 				// T = 0
-				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", f, oldElfHeader, tabSH))
+				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", f, oldElfHeader, tabSH.headers))
 				{
 					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
 					partieText[tableReloc.Rel[i].r_offset] = addrSymbole + (uint16_t)lire_octets(oldElfHeader.e_ident[EI_DATA],f,2);
 				}
-				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", f, oldElfHeader, tabSH))
+				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", f, oldElfHeader, tabSH.headers))
 				{
 					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
 					partieData[tableReloc.Rel[i].r_offset] = addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2);
@@ -86,12 +86,12 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 				// R_ARM_CALL & R_ARM_JUMP24
 				// ((S+A) | T) - P
 				// P correspond au qqchose dérivé de r_offset du REL (en clair faut juste redécaler sur offset)
-				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", f, oldElfHeader, tabSH))
+				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", f, oldElfHeader, tabSH.headers))
 				{
 					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
 					partieText[tableReloc.Rel[i].r_offset] = (addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[i].r_offset;
 				}
-				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", f, oldElfHeader, tabSH))
+				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", f, oldElfHeader, tabSH.headers))
 				{
 					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
 					partieData[tableReloc.Rel[i].r_offset] = (addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[i].r_offset;
@@ -104,9 +104,9 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	}
 	// Ecriture sur le fichier
 	fseek(f, addrText, SEEK_SET);
-	fwrite(partieText, sizeof(unsigned char)*(tabSH[indexText].sh_size/16), 1, f);
+	fwrite(partieText, sizeof(unsigned char)*(tabSH.headers[indexText].sh_size/16), 1, f);
 	fseek(f, addrData, SEEK_SET);
-	fwrite(partieData, sizeof(unsigned char)*(tabSH[indexData].sh_size/16), 1, f);
+	fwrite(partieData, sizeof(unsigned char)*(tabSH.headers[indexData].sh_size/16), 1, f);
 	free(partieText);
 	free(partieData);
 }
