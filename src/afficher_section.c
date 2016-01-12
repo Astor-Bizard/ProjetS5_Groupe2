@@ -23,6 +23,7 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 	char *names, *name;
 	int different;
 	if(str[0]!='\0'){
+		rewind(f);
 		names = fetchSectionNames(f,elfHeader,tabSH);
 		// Cas nombre : on traduit le nombre (string) en int
 		i=0;
@@ -84,7 +85,6 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 		str[i] = '\0';
 	}
 
-	rewind(f);
 	// On traduit la demande (string) en index dans la table
 	num_sh=index_Shdr(str,f,elfHeader,tabSH);
 	if(num_sh==-1){

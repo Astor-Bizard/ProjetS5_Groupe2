@@ -97,7 +97,8 @@ Elf32_Shdr *renumerote_section(FILE *f_read,
 
 	elfHeaders_mod->e_shoff -=  OctetSupp;
 
-	fwrite(&elfHeaders,sizeof(Elf32_Ehdr),1,f_write);
+	//fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
+	//fwrite(section_headers_mod,sizeof(Elf32_Shdr),elfHeaders_mod->e_shnum,f_write);
 
 	return section_headers_mod;
 }
