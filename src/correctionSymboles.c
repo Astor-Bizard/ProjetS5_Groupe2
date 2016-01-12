@@ -84,13 +84,13 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 
 			if(newSymbolsTable.symboles[j].st_shndx == 0)
 			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, newSymbolsTable.symboles[j].st_value, newSymbolsTable.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newSymbolsTable.symboles[j].st_other), nomSymbole);
+				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, newSymbolsTable.symboles[j].st_value, newSymbolsTable.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newSymbolsTable.symboles[j].st_other), symbolName);
 			}
 			else
 			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, newSymbolsTable.symboles[j].st_value, newSymbolsTable.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newSymbolsTable.symboles[j].st_other), newSymbolsTable.symboles[j].st_shndx, nomSymbole);
+				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, newSymbolsTable.symboles[j].st_value, newSymbolsTable.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newSymbolsTable.symboles[j].st_other), newSymbolsTable.symboles[j].st_shndx, symbolName);
 			}
-			free(nomSymbole);
+			free(symbolName);
 		}
 	}
 
