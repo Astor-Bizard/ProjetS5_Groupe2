@@ -10,6 +10,7 @@ Réimplantation de type R_ARM
 // TODO: a changer !!
 #define MAGIE1 1
 #define MAGIE3 3
+//void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader,  Elf32_Shdr *tabSH, Str_Reloc tableReloc)
 
 void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader,  Elf32_Shdr *tabSH, Str_Reloc tableReloc)
 {
@@ -20,7 +21,8 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	Elf32_Addr addrText = NULL;
 	Elf32_Addr addrData = NULL;
 	int numAddrText = NULL;
-	int numAddrData = NULL;
+	// TODO:utile ?
+	//int numAddrData = NULL;
 	int i;
 	unsigned char addrSymbole;
 
@@ -77,7 +79,7 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", f, oldElfHeader, tabSH))
 				{
 					fseek(f,addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
-					partieData[tableReloc.Rel[i].r_offset] = addrSymbole + (uint16_t)lire_octets(oldElfHeader.e_ident[EI_DATA],f,2);
+					partieData[tableReloc.Rel[i].r_offset] = addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2);
 				}
 				break;
 			case 28:
@@ -88,12 +90,12 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", f, oldElfHeader, tabSH))
 				{
 					fseek(f,addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
-					partieText[tableReloc.Rel[i].r_offset] = (addrSymbole + (uint16_t)lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[i].r_offset;
+					partieText[tableReloc.Rel[i].r_offset] = (addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[i].r_offset;
 				}
 				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", f, oldElfHeader, tabSH))
 				{
 					fseek(f,addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
-					partieData[tableReloc.Rel[i].r_offset] = (addrSymbole + (uint16_t)lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[i].r_offset;
+					partieData[tableReloc.Rel[i].r_offset] = (addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[i].r_offset;
 				}
 				break;
 			default:
@@ -101,7 +103,6 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 				break;
 		}
 	}
-	// Faut ajouter qqchose ici.
 	// Ecriture sur le fichier
 	fseek(f, addrText, SEEK_SET);
 	fwrite(&partieText, sizeof(unsigned char)*4, 1, f);
