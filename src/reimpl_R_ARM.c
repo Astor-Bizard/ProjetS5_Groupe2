@@ -12,19 +12,11 @@ Réimplantation de type R_ARM
 
 void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldElfHeader, SectionsHeadersList tabSH, Str_Reloc tableReloc)
 {
-	int indexSection;
-	//index_Shdr(".text", oldElfHeader, tabSH);
-
 	unsigned char *section;
-
-	//recuperer_section_num(f, oldElfHeader, tabSH, indexText);
 	unsigned char info;
-	int numAddrText = NULL;
 	int i, j;
 	unsigned char addrSymbole;
-
 	Elf32_Addr addrDest;
-
 
 	for(i=0; i<tableDeDonnees.nbSecRel; i++)
 	{
