@@ -3,7 +3,6 @@ Cree le 5 janvier 2016 par Astor
 Affichage d'une section specifique
 */
 #include "afficher_section.h"
-#include "lectureSH.h"
 
 #define ASCII_0 48
 

@@ -9,6 +9,7 @@ Affichage d'une section specifique
 #include <stdlib.h>
 #include <string.h>
 #include <elf.h>
+#include "lectureSH.h"
 
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
 int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList);
