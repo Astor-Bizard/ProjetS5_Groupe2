@@ -47,7 +47,7 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 					// A = addend de la relocalisation
 					// T = 0
 					fseek(f, addrDest+tableReloc.Rel[j].r_offset, SEEK_SET);
-					partieText[tableReloc.Rel[j].r_offset] = addrSymbole + (uint16_t)lire_octets(oldElfHeader.e_ident[EI_DATA],f,2);
+					section[tableReloc.Rel[j].r_offset] = addrSymbole + (uint16_t)lire_octets(oldElfHeader.e_ident[EI_DATA],f,2);
 					j++;
 					break;					
 				case 28:
@@ -56,7 +56,7 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 					// ((S+A) | T) - P
 					// P correspond au qqchose dérivé de r_offset du REL (en clair faut juste redécaler sur offset)
 					fseek(f, addrDest+tableReloc.Rel[j].r_offset, SEEK_SET);
-					partieText[tableReloc.Rel[j].r_offset] = (addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[j].r_offset;
+					section[tableReloc.Rel[j].r_offset] = (addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[j].r_offset;
 					j++;
 					break;
 				default:
@@ -66,7 +66,7 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 			}
 		}
 		// Ecriture sur le fichier
-		(f, addrDest, SEEK_SET);
+		fseek(f, addrDest, SEEK_SET);
 		fwrite(section, sizeof(unsigned char)*(tabSH.headers[i].sh_size/16), 1, f);
 		free(section);
 	}
