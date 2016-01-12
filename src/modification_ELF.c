@@ -18,9 +18,9 @@ Programme principal de la phase 2
 int main(int argc, char *argv[])
 {
 	Elf32_Ehdr Old_elfHeaders;
-	Elf32_Shdr *Old_section_headers;
+	SectionsHeadersList Old_section_headers;
 	Elf32_Ehdr New_elfHeaders;
-	Elf32_Shdr *New_section_headers;
+	SectionsHeadersList New_section_headers;
 	ListeSymboles sym_tab;
 	ListeSymboles newST;
 	Str_Reloc str_reloc;
@@ -101,8 +101,8 @@ int main(int argc, char *argv[])
 
 	free_Tab_Donnees(tab_donnees);
 	free_Str_Reloc(str_reloc);
-	free_Elf32_Shdr(Old_section_headers);
-	free_Elf32_Shdr(New_section_headers);
+	free_SectionsHeadersList(Old_section_headers);
+	free_SectionsHeadersList(New_section_headers);
 	free_ListeSymboles(sym_tab);
 	free_ListeSymboles(newST);
 
