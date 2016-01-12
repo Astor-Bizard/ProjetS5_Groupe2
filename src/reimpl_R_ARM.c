@@ -16,14 +16,15 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	unsigned char info;
 	int i;
 	int j = 0;
+	int valeurSecRel;
 	unsigned char addrSymbole;
 	Elf32_Addr addrDest;
 	printf("DEBUT\n");
 	for(i=0; i<tableDeDonnees.nbSecRel; i++)
 	{
-		printf("Section %d\n nb rel : %d section dans rel : %d",i, tableReloc.nb_Rel, tableReloc.Sec_Rel[j]);
-
-		while(j<tableReloc.nb_Rel && i==tableReloc.Sec_Rel[j])
+		printf("Section %d nb rel : %d section dans rel : %d \n",i, tableReloc.nb_Rel, tableReloc.Sec_Rel[j]);
+		valeurSecRel = Sec_Rel[j];
+		while(j<tableReloc.nb_Rel && valeurSecRel==tableReloc.Sec_Rel[j])
 		{
 			printf("Reloc %d\n",j);
 			info = 255 & tableReloc.Rel[j].r_info;
