@@ -99,10 +99,8 @@ int main(int argc, char *argv[])
 	fclose(f_read);
 	fclose(f_write);
 
-	free(tab_donnees.table_Addr);
-	free(tab_donnees.table_Num_Addr);
+	free_Tab_Donnees(tab_donnees);
 	free_Str_Reloc(str_reloc);
-
 	free_Elf32_Shdr(Old_section_headers);
 	free_Elf32_Shdr(New_section_headers);
 	free_ListeSymboles(sym_tab);
