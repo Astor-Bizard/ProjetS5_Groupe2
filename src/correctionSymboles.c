@@ -41,12 +41,6 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 		exit(1);
 	}
 
-	if (!silent)
-	{
-		printf("New symbol table '.symtab' contains %d entries:\n", oldSymbolsTable.nbSymboles);
-		printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
-	}
-
 	// Copie et correction de oldSymbolsTable vers newSymbolsTable
 	i = index_Shdr(".symtab", oldElfHeader, oldSHList);
 	newSymbolsTable.names = fetchSymbolNames(oldFile, oldSHList, i);
@@ -73,27 +67,33 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 		}
 		// Nouvelle valeur du symbole = Ancienne valeur + Adresse de la section parente
 		newSymbolsTable.symboles[j-d].st_value = oldSymbolsTable.symboles[j].st_value + newSHList.headers[i].sh_addr;
+	}
+	newSymbolsTable.nbSymboles = j-d;
+
 
 		// Affichage si necessaire
 		if (!silent)
 		{
-			info = 15 & newSymbolsTable.symboles[j-d].st_info;
-			bind = 15<<4 & newSymbolsTable.symboles[j-d].st_info;
-			symbolName = getSymbolNameBis(newSymbolsTable.names, newSymbolsTable.symboles[j-d]);
+			printf("New symbol table '.symtab' contains %d entries:\n", newSymbolsTable.nbSymboles);
+			printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
+			for(j=0; j<newSymbolsTable.nbSymboles; j++)
+			{
+				info = 15 & newSymbolsTable.symboles[j].st_info;
+				bind = 15<<4 & newSymbolsTable.symboles[j].st_info;
+				symbolName = getSymbolNameBis(newSymbolsTable.names, newSymbolsTable.symboles[j]);
 
-			if(newSymbolsTable.symboles[j-d].st_shndx == 0)
-			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, newSymbolsTable.symboles[j-d].st_value, newSymbolsTable.symboles[j-d].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newSymbolsTable.symboles[j-d].st_other), symbolName);
+				if(newSymbolsTable.symboles[j].st_shndx == 0)
+				{
+					printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, newSymbolsTable.symboles[j].st_value, newSymbolsTable.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newSymbolsTable.symboles[j].st_other), symbolName);
+				}
+				else
+				{
+					printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, newSymbolsTable.symboles[j].st_value, newSymbolsTable.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newSymbolsTable.symboles[j].st_other), newSymbolsTable.symboles[j].st_shndx, symbolName);
+				}
+				free(symbolName);
 			}
-			else
-			{
-				printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, newSymbolsTable.symboles[j-d].st_value, newSymbolsTable.symboles[j-d].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(newSymbolsTable.symboles[j-d].st_other), newSymbolsTable.symboles[j-d].st_shndx, symbolName);
-			}
-			free(symbolName);
 		}
-	}
 
-	newSymbolsTable.nbSymboles = j-d;
 	return newSymbolsTable;
 }
 
