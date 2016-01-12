@@ -39,7 +39,7 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 		return;
 	}
 
-	for(i=0, i<tableDeDonnees.nbSecRel, i++)
+	for(i=0; i<tableDeDonnees.nbSecRel; i++)
 	{
 		if (i == TEXT)
 		{
@@ -72,12 +72,12 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 				// T = 0
 				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", f, oldElfHeader, tabSH))
 				{
-					fseek(f,addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
+					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
 					partieText[tableReloc.Rel[i].r_offset] = addrSymbole + (uint16_t)lire_octets(oldElfHeader.e_ident[EI_DATA],f,2);
 				}
 				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", f, oldElfHeader, tabSH))
 				{
-					fseek(f,addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
+					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
 					partieData[tableReloc.Rel[i].r_offset] = addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2);
 				}
 				break;
@@ -88,12 +88,12 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 				// P correspond au qqchose dérivé de r_offset du REL (en clair faut juste redécaler sur offset)
 				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.text", f, oldElfHeader, tabSH))
 				{
-					fseek(f,addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
+					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
 					partieText[tableReloc.Rel[i].r_offset] = (addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[i].r_offset;
 				}
 				if(tableReloc.Sec_Rel[i] == index_Shdr(".rel.data", f, oldElfHeader, tabSH))
 				{
-					fseek(f,addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
+					fseek(f, addrSymbole+tableReloc.Rel[i].r_offset, SEEK_SET);
 					partieData[tableReloc.Rel[i].r_offset] = (addrSymbole + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],f,2)) - tableReloc.Rel[i].r_offset;
 				}
 				break;
