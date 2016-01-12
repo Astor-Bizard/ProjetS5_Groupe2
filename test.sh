@@ -22,6 +22,11 @@ do
 		arm-eabi-readelf --hex-dump=$j $i >>$test/readelf_$i.out 2>>$test/readelf_$i.out
 		../../lecture_ELF -x $j $i >>$test/lectureELF_$i.out 2>>$test/lectureELF_$i.out
 	done
+	for j in .text .data .ARM.attributes .shstrtab .symtab truc
+	do
+		arm-eabi-readelf --hex-dump=$j $i >>$test/readelf_$i.out 2>>$test/readelf_$i.out
+		../../lecture_ELF -x $j $i >>$test/lectureELF_$i.out 2>>$test/lectureELF_$i.out
+	done
 
 	arm-eabi-readelf -s $i >>$test/readelf_$i.out
 	../../lecture_ELF -s $i >>$test/lectureELF_$i.out

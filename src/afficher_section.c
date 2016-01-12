@@ -44,17 +44,14 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 		else{
 			num_sh=-1;
 			different=1;
-			printf("str : %s",str);
 			while(num_sh<elfHeader.e_shnum-1 && different){
 				num_sh++;
 				name=getSectionNameBis(names,tabSH[num_sh]);
 				different=strcmp(str,name);
-				printf("name : %s",name);
 				free(name);
 			}
-			printf("%d",num_sh);
 		}
-		if(num_sh>=elfHeader.e_shnum) num_sh=-1;
+		if(different) num_sh=-1;
 		free(names);
 		return num_sh;
 	}
@@ -67,7 +64,6 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 	int num_sh=0,i,j;
 	unsigned char c;
 	unsigned char *section;
-	char *names, *sectionName;
 	section=NULL;
 	unsigned char aff[17];
 	for(j=0;j<17;j++)aff[j]='\0';
@@ -109,13 +105,10 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH
 			else{
 				// Initialisation de l'affichage, récupération du nom de la section
 				printf("\nHex dump of section '%s':\n",str);
-				names = fetchSectionNames(f,elfHeader,tabSH);
 				for(i=0;i<elfHeader.e_shnum;i++){
-					sectionName = getSectionNameBis(names,tabSH[i]);
-					if(strlen(sectionName)>4 && !strcmp(str, sectionName+4) && tabSH[i].sh_type==SHT_REL) printf(" NOTE: This section has relocations against it, but these have NOT been applied to this dump.\n");
-					free(sectionName);
+					if(tabSH[i].sh_info==num_sh && tabSH[i].sh_type==SHT_REL)
+						printf(" NOTE: This section has relocations against it, but these have NOT been applied to this dump.\n");
 				}
-				free(names);
 
 				// On se place
 				fseek(f,tabSH[num_sh].sh_offset,0);
