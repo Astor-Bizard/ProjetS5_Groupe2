@@ -49,15 +49,7 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 	}
 
 	// Copie et correction de oldSymbolsTable vers newSymbolsTable
-	i = 0;
-	nameSearch = getSectionNameBis(oldSHList.names, oldSHList.headers[i]);
-	while(strcmp(nameSearch, ".symtab"))
-	{
-		free(nameSearch);
-		i++;
-		nameSearch = getSectionNameBis(oldSHList.names, oldSHList.headers[i]);
-	}
-	free(nameSearch);
+	i = index_Shdr(".symtab", oldElfHeader, oldSHList);
 	newSymbolsTable.names = fetchSymbolNames(oldFile, oldSHList, i);
 
 	for(j=0; j<oldSymbolsTable.nbSymboles; j++)
