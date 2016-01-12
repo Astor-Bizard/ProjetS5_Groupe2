@@ -19,7 +19,7 @@ Réimplantation de type R_ARM
 /*
 Fonction principale qui fera la reimplantation de tout les types R_ARM_ABS(8-16-32) et R_ARM_CALL et R_ARM_JUMP24
 @param tableDeDonnees la structure qui permet de recuperer les addresses des sections .text et .data
-@param f le fichier ouvert en lecture
+@param f le fichier a modifier ouvert en lecture
 @param oldElfHeader le header du fichier format elf avant modification par la phase 2
 @param newElfHeader le header du fichier format efl après modification par la phase 2
 @param tabSH le tableau des sections
