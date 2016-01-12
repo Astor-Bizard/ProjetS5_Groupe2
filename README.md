@@ -15,7 +15,7 @@ Etape 10 : Gabriel
 
 #A savoir :
 Ajoutez ces lignes dans votre .bashrc :  
-> source ~/.envarm/setenvarm.sh >/dev/null
+> source ~/.envarm/setenvarm.sh >/dev/null  
 > export PATH=$PATH:<chemin vers le projet>/elf_linker-1.0/
 
 Etape 8 :  
