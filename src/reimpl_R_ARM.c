@@ -19,7 +19,7 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *f, Elf32_Ehdr oldE
 	unsigned char addrSymbole;
 	Elf32_Addr addrDest;
 	printf("DEBUT\n");
-	for(i=0; i<tableDeDonnees.nbSecRel; i++)
+	for(i=0; i<tableDeDonnees.nbSecRel-1; i++)
 	{
 		printf("Section %d\n",i);
 		while(j<tableReloc.nb_Rel && i==tableReloc.Sec_Rel[j])
