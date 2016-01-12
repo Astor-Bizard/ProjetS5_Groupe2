@@ -25,7 +25,7 @@ Etape 9 :
 R_ARM_CALL <=> R_ARM_JUMP24
 
 ##Questions :
-- Comment faire fonctionner le simulatueur?!(Solved: Export Path ci dessus)
+-Comment faire fonctionner le simulatueur?!(Solved: Export Path ci dessus)
 
 
 -Utilité du numero de la machine  
