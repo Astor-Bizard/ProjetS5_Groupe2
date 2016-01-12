@@ -1,6 +1,6 @@
 #!/bin/bash
 
-make -s
+make -s lecture_ELF
 
 mkdir -p test/
 

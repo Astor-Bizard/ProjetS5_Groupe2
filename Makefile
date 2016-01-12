@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Werror
+CFLAGS=-Wall -Werror -g
 BUILD=build
 SRC=src
 EXEC=lecture_ELF modification_ELF
