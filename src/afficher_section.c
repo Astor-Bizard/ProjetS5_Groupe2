@@ -42,14 +42,17 @@ int index_Shdr(char str[], FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *tabSH){
 		}
 		// Cas nom : on le cherche dans la table str
 		else{
-			num_sh=0;
+			num_sh=-1;
 			different=1;
-			while(num_sh<elfHeader.e_shnum && different){
+			printf("str : %s",str);
+			while(num_sh<elfHeader.e_shnum-1 && different){
+				num_sh++;
 				name=getSectionNameBis(names,tabSH[num_sh]);
 				different=strcmp(str,name);
+				printf("name : %s",name);
 				free(name);
-				num_sh++;
 			}
+			printf("%d",num_sh);
 		}
 		if(num_sh>=elfHeader.e_shnum) num_sh=-1;
 		free(names);
