@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	tab_donnees.table_Num_Addr[TEXT]=index_Shdr(".text", f_read, Old_elfHeaders, Old_section_headers);
-	tab_donnees.table_Num_Addr[DATA]=index_Shdr(".data", f_read, Old_elfHeaders, Old_section_headers);
+	tab_donnees.table_Num_Addr[TEXT]=index_Shdr(".text", Old_elfHeaders, Old_section_headers);
+	tab_donnees.table_Num_Addr[DATA]=index_Shdr(".data", Old_elfHeaders, Old_section_headers);
 
 	//.text = 0x58
 	//.data = 0x1000
@@ -84,8 +84,8 @@ int main(int argc, char *argv[])
 	afficher_headers(Old_elfHeaders);
 	printf("New ");
 	afficher_headers(New_elfHeaders);
-	displaySectionsHeaders(f_read, Old_elfHeaders, Old_section_headers);
-	displaySectionsHeaders(f_read, New_elfHeaders, New_section_headers);
+	displaySectionsHeaders(Old_elfHeaders, Old_section_headers);
+	displaySectionsHeaders(New_elfHeaders, New_section_headers);
 
 	rewind(f_read);
 	newST = applySymbolsCorrections(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);
