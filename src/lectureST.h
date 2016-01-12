@@ -7,6 +7,7 @@ Lecture de la table des symboles
 
 typedef struct {
 	Elf32_Sym* symboles;
+	char* names;
 	int nbSymboles;
 } ListeSymboles;
 
@@ -14,11 +15,11 @@ typedef struct {
 * Fonction qui retourne un tableau de symboles
 * @param f Le fichier ouvert en lecture
 * @param elfHeader Le header du fichier en lecture
-* @param sectionHeader Le tableau des en-têtes de sections du fichier en lecture
+* @param shList La liste des en-têtes de sections du fichier en lecture
 * @param silent Si silent est à 1, aucun affichage ne sera produit en dehors des erreurs
-* @return Une ListeSymboles contenant le tableau des symboles et le nombre de symboles
+* @return Une ListeSymboles contenant le tableau des symboles et le nombre de symboles, ainsi que leurs noms
 */
-ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHeader, int silent);
+ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList, int silent);
 
 /*
 Fonction qui retourne la chaine de caractère qui correspond au type du symbole donné en parametre
@@ -44,11 +45,11 @@ char* visionSymbole(unsigned char vis);
 /*
 * Récupère la table des nom des symboles(un '.strtab') sous la forme d'une chaine. 
 * @param f Le fichier dans lequel se trouve les noms de symboles, ouvert en lecture
-* @param shTable Table des en-têtes de sections
+* @param shList Liste des en-têtes de sections
 * @param symbolTabIndex Index de la table des symboles dans shTable
 * @return Une chaine de caractères composée de plusieurs sous-chaines. Copie conforme de la section '.strtab' liée à '.symtab'
 */
-char* fetchSymbolNames(FILE* f, Elf32_Shdr* shTable, int symbolTabIndex);
+char* fetchSymbolNames(FILE* f, SectionsHeadersList shList, int symbolTabIndex);
 
 /*
 * Récupère le nom d'un symbole en se basant sur le champ st_name de son en-tête.

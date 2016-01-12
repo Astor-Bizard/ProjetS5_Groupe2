@@ -9,6 +9,12 @@ Lecture de la table des sections
 #define SHT_ARM_OVERLAYSECTION 0x70000005
 #define FLAG_STRING_LENGTH 4
 
+typedef struct {
+	Elf32_Shdr* headers;
+	char* names;
+	int size;
+} SectionsHeadersList;
+
 /*
 * Fait le lien entre l'identifiant numérique d'un type de section et son nom.
 * @param sh_type Un entier, généralement issu du champ du même nom d'un en-tête de section
@@ -20,10 +26,10 @@ char* typeNameFromValue(uint32_t sh_type);
 * Récupère la table des nom des sections('.shstrtab') sous la forme d'une chaine. 
 * @param f Le fichier dans lequel se trouve les noms de sections, ouvert en lecture
 * @param elfHeader Le header du fichier en lecture
-* @param shTable La table des en-têtes de sections du fichier en lecture
+* @param shList La liste des en-têtes de sections du fichier en lecture
 * @return Une chaine de caractères composée de plusieurs sous-chaines. Copie conforme de la section '.shstrtab'
 */
-char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable);
+char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, SectionsHeadersList shList);
 
 /*
 * Récupère le nom d'une section en se basant sur le champ sh_name de son en-tête.
@@ -52,17 +58,17 @@ char* sectionFlagsTranslation(uint32_t flags);
 * Affiche la liste des en-têtes de section.
 * @param f Le fichier ouvert en lecture
 * @param elfHeader Le header du fichier en lecture
-* @param shTable Le tableau des en-têtes de section
+* @param shList La liste des en-têtes de section
 */
-void displaySectionsHeaders(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable);
+void displaySectionsHeaders(FILE* f, Elf32_Ehdr elfHeader, SectionsHeadersList shList);
 
 /*
 * Récupère la liste des en-têtes de section.
 * @param f Le fichier ouvert en lecture
 * @param elfHeader Le header du fichier en lecture
 * @param silent Si silent est à 1, aucun affichage ne sera produit en dehors des erreurs
-* @return Un tableau de Elf32_Shdr(en-tête de section) contenant tout les en-têtes de section du fichier f, dans le même ordre que ce dernier.
+* @return Une liste contenant tout les en-têtes de section du fichier f, dans le même ordre que ce dernier, ainsi que leurs noms
 */
-Elf32_Shdr* readSectionsHeadersFromFile(FILE *f, Elf32_Ehdr elfHeader, int silent);
+SectionsHeadersList readSectionsHeadersFromFile(FILE *f, Elf32_Ehdr elfHeader, int silent);
 
 #endif

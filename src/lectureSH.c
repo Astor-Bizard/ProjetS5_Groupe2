@@ -84,17 +84,17 @@ char* typeNameFromValue(uint32_t sh_type) {
 	return typeName;
 }
 
-char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
+char* fetchSectionNames(FILE* f, Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
 	int i;
 
-	char* names = (char*) malloc(sizeof(char)*shTable[elfHeader.e_shstrndx].sh_size);
+	char* names = (char*) malloc(sizeof(char)*shList.headers[elfHeader.e_shstrndx].sh_size);
 	if (names==NULL) {
 		printf("\nErreur lors de l'allocation initiale de la table des noms.\n");
 		return NULL;
 	}
 
-	fseek(f, shTable[elfHeader.e_shstrndx].sh_offset, 0);
-	for(i=0; i<shTable[elfHeader.e_shstrndx].sh_size; i++)
+	fseek(f, shList.headers[elfHeader.e_shstrndx].sh_offset, 0);
+	for(i=0; i<shList.headers[elfHeader.e_shstrndx].sh_size; i++)
 		names[i] = fgetc(f);
 	
 	return names;
@@ -179,23 +179,22 @@ char* sectionFlagsTranslation(uint32_t flags) {
 	return flagsString;
 }
 
-void displaySectionsHeaders(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) {
+void displaySectionsHeaders(FILE* f, Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
 	int i;
 	char* sectionName;
 	char* flags;
-	char* names = fetchSectionNames(f, elfHeader, shTable);
 
 	printf("There are %d section headers, starting at offset 0x%x:\n\n", elfHeader.e_shnum, elfHeader.e_shoff);
 	printf("Section Headers:\n");
 	printf("  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al\n");
 	
 	for(i=0; i<elfHeader.e_shnum; i++) {
-		sectionName = getSectionName(names, shTable[i].sh_name);
+		sectionName = getSectionName(shList.names, shList.headers[i].sh_name);
 		if(strlen(sectionName)>17)
 			sectionName[17] = '\0';
-		flags = sectionFlagsTranslation(shTable[i].sh_flags);
+		flags = sectionFlagsTranslation(shList.headers[i].sh_flags);
 
-		printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, sectionName, typeNameFromValue(shTable[i].sh_type), shTable[i].sh_addr, shTable[i].sh_offset, shTable[i].sh_size, shTable[i].sh_entsize, flags, shTable[i].sh_link, shTable[i].sh_info, shTable[i].sh_addralign);
+		printf("  [%2d] %-17s %-15s %08x %06x %06x %02x %3s %2d %3d %2d\n", i, sectionName, typeNameFromValue(shList.headers[i].sh_type), shList.headers[i].sh_addr, shList.headers[i].sh_offset, shList.headers[i].sh_size, shList.headers[i].sh_entsize, flags, shList.headers[i].sh_link, shList.headers[i].sh_info, shList.headers[i].sh_addralign);
 		
 		free(flags);
 		free(sectionName);
@@ -204,37 +203,42 @@ void displaySectionsHeaders(FILE* f, Elf32_Ehdr elfHeader, Elf32_Shdr* shTable) 
 	printf("  W (write), A (alloc), X (execute), M (merge), S (strings)\n");
 	printf("  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)\n");
 	printf("  O (extra OS processing required) o (OS specific), p (processor specific)\n");
-
-	free(names);
 }
 
-Elf32_Shdr* readSectionsHeadersFromFile(FILE *f, Elf32_Ehdr elfHeader, int silent) {
+SectionsHeadersList readSectionsHeadersFromFile(FILE *f, Elf32_Ehdr elfHeader, int silent) {
 	int i;
+	SectionsHeadersList shList;
 
 	// Allocation de la table des en-têtes de section
-	Elf32_Shdr* shTable = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeader.e_shnum);
-	if (shTable==NULL) {
-		printf("\nErreur lors de l'allocation initiale de shTable.\n");
-		return NULL;
+	shList.headers = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeader.e_shnum);
+	if (shList.headers==NULL) {
+		printf("\nErreur lors de l'allocation initiale de shList.headers.\n");
+		shList.names = NULL;
+		shList.headers = NULL;
+		shList.size = 0;
+		return shList;
 	}
+
+	shList.names = fetchSectionNames(f, elfHeader, shList);
 
 	fseek(f, elfHeader.e_shoff, 0);
 	for(i=0; i<elfHeader.e_shnum; i++) {
-		shTable[i].sh_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shTable[i].sh_type = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shTable[i].sh_flags = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shTable[i].sh_addr = (Elf32_Addr) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shTable[i].sh_offset = (Elf32_Off) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shTable[i].sh_size = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shTable[i].sh_link = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shTable[i].sh_info = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shTable[i].sh_addralign = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
-		shTable[i].sh_entsize = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i].sh_name = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i].sh_type = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i].sh_flags = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i].sh_addr = (Elf32_Addr) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i].sh_offset = (Elf32_Off) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i].sh_size = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i].sh_link = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i].sh_info = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i].sh_addralign = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
+		shList.headers[i].sh_entsize = (uint32_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 4);
 	}
+	shList.size = i;
 
 	if (!silent) {
-		displaySectionsHeaders(f, elfHeader, shTable);
+		displaySectionsHeaders(f, elfHeader, shList);
 	}
 
-	return shTable;
+	return shList;
 }

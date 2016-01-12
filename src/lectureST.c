@@ -10,38 +10,37 @@ Lecture de la table des symboles
 #include "lectureSH.h"
 #include "lectureST.h"
 
-ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectionHeader, int silent)
+ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList, int silent)
 {
 	uint32_t sectionSymbolTabSize;
 	uint32_t sectionSymbolTabOffset;
-	char* names = fetchSectionNames(f, elfHeader, sectionHeader);
-	char* symbolNames;
+	char* symbolString;
 	int i = 0;
 	int j = 0;
+	unsigned char bind, info;
 	ListeSymboles listeSymboles;
 
-	char* nomSection = getSectionNameBis(names, sectionHeader[i]);
+	char* nomSection = getSectionNameBis(shList.names, shList.headers[i]);
 	while(strcmp(nomSection, ".symtab"))
 	{
 		free(nomSection);
 		i++;
-		nomSection = getSectionNameBis(names, sectionHeader[i]);
+		nomSection = getSectionNameBis(shList.names, shList.headers[i]);
 	}
 	free(nomSection);
-	sectionSymbolTabSize = sectionHeader[i].sh_size;
-	sectionSymbolTabOffset = sectionHeader[i].sh_offset;
-	symbolNames = fetchSymbolNames(f, sectionHeader, i);
+	sectionSymbolTabSize = shList.headers[i].sh_size;
+	sectionSymbolTabOffset = shList.headers[i].sh_offset;
 
 	listeSymboles.symboles = (Elf32_Sym*) malloc(sizeof(Elf32_Sym)*(sectionSymbolTabSize/16));
 	if(listeSymboles.symboles == NULL)
 	{
 		printf("Erreur d'allocation\n");
 		listeSymboles.symboles = NULL;
+		listeSymboles.names = NULL;
 		listeSymboles.nbSymboles = 0;
-		free(names);
-		free(symbolNames);
 		return listeSymboles;
 	}
+	listeSymboles.names = fetchSymbolNames(f, shList, i);
 	
 	if (!silent)
 	{
@@ -59,12 +58,12 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 		listeSymboles.symboles[j].st_other = (unsigned char) lire_octets(elfHeader.e_ident[EI_DATA], f, 1);
 		listeSymboles.symboles[j].st_shndx = (uint16_t) lire_octets(elfHeader.e_ident[EI_DATA], f, 2);
 
-		unsigned char info = 15 & listeSymboles.symboles[j].st_info;
-		unsigned char bind = 15<<4 & listeSymboles.symboles[j].st_info;
+		info = 15 & listeSymboles.symboles[j].st_info;
+		bind = 15<<4 & listeSymboles.symboles[j].st_info;
 
 		if (!silent)
 		{
-			char* symbolString = getSymbolNameBis(symbolNames, listeSymboles.symboles[j]);
+			symbolString = getSymbolNameBis(listeSymboles.names, listeSymboles.symboles[j]);
 
 			if(listeSymboles.symboles[j].st_shndx == 0)
 			{
@@ -80,10 +79,6 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, Elf32_Shdr *sectio
 	}
 
 	listeSymboles.nbSymboles = j;
-
-	free(names);
-	free(symbolNames);
-
 	return listeSymboles;
 }
 
@@ -165,18 +160,18 @@ char* visionSymbole(unsigned char vis)
 	return visionSymboleChar;
 }
 
-char* fetchSymbolNames(FILE* f, Elf32_Shdr* shTable, int symbolTabIndex) 
+char* fetchSymbolNames(FILE* f, SectionsHeadersList shList, int symbolTabIndex) 
 {
 	int i;
 
-	char* symbols = (char*) malloc(sizeof(char)*shTable[symbolTabIndex+1].sh_size);
+	char* symbols = (char*) malloc(sizeof(char)*shList.headers[symbolTabIndex+1].sh_size);
 	if (symbols==NULL) {
 		printf("Erreur lors de l'allocation initiale de la table des noms.");
 		return NULL;
 	}
 
-	fseek(f, shTable[symbolTabIndex+1].sh_offset, 0);
-	for(i=0; i<shTable[symbolTabIndex+1].sh_size; i++)
+	fseek(f, shList.headers[symbolTabIndex+1].sh_offset, 0);
+	for(i=0; i<shList.headers[symbolTabIndex+1].sh_size; i++)
 		symbols[i] = fgetc(f);
 	
 	return symbols;

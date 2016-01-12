@@ -45,21 +45,21 @@ size_t fwrite8(FILE* f, int mode, uint8_t value);
 * @param oldFile Le fichier original, ouvert en lecture
 * @param oldElfHeader Le header du fichier original
 * @param newElfHeader Le header du nouveau fichier
-* @param originalSH La table des en-têtes de sections du fichier original
-* @param newSH La table des en-têtes de sections du nouveau fichier
-* @param oldST La table des symboles du fichier original
+* @param oldSectionsHeaders La table des en-têtes de sections du fichier original
+* @param newSectionHeaders La table des en-têtes de sections du nouveau fichier
+* @param oldSymbolsTable La table des symboles du fichier original
 * @param silent Si silent est à 1, aucun affichage ne sera produit en dehors des erreurs
 * @return La table des symboles corrigée
 */
-ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader, Elf32_Shdr* originalSH, Elf32_Shdr* newSH, ListeSymboles oldST, int silent);
+ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader, SectionsHeadersList oldSHList, SectionsHeadersList newSHList, ListeSymboles oldSymbolsTable, int silent);
 
 /*
 * Ecrit la table des symboles dans un fichier
-* @param newFile Le fichier dans lequel écrire la table, ouvert en écriture
-* @param newElfHeader Le header du fichier
-* @param newSH La table des en-têtes de sections du fichier
-* @param newST La table des symboles à écrire
+* @param file Le fichier dans lequel écrire la table, ouvert en écriture
+* @param elfHeader Le header du fichier
+* @param shList La liste des en-têtes de sections du fichier
+* @param symbolsTable La table des symboles à écrire
 */
-void writeSymbolsToFile(FILE* newFile, Elf32_Ehdr newElfHeader, Elf32_Shdr* newSH, ListeSymboles newST);
+void writeSymbolsToFile(FILE* file, Elf32_Ehdr elfHeader, SectionsHeadersList shList, ListeSymboles symbolsTable);
 
 #endif

@@ -35,7 +35,7 @@ void print_usage() {
 
 int main(int argc, char *argv[]) {
 	Elf32_Ehdr elfHeaders;
-	Elf32_Shdr *sectionsHeadersTable;
+	SectionsHeadersList shList;
 	ListeSymboles symbolsTable;
 	Str_Reloc relocationTable;
 	char* fileName;
@@ -121,23 +121,23 @@ int main(int argc, char *argv[]) {
 
 	elfHeaders = lecture_Headers(f, (!(options & OPTION_FILE_HEADER)));
 
-	sectionsHeadersTable = readSectionsHeadersFromFile(f, elfHeaders, (!(options & OPTION_SECTION_HEADERS)));
+	shList = readSectionsHeadersFromFile(f, elfHeaders, (!(options & OPTION_SECTION_HEADERS)));
 
 	if(options & OPTION_SECTION_DISPLAY) 
 	{
 		if(sectionToDisplay == NULL)
-			afficher_section(f, elfHeaders, sectionsHeadersTable, 0, NULL);
+			afficher_section(f, elfHeaders, shList, 0, NULL);
 		else 
-			afficher_section(f, elfHeaders, sectionsHeadersTable, 0, sectionToDisplay);
+			afficher_section(f, elfHeaders, shList, 0, sectionToDisplay);
 	}
 
-	symbolsTable = lectureSymbolTab(f, elfHeaders, sectionsHeadersTable, (!(options & OPTION_SYMS)));
+	symbolsTable = lectureSymbolTab(f, elfHeaders, shList, (!(options & OPTION_SYMS)));
 
-	relocationTable = affichage_relocation(f, elfHeaders, sectionsHeadersTable, symbolsTable, (!(options & OPTION_RELOCS)));
+	relocationTable = affichage_relocation(f, elfHeaders, shList, symbolsTable, (!(options & OPTION_RELOCS)));
 
 	fclose(f);
 	free_Str_Reloc(relocationTable);
-	free_Elf32_Shdr(sectionsHeadersTable);
+	free_SectionsHeadersList(sectionsHeadersTable);
 	free_ListeSymboles(symbolsTable);
 	
 	return 0;

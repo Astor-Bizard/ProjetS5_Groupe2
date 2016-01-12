@@ -4,14 +4,18 @@ Libere les differente structure du programme
 
 #include "liberation.h"
 
-void free_Elf32_Shdr(Elf32_Shdr *section_headers)
+void free_SectionsHeadersList(SectionsHeadersList shList)
 {
-	free(section_headers);
+	free(shList.headers);
+	free(shList.names);
+	shList.size = 0;
 }
 
 void free_ListeSymboles(ListeSymboles sym_tab)
 {
 	free(sym_tab.symboles);
+	free(sym_tab.names);
+	sym_tab.nbSymboles = 0;
 }
 
 void free_Str_Reloc(Str_Reloc str_reloc)

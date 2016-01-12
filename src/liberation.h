@@ -13,7 +13,7 @@ Libere les differente structure du programme
 #include "affichage_relocation.h"
 #include "renum_section.h"
 
-void free_Elf32_Shdr(Elf32_Shdr *section_headers);
+void free_SectionsHeadersList(SectionsHeadersList shList);
 void free_ListeSymboles(ListeSymboles sym_tab);
 void free_Str_Reloc(Str_Reloc str_reloc);
 void free_Tab_Donnees(Table_Donnees tab_donnees);
