@@ -29,8 +29,6 @@ size_t fwrite8(FILE* f, int mode, uint8_t value) {
 ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader, SectionsHeadersList oldSHList, SectionsHeadersList newSHList, ListeSymboles oldSymbolsTable, int silent) {
 	int i, j, d;
 	char* originalName;
-	char* symbolName;
-	unsigned char info, bind;
 	ListeSymboles newSymbolsTable;
 	
 	// Allocation de la nouvelle table des symboles, de la même longueur de l'ancienne
