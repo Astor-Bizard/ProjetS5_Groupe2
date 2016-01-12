@@ -82,7 +82,9 @@ int main(int argc, char *argv[])
 	New_section_headers = renumerote_section(f_read,f_write, Old_elfHeaders, Old_section_headers, &New_elfHeaders, tab_donnees);
 	
 	afficher_headers(Old_elfHeaders);
+	printf("New ");
 	afficher_headers(New_elfHeaders);
+	displaySectionsHeaders(f_read, Old_elfHeaders, Old_section_headers);
 	displaySectionsHeaders(f_read, New_elfHeaders, New_section_headers);
 
 	rewind(f_read);

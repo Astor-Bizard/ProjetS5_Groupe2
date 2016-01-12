@@ -26,12 +26,12 @@ Elf32_Shdr *renumerote_section(FILE *f_read,
 						FILE *f_write,
 						Elf32_Ehdr elfHeaders, 
 						Elf32_Shdr *section_headers, 
-						Elf32_Ehdr *elfHeaders_mod, 
+						Elf32_Ehdr *elfHeaders_mod,
 						Table_Donnees tab_donnees
 						)
 {
 	int i,k; 
-	int nbRec = 0;
+	int nbRec;
 	int nb_Sec_A_Traiter = 0;
 	Elf32_Word OctetSupp = 0;
 	Elf32_Shdr *section_headers_mod;
@@ -42,6 +42,12 @@ Elf32_Shdr *renumerote_section(FILE *f_read,
 	*elfHeaders_mod=elfHeaders;
 
 	elfHeaders_mod->e_shnum = elfHeaders.e_shnum - nb_Sec_A_Traiter;
+
+	for(i=0;i<tab_donnees.nbSecRel;i++){
+		if(tab_donnees.table_Num_Addr[i]<elfHeaders.e_shstrndx){
+			elfHeaders_mod->e_shstrndx--;
+		}
+	}
 	
 	section_headers_mod = (Elf32_Shdr*) malloc(sizeof(Elf32_Shdr)*elfHeaders.e_shnum);
 	if (section_headers_mod==NULL) {
@@ -52,6 +58,20 @@ Elf32_Shdr *renumerote_section(FILE *f_read,
 
 
 	//Modification table des sections
+
+	//Copie (sauf REL)
+	nbRec=0;
+	for(i=0;i<elfHeaders.e_shnum;i++)
+	{
+		if(section_headers[i].sh_type != SHT_REL)
+		{
+			section_headers_mod[i-nbRec] = section_headers[i];
+		}
+		else nbRec++;
+	}
+
+	nbRec=0;
+	//Application des modifications de relocation
 	for(i=0;i<elfHeaders.e_shnum;i++)
 	{
 		if(section_headers[i].sh_type == SHT_REL)
@@ -59,25 +79,20 @@ Elf32_Shdr *renumerote_section(FILE *f_read,
 			OctetSupp += section_headers[i].sh_size;
 			nbRec++;
 			k= 0;
-			while(k < tab_donnees.nbSecRel && tab_donnees.table_Num_Addr[k] != (i-1))
+			while(k < tab_donnees.nbSecRel && tab_donnees.table_Num_Addr[k] != i)
 			{
 				k++;
 			}
 			if(k == tab_donnees.nbSecRel)
 			{
-				printf("Table (%i) non trouvé , erreur d'argument\n",i-1);
+				printf("Table (%i) non trouvée , erreur d'argument\n",i);
 				exit(1);
 			}
 			else
 			{
-				printf("ICI\n");
-				section_headers_mod[i-nbRec].sh_addr = tab_donnees.table_Addr[k];
+				section_headers_mod[i-nbRec].sh_addr += tab_donnees.table_Addr[k]+section_headers_mod[i-nbRec].sh_offset;
 			}
 		}
-		else
-		{
-			section_headers_mod[i-nbRec] = section_headers[i];
-		}			
 	}
 
 	elfHeaders_mod->e_shoff -=  OctetSupp;
