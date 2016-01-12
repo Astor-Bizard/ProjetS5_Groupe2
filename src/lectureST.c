@@ -58,7 +58,7 @@ void afficherTableSymboles(ListeSymboles listeSymboles) {
 	unsigned char bind, info;
 	int j;
 
-	printf("\nSymbol table '.symtab' contains %d entries:\n", listeSymboles);
+	printf("\nSymbol table '.symtab' contains %d entries:\n", listeSymboles.nbSymboles);
 	printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
 
 	for(j=0; j<listeSymboles.nbSymboles; j++)
