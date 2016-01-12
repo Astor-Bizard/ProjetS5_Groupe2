@@ -59,9 +59,14 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 		newSymbolsTable.symboles[j].st_other = oldSymbolsTable.symboles[j].st_other;
 
 		// Recherche du nouvel id de la section du symbole courant
-		originalName = getSectionNameBis(oldSHList.names, oldSHList.headers[oldSymbolsTable.symboles[j].st_shndx]); 
-		newSymbolsTable.symboles[j].st_shndx = index_Shdr(originalName, newElfHeader, newSHList);
-		free(originalName);
+		if (oldSymbolsTable.symboles[j].st_shndx==0) {
+			newSymbolsTable.symboles[j].st_shndx = 0;
+		}
+		else {
+			originalName = getSectionNameBis(oldSHList.names, oldSHList.headers[oldSymbolsTable.symboles[j].st_shndx]); 
+			newSymbolsTable.symboles[j].st_shndx = index_Shdr(originalName, newElfHeader, newSHList);
+			free(originalName);
+		}
 
 		// Nouvelle valeur du symbole = Ancienne valeur + Adresse de la section parente
 		newSymbolsTable.symboles[j].st_value = oldSymbolsTable.symboles[j].st_value + newSHList.headers[i].sh_addr;
