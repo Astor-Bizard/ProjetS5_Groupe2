@@ -6,6 +6,7 @@
 #include <elf.h>
 #include <string.h>
 #include "lecture_headers.h"
+#include "afficher_section.h"
 #include "lectureSH.h"
 #include "lectureST.h"
 
