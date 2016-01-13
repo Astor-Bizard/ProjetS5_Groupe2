@@ -1,4 +1,4 @@
-#ignorer les fichiers à extensions suivantes :
+﻿#ignorer les fichiers à extensions suivantes :
 *.o
 *.a
 *.log
@@ -8,6 +8,10 @@
 *.out
 
 elf_linker-1.0/
+!elf_linker-1.0/Makefile.am
+!elf_linker-1.0/ARM_runner_exec.c
+!elf_linker-1.0/ARM_runner_exec.h
+
 
 lecture_ELF
 modification_ELF
