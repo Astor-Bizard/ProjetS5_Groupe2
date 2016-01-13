@@ -47,8 +47,8 @@ int index_Shdr(char str[], Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
 				different=strcmp(str, name);
 				free(name);
 			}
+			if(different) num_sh=-1;
 		}
-		if(different) num_sh=-1;
 		return num_sh;
 	}
 	else return -1;

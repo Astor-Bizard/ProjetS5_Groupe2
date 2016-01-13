@@ -153,7 +153,7 @@ void afficher_headers(Elf32_Ehdr headers)
 	if(headers.e_machine==40)
 		printf("UNIX - System V\n");
 	else
-		printf("Machine numero : %d (incompatible)", headers.e_machine);
+		printf("Machine numero : %d (incompatible)\n", headers.e_machine);
 
 	printf("  ABI Version:                       0\n");
 
