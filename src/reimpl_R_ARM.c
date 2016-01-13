@@ -23,7 +23,8 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *oldF, FILE *newF, 
 	uint32_t tailleSection;
 	uint32_t offsetSection = 0;
 	
-	int machin;
+	int32_t addend;
+	uint32_t valeurSymb, p;
 
 	for(i=0; i<tableDeDonnees.nbSecRel; i++)
 	{
@@ -43,29 +44,29 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *oldF, FILE *newF, 
 		}
 		while(j<tableReloc.nb_Rel && valeurSecRel==tableReloc.Sec_Rel[j])
 		{
-			
 			info = 255 & tableReloc.Rel[j].r_info;
-			addrSymbole = (255<<8 & tableReloc.Rel[j].r_info)>>8;			
+			addrSymbole = (255<<8 & tableReloc.Rel[j].r_info)>>8;
+
+			printf("Deplacement vers %x + %x = %x\n", tabSH.headers[valeurSecRel-1].sh_offset, tableReloc.Rel[j].r_offset, tabSH.headers[valeurSecRel-1].sh_offset+tableReloc.Rel[j].r_offset);
+			fseek(oldF, tabSH.headers[valeurSecRel-1].sh_offset + tableReloc.Rel[j].r_offset, SEEK_SET);
+			fseek(newF, addrDest + tableReloc.Rel[j].r_offset, SEEK_SET);
+
 			switch(info)
 			{
 				case 2:
-
 				case 5:
-
 				case 8:
 					// R_ARM_ABS*
 					// (S + A) | T , addresse du symbole + relocation, T = 1 si symbole est du type STT_FUNC sinon 0
 					// S = valeur du symbole 
 					// A = addend de la relocalisation
 					// T = 0
-					
-					fseek(oldF, addrDest+tableReloc.Rel[j].r_offset, SEEK_SET);
-					fseek(newF, addrDest+tableReloc.Rel[j].r_offset, SEEK_SET);
+					addend = (int32_t) lire_octets(oldElfHeader.e_ident[EI_DATA], oldF, 4);
+					valeurSymb = symbList.symboles[addrSymbole].st_value;
 
-					machin = (int)lire_octets(oldElfHeader.e_ident[EI_DATA],oldF,4);
-					sectionARecopier[tableReloc.Rel[j].r_offset] = symbList.symboles[addrSymbole].st_value + machin;
+					sectionARecopier[tableReloc.Rel[j].r_offset] = valeurSymb + addend;
 					//fwrite(&section[tableReloc.Rel[j].r_offset], sizeof(unsigned char), 1, newF);
-					printf("Reloc a %x de %x + %x = %x mais j'ai %x\n",addrDest+tableReloc.Rel[j].r_offset, symbList.symboles[addrSymbole].st_value, machin, symbList.symboles[addrSymbole].st_value + machin, sectionARecopier[tableReloc.Rel[j].r_offset]);
+					printf("Reloc a %8x de %8x + %8x = %8x mais j'ai %8x\n", addrDest+tableReloc.Rel[j].r_offset, valeurSymb, addend, valeurSymb + addend, sectionARecopier[tableReloc.Rel[j].r_offset]);
 
 					break;					
 				case 28:
@@ -73,14 +74,14 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *oldF, FILE *newF, 
 					// R_ARM_CALL & R_ARM_JUMP24
 					// ((S+A) | T) - P
 					// P correspond au qqchose dérivé de r_offset du REL (en clair faut juste redécaler sur offset)
-					
-					fseek(oldF, addrDest+tableReloc.Rel[j].r_offset, SEEK_SET);
-					fseek(newF, addrDest+tableReloc.Rel[j].r_offset, SEEK_SET);
-					machin = (int)lire_octets(oldElfHeader.e_ident[EI_DATA],oldF,3);
-					sectionARecopier[tableReloc.Rel[j].r_offset] = (symbList.symboles[addrSymbole].st_value + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],oldF,4)) - (addrDest + tableReloc.Rel[j].r_offset);
+					addend = (int32_t) lire_octets(oldElfHeader.e_ident[EI_DATA], oldF, 3);
+					valeurSymb = symbList.symboles[addrSymbole].st_value;
+					p = addrDest + tableReloc.Rel[j].r_offset; 
+
+					sectionARecopier[tableReloc.Rel[j].r_offset] = (valeurSymb + addend) - p;
 					
 					//fwrite(&section[tableReloc.Rel[j].r_offset], sizeof(unsigned char), 1, newF);
-					printf("Reloc a %x de %x + %x - %x = %x mais j'ai %x\n",addrDest+tableReloc.Rel[j].r_offset, symbList.symboles[addrSymbole].st_value, machin, (addrDest + tableReloc.Rel[j].r_offset), symbList.symboles[addrSymbole].st_value + machin - (addrDest + tableReloc.Rel[j].r_offset), sectionARecopier[tableReloc.Rel[j].r_offset]);
+					printf("Reloc a %8x de %8x + %8x - %8x = %8x mais j'ai %8x\n", addrDest+tableReloc.Rel[j].r_offset, valeurSymb, addend, p,  (valeurSymb + addend) - p, sectionARecopier[tableReloc.Rel[j].r_offset]);
 
 
 					break;
