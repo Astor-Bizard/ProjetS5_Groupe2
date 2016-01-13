@@ -25,6 +25,7 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *oldF, FILE *newF, 
 	
 	for(i=0; i<tableDeDonnees.nbSecRel; i++)
 	{
+		offsetSection = 0;
 		addrDest = tableDeDonnees.table_Addr[i];
 		valeurSecRel = tableReloc.Sec_Rel[j];
 		section = recuperer_section_num(oldF, oldElfHeader, tabSH, valeurSecRel);
