@@ -48,7 +48,7 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLis
 	listeSymboles.nbSymboles = j;
 
 	if (!silent)
-		afficherTableSymboles(listeSymboles,elfHeader);
+		afficherTableSymboles(listeSymboles, elfHeader);
 
 	return listeSymboles;
 }
@@ -77,9 +77,9 @@ void afficherTableSymboles(ListeSymboles listeSymboles, Elf32_Ehdr elfHeader) {
 				break;
 			case 65522: printf("COM ");
 				break;
-			default: printf("%3d ",listeSymboles.symboles[j].st_shndx);
+			default: printf("%3d ", listeSymboles.symboles[j].st_shndx);
 		}
-		printf("%s\n",symbolString);
+		printf("%s\n", symbolString);
 		free(symbolString);
 	}
 }

@@ -31,8 +31,8 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *oldF, FILE *newF, 
 		offsetSection = 0;
 		addrDest = tableDeDonnees.table_Addr[i];
 		valeurSecRel = tableReloc.Sec_Rel[j];
-		section = recuperer_section_num(oldF, oldElfHeader, tabSH, valeurSecRel);
-		sectionARecopier = recuperer_section_num(oldF, oldElfHeader, tabSH, valeurSecRel-1);
+		section = recuperer_section_num(oldF, tabSH, valeurSecRel);
+		sectionARecopier = recuperer_section_num(oldF, tabSH, valeurSecRel-1);
 		//ecriture de la section 
 		tailleSection = tabSH.headers[valeurSecRel].sh_size;
 		fseek(newF, addrDest, SEEK_SET);

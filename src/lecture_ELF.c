@@ -125,9 +125,9 @@ int main(int argc, char *argv[]) {
 	if(options & OPTION_SECTION_DISPLAY) 
 	{
 		if(sectionToDisplay == NULL)
-			afficher_section(f, elfHeaders, shList, 0, NULL);
+			afficher_section(f, shList, 0, NULL);
 		else 
-			afficher_section(f, elfHeaders, shList, 0, sectionToDisplay);
+			afficher_section(f, shList, 0, sectionToDisplay);
 	}
 
 	symbolsTable = lectureSymbolTab(f, elfHeaders, shList, (!(options & OPTION_SYMS)));

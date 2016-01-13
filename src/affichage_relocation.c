@@ -181,7 +181,7 @@ void afficher_sectionR(FILE *f,
 {
 	int i;
 	unsigned char *section;
-    section = recuperer_section_num(f, header, liste_sections, numS); // Y'a rien a voir circulez!
+    section = recuperer_section_num(f, liste_sections, numS); // Y'a rien a voir circulez!
 	unsigned long long int addr;
 	unsigned long long int info;
     unsigned char type;

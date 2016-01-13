@@ -40,7 +40,7 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 	}
 
 	// Copie et correction de oldSymbolsTable vers newSymbolsTable
-	i = index_Shdr(".symtab", oldElfHeader, oldSHList);
+	i = index_Shdr(".symtab", oldSHList);
 	newSymbolsTable.names = fetchSymbolNames(oldFile, oldSHList, i);
 	d = 0;
 	for(j=0; j<oldSymbolsTable.nbSymboles; j++)
@@ -56,7 +56,7 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 		}
 		else {
 			originalName = getSectionNameBis(oldSHList.names, oldSHList.headers[oldSymbolsTable.symboles[j].st_shndx]); 
-			newSymbolsTable.symboles[j-d].st_shndx = index_Shdr(originalName, newElfHeader, newSHList);
+			newSymbolsTable.symboles[j-d].st_shndx = index_Shdr(originalName, newSHList);
 			free(originalName);
 		}
 		if(newSymbolsTable.symboles[j-d].st_shndx==65535) {
@@ -70,7 +70,7 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 
 	// Affichage si necessaire
 	if (!silent)
-		afficherTableSymboles(newSymbolsTable,newElfHeader);
+		afficherTableSymboles(newSymbolsTable, newElfHeader);
 
 	return newSymbolsTable;
 }
@@ -81,7 +81,7 @@ void writeSymbolsToFile(FILE* file, Elf32_Ehdr elfHeader, SectionsHeadersList sh
 
 	printf("MARQUE 1\n");
 	// Recherche de la table des symboles dans le nouveau fichier pour récupérer son offset
-	i = index_Shdr(".symtab", elfHeader, shList);
+	i = index_Shdr(".symtab", shList);
 	writingOffset = shList.headers[i].sh_offset;
 
 	printf("MARQUE 2\n");
