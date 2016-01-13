@@ -84,13 +84,13 @@ Elf32_Ehdr lecture_Headers(FILE *f, int silent)
 	MEMORISER(2,headers.e_type);
 	switch(headers.e_type)
 	{
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 0xff00:
-		case 0xffff:
+		case ET_NONE:
+		case ET_REL:
+		case ET_EXEC:
+		case ET_DYN:
+		case ET_CORE:
+		case ET_LOPROC:
+		case ET_HIPROC:
 			break;
 		default:
 			printf("Erreur lecture_Header : Type\n");
@@ -160,25 +160,25 @@ void afficher_headers(Elf32_Ehdr headers)
 	printf("  Type:                              ");
 	switch(headers.e_type)
 	{
-		case 0:
+		case ET_NONE:
 			printf("NONE (No file type)\n");
 			break;
-		case 1:
+		case ET_REL:
 			printf("REL (Relocatable file)\n");
 			break;
-		case 2:
+		case ET_EXEC:
 			printf("EXEC (Executable)\n");
 			break;
-		case 3:
+		case ET_DYN:
 			printf("DYN (Shared object file)\n");
 			break;
-		case 4:
+		case ET_CORE:
 			printf("CORE (Core file)\n");
 			break;
-		case 0xff00:
+		case ET_LOPROC:
 			printf("LOPROC (Processor-specific)\n");
 			break;
-		case 0xffff:
+		case ET_HIPROC:
 			printf("HIPROC (Processor-specific)\n");
 			break;
 	}

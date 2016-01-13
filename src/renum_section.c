@@ -33,13 +33,14 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 	int i,k; 
 	int nbRec, nbSecVide;
 	int nb_Sec_A_Traiter = 0;
-	Elf32_Word OctetSupp = 0;
 	SectionsHeadersList section_headers_mod;
 	
 	//Modification du Headers
 	nb_Sec_A_Traiter = nbSecRel(elfHeaders,section_headers.headers);
 	
 	*elfHeaders_mod=elfHeaders;
+
+	elfHeaders_mod->e_type = ET_EXEC;
 
 	elfHeaders_mod->e_shnum = elfHeaders.e_shnum - nb_Sec_A_Traiter;
 
@@ -77,7 +78,6 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 	{
 		if(section_headers.headers[i].sh_type == SHT_REL)
 		{
-			OctetSupp += section_headers.headers[i].sh_size;
 			nbRec++;
 			k= 0;
 			while(k < tab_donnees.nbSecRel && tab_donnees.table_Num_Addr[k] !=  section_headers.headers[i].sh_info)
@@ -109,6 +109,10 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 			if(section_headers_mod.headers[i].sh_type == SHT_NOBITS)
 			{
 				nbSecVide ++;
+				if(i<elfHeaders_mod->e_shstrndx)
+				{
+					elfHeaders_mod->e_shstrndx--;
+				}
 			}
 			else
 			{
@@ -130,8 +134,7 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 	
 	elfHeaders_mod->e_shnum -= (nbSecVide + 2);
 	
-	OctetSupp -= (section_headers_mod.headers[elfHeaders_mod->e_shnum].sh_size + section_headers_mod.headers[elfHeaders_mod->e_shnum+1].sh_size);
-	elfHeaders_mod->e_shoff -=  OctetSupp;
+	elfHeaders_mod->e_shoff =  section_headers_mod.headers[elfHeaders_mod->e_shnum].sh_offset;
 
 
 	// copie et maj des anciens valeurs de la struture section_headers 
