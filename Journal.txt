@@ -24,3 +24,8 @@ Creation des premier fichier C pour lire le headers et afficher les differents i
 		Nettoyage des erreurs mémoire via valgrind.
 		Audit de code, réécriture de certaines parties du code qui étaient très sales.
 		On continue la phase 2, on progresse.
+
+	-12/01/16 : Septième jour de projet
+		Les étapes 6 et 7 sont presque terminées.
+		Création d'un type, petite séance débug de ce que ça a cassé.
+		Tout va bien.
