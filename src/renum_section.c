@@ -138,7 +138,7 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 	}
 	
 
-	//fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
+	fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
 	//fwrite(section_headers_mod.headers,sizeof(Elf32_Shdr),elfHeaders_mod->e_shnum,f_write);
 
 	return section_headers_mod;

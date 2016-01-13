@@ -49,7 +49,8 @@ On peut modifier les symb .data .text fourni mais qu'en est t'il des main $a dat
 
 A quoi doit ressembler la nouvelle table des symboles. Pourquoi est-elle plus grande que l'ancienne ?  
   
-  
+ rep : table des symboles et des noms à enlever des sections
+
   
   
 ##Mémo des commandes :    

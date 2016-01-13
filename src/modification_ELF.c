@@ -9,6 +9,7 @@ Programme principal de la phase 2
 #include "renum_section.h"
 #include "correctionSymboles.h"
 #include "liberation.h"
+#include "reimpl_R_ARM.h"
 
 #define SILENT 1 
 
@@ -93,6 +94,8 @@ int main(int argc, char *argv[])
 	//rewind(f_read);
 	//rewind(f_write);
 	//writeSymbolsToFile(f_write, New_elfHeaders, New_section_headers, newST);
+
+	reimplantation_R_ARM(tab_donnees,f_read,f_write,Old_elfHeaders, Old_section_headers, str_reloc);
 
 	printf("-----Fin de l'ecriture dans %s-----\n", argv[2]);
 
