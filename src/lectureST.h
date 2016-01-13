@@ -32,7 +32,7 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLis
 * Fonction qui affiche une liste de symboles
 * @param listeSymboles La liste de symboles à afficher
 */
-void afficherTableSymboles(ListeSymboles listeSymboles);
+void afficherTableSymboles(ListeSymboles listeSymboles, Elf32_Ehdr elfHeader);
 
 /*
 Fonction qui retourne la chaine de caractère qui correspond au type du symbole donné en parametre

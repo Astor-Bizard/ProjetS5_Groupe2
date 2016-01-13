@@ -70,7 +70,7 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 
 	// Affichage si necessaire
 	if (!silent)
-		afficherTableSymboles(newSymbolsTable);
+		afficherTableSymboles(newSymbolsTable,newElfHeader);
 
 	return newSymbolsTable;
 }

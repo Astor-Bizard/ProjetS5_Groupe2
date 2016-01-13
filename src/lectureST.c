@@ -48,12 +48,12 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLis
 	listeSymboles.nbSymboles = j;
 
 	if (!silent)
-		afficherTableSymboles(listeSymboles);
+		afficherTableSymboles(listeSymboles,elfHeader);
 
 	return listeSymboles;
 }
 
-void afficherTableSymboles(ListeSymboles listeSymboles) {
+void afficherTableSymboles(ListeSymboles listeSymboles, Elf32_Ehdr elfHeader) {
 	char* symbolString;
 	unsigned char bind, info;
 	int j;
@@ -71,6 +71,10 @@ void afficherTableSymboles(ListeSymboles listeSymboles) {
 		if(listeSymboles.symboles[j].st_shndx == 0)
 		{
 			printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), symbolString);
+		}
+		else if(listeSymboles.symboles[j].st_shndx >= elfHeader.e_shnum)
+		{
+			printf("   %3d: %08x %5d %-7s %-6s %-7s  ABS %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), symbolString);
 		}
 		else
 		{
