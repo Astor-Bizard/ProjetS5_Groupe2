@@ -80,7 +80,7 @@ Table_Donnees remplirDonnees(int argc,char *argv[],
 	{
 		addr = recuper_donnees(argv[i+3],nom);
 		
-		tab_donnees.table_Num_Addr[i]=index_Shdr(nom, Old_elfHeaders, Old_section_headers);
+		tab_donnees.table_Num_Addr[i]=index_Shdr(nom, Old_section_headers); 
 		tab_donnees.table_Addr[i]=addr;
 		printf("tab_donnees.table_Addr[i] : %06x\n", tab_donnees.table_Addr[i]);
 
