@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 
 	tab_donnees = remplirDonnees(argc,argv,Old_elfHeaders, Old_section_headers);
 	rewind(f_read);
-	New_section_headers = renumerote_section(f_read,f_write, Old_elfHeaders, Old_section_headers, &New_elfHeaders, tab_donnees);
+	New_section_headers = renumerote_section(f_read, f_write, Old_elfHeaders, Old_section_headers, &New_elfHeaders, tab_donnees);
 	afficher_headers(Old_elfHeaders);
 	printf("New ");
 	afficher_headers(New_elfHeaders);
@@ -159,6 +159,7 @@ int main(int argc, char *argv[])
 	//rewind(f_read);
 	//rewind(f_write);
 	//writeSymbolsToFile(f_write, New_elfHeaders, New_section_headers, newST);
+	void ecrire_nouvelles_sections(f_write, New_section_headers);
 
 	reimplantation_R_ARM(tab_donnees,f_read,f_write,Old_elfHeaders, Old_section_headers, str_reloc, newST);
 
