@@ -172,3 +172,19 @@ int nbSecRel(Elf32_Ehdr elfHeaders, Elf32_Shdr *section_headers)
 	return retour;
 
 }
+
+void ecrire_nouvelles_sections(FILE *f_write, SectionsHeadersList shList){
+	int i,num_sh;
+	unsigned char *section;
+	for(num_sh=1;num_sh<shList.size;num_sh++){
+		section=recuperer_section_num(f_write,shList,num_sh);
+		if(fseek(f_write,shList.headers[num_sh].sh_offset,0)){
+			for(i=ftell(f_write);i<shList.headers[num_sh].sh_offset;i++){
+				fputc('\0',f_write);
+			}
+		}
+		for(i=0;i<shList.headers[num_sh].sh_size;i++){
+			fputc(section[i],f_write);
+		}
+	}
+}

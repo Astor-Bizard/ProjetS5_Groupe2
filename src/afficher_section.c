@@ -52,7 +52,7 @@ void afficher_string(unsigned char *section, int size){
 }
 
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
-int index_Shdr(char str[], Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
+int index_Shdr(char str[], SectionsHeadersList shList) {
 	int i,num_sh;
 	char *name;
 	int different;
@@ -65,7 +65,7 @@ int index_Shdr(char str[], Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
 			i++;
 		}
 		if(str[i]=='\0'){
-			if(num_sh<elfHeader.e_shnum){
+			if(num_sh<shList.size){
 				name=getSectionNameBis(shList.names, shList.headers[num_sh]);
 				strcpy(str, name);
 				free(name);
@@ -76,7 +76,7 @@ int index_Shdr(char str[], Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
 		else{
 			num_sh=-1;
 			different=1;
-			while(num_sh<elfHeader.e_shnum-1 && different){
+			while(num_sh<shList.size-1 && different){
 				num_sh++;
 				name=getSectionNameBis(shList.names, shList.headers[num_sh]);
 				different=strcmp(str, name);
@@ -90,7 +90,7 @@ int index_Shdr(char str[], Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
 }
 
 // Affiche le contenu d'une section désignée par nom ou numéro. Renvoie ce contenu, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
-unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList, int renvoi, char* strOverride) {
+unsigned char *afficher_section(FILE *f, SectionsHeadersList shList, int renvoi, char* strOverride) {
 	char str[42];
 	int num_sh=0,i;
 	unsigned char *section;
@@ -113,10 +113,10 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLi
 	}
 
 	// On traduit la demande (string) en index dans la table
-	num_sh=index_Shdr(str,elfHeader,shList);
+	num_sh=index_Shdr(str,shList);
 	if(num_sh==-1){
 		if(is_number(str)){
-			if(atoi(str)!=elfHeader.e_shnum) fprintf(stderr,"readelf: Warning: Section %s was not dumped because it does not exist!\n",str);
+			if(atoi(str)!=shList.size) fprintf(stderr,"readelf: Warning: Section %s was not dumped because it does not exist!\n",str);
 		}
 		else fprintf(stderr,"readelf: Warning: Section '%s' was not dumped because it does not exist!\n",str);
 		return NULL;
@@ -136,7 +136,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLi
 			else{
 				// Initialisation de l'affichage, récupération du nom de la section
 				printf("\nHex dump of section '%s':\n",str);
-				for(i=0; i<elfHeader.e_shnum; i++){
+				for(i=0; i<shList.size; i++){
 					if(shList.headers[i].sh_info==num_sh && shList.headers[i].sh_type==SHT_REL)
 						printf(" NOTE: This section has relocations against it, but these have NOT been applied to this dump.\n");
 				}
@@ -164,12 +164,12 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLi
 }
 
 // Renvoie un pointeur sur le contenu de la section numero num_sh, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
-unsigned char *recuperer_section_num(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList, int num_sh) {
+unsigned char *recuperer_section_num(FILE *f, SectionsHeadersList shList, int num_sh) {
 	int i;
 	unsigned char c;
 	unsigned char *section;
 
-	if(num_sh<0 || num_sh>=elfHeader.e_shnum){
+	if(num_sh<0 || num_sh>=shList.size){
 		return NULL;
 	}
 	else{
