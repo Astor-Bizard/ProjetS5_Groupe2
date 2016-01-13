@@ -127,6 +127,10 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLi
 			// On affiche le contenu de la section
 			if(shList.headers[num_sh].sh_size==0){
 				printf("\nSection '%s' has no data to dump.\n",str);
+				if(!renvoi){
+					free(section);
+					section=NULL;
+				}
 				return section;
 			}
 			else{
