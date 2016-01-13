@@ -1,8 +1,7 @@
 ## Gabriel Bouvier
 ## Exectution par le simulatueur: plan de base.
-#!/bin/bash
-
 ## vérifier qu'on a au moins un argument et que c'est un fichier
+#!/bin/bash
 if [ $# -gt 0 ]
 then
 	if [ -f $1 ]
@@ -18,9 +17,9 @@ then
 		## run le simulatueur (dans l'interface sim)
 		ARM_runner_example --debug elf_linker-1.0/ARM_runner_example.c --debug elf_linker-1.0/gdb_protocol.c --host localhost --service 6666 $1
 	else
-		echo "Arguments de la forme: [NOM_FICHIER(.o)] [Flags de arm_simulator]..."
+		echo "Arguments de la forme: [NOM_FICHIER(.o)]" 
 	fi
 else
-	echo "Ce programme attend un fichier en argument"
+	echo "Ce programme attend un fichier en argument" 
 fi
-
+exit 1
