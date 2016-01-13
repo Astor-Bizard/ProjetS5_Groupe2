@@ -68,18 +68,18 @@ void afficherTableSymboles(ListeSymboles listeSymboles, Elf32_Ehdr elfHeader) {
 
 		symbolString = getSymbolNameBis(listeSymboles.names, listeSymboles.symboles[j]);
 
-		if(listeSymboles.symboles[j].st_shndx == 0)
+		printf("   %3d: %08x %5d %-7s %-6s %-7s  ", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other));
+		switch(listeSymboles.symboles[j].st_shndx)
 		{
-			printf("   %3d: %08x %5d %-7s %-6s %-7s  UND %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), symbolString);
+			case 0: printf("UND ");
+				break;
+			case 65521: printf("ABS ");
+				break;
+			case 65522: printf("COM ");
+				break;
+			default: printf("%3d ",listeSymboles.symboles[j].st_shndx);
 		}
-		else if(listeSymboles.symboles[j].st_shndx >= elfHeader.e_shnum)
-		{
-			printf("   %3d: %08x %5d %-7s %-6s %-7s  ABS %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), symbolString);
-		}
-		else
-		{
-			printf("   %3d: %08x %5d %-7s %-6s %-7s  %3d %s\n", j, listeSymboles.symboles[j].st_value, listeSymboles.symboles[j].st_size, typeSymbole(info), bindSymbole(bind), visionSymbole(listeSymboles.symboles[j].st_other), listeSymboles.symboles[j].st_shndx, symbolString);
-		}
+		printf("%s\n",symbolString);
 		free(symbolString);
 	}
 }
