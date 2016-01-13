@@ -37,7 +37,7 @@ int index_Shdr(char str[], Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
 			}
 			else num_sh=-1;
 		}
-		// Cas nom : on le cherche dans la table str
+		// Cas nom : on le cherche dans la table shstrtab
 		else{
 			num_sh=-1;
 			different=1;
@@ -116,8 +116,8 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLi
 					// Affichage de l'offset
 					if(i!=0){
 						if(i%16==0){
-							printf(" %s\n  0x%08x ",aff,i);
-							for(j=0;j<17;j++)aff[j]='\0';	// Affichage non hexa
+							printf(" %s\n  0x%08x ",aff,i);	// Affichage non hexa
+							for(j=0;j<17;j++)aff[j]='\0';
 						}
 						else if(i%4==0) printf(" ");
 					}
