@@ -90,12 +90,11 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLi
 		return NULL;
 	}
 	else{
-		if(renvoi) section=malloc(sizeof(unsigned char)*(shList.headers[num_sh].sh_size+1));
+		if(renvoi) section=malloc(sizeof(unsigned char)*shList.headers[num_sh].sh_size);
 		if(section != NULL || !renvoi){
 			// On affiche le contenu de la section
 			if(shList.headers[num_sh].sh_size==0){
 				printf("\nSection '%s' has no data to dump.\n",str);
-				if(renvoi) section[0]='\0';
 				return section;
 			}
 			else{
@@ -132,6 +131,7 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLi
 					else aff[i%16]='.';
 					i++;
 				}
+
 				// Terminaison de l'affichage
 				while(i%16!=0){
 					if(i%4==0) printf(" ");
@@ -139,8 +139,6 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLi
 					i++;
 				}
 				printf(" %s",aff);
-
-				if(renvoi) section[i]='\0';
 			}
 			printf("\n\n");
 		}
@@ -164,14 +162,13 @@ unsigned char *recuperer_section_num(FILE *f, Elf32_Ehdr elfHeader, SectionsHead
 	else{
 		// On se place
 		fseek(f,shList.headers[num_sh].sh_offset,0);
-		section=malloc(sizeof(unsigned char)*(shList.headers[num_sh].sh_size+1));
+		section=malloc(sizeof(unsigned char)*shList.headers[num_sh].sh_size);
 		if(section != NULL){
 			// On mémorise le contenu de la section
 			for(i=0;i<shList.headers[num_sh].sh_size;i++){
 				c=fgetc(f);
 				section[i]=c;
 			}
-			section[i]='\0';
 		}
 		else{
 			fprintf(stderr,"Erreur d'allocation !\n");
