@@ -2,10 +2,8 @@
 ## Exectution par le simulatueur: plan de base.
 ## vérifier qu'on a au moins un argument et que c'est un fichier
 #!/bin/bash
-if [ $# -gt 0 ]
-then
-	if [ -f $1 ]
-	then
+if [ $# -gt 0 ]; then
+	if [ -f $1 ]; then
 		## Récupérer les arguments (args d'affichage du simulatueur)
 		## Récupérer le nom du code à exécuter (Arg1)
 
@@ -22,4 +20,3 @@ then
 else
 	echo "Ce programme attend un fichier en argument" 
 fi
-exit 1
