@@ -28,14 +28,18 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *oldF, FILE *newF, 
 
 	for(i=0; i<tableDeDonnees.nbSecRel; i++)
 	{
+		printf("MARQUE 1:%d\n", i);
 		offsetSection = 0;
 		addrDest = tableDeDonnees.table_Addr[i];
 		valeurSecRel = tableReloc.Sec_Rel[j];
 		section = recuperer_section_num(oldF, tabSH, valeurSecRel);
+		printf("MARQUE 2:%d\n", i);
 		sectionARecopier = recuperer_section_num(oldF, tabSH, valeurSecRel-1);
+		printf("MARQUE 3:%d\n", i);
 		//ecriture de la section 
 		tailleSection = tabSH.headers[valeurSecRel].sh_size;
 		fseek(newF, addrDest, SEEK_SET);
+		printf("MARQUE 4:%d\n", i);
 		printf("Ecriture de la section : %d a l'addresse %x\n", valeurSecRel, addrDest);
 		while(offsetSection<tailleSection)
 		{
