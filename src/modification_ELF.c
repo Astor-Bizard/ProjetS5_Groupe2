@@ -156,10 +156,13 @@ int main(int argc, char *argv[])
 	rewind(f_read);
 	newST = applySymbolsCorrections(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);
 
+	printf("MARQUE 1\n");
 	//rewind(f_read);
 	//rewind(f_write);
 	//writeSymbolsToFile(f_write, New_elfHeaders, New_section_headers, newST);
 	ecrire_nouvelles_sections(f_write, New_section_headers);
+
+	printf("MARQUE 2\n");
 
 	reimplantation_R_ARM(tab_donnees,f_read,f_write,Old_elfHeaders, Old_section_headers, str_reloc, newST);
 
