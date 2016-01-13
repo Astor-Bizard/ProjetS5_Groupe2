@@ -64,3 +64,7 @@ A quoi doit ressembler la nouvelle table des symboles. Pourquoi est-elle plus gr
 
 call/Jump 3 !!! endian  
 abs32 4  
+
+
+arm-eabi-strip fichier exécutable (enleve tout ce qui est inutile pour l'execution : resultat à obtenir)
+
