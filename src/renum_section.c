@@ -91,6 +91,11 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 			}
 			else
 			{
+				if(tab_donnees.table_Addr[k]%section_headers_mod.headers[i-nbRec].sh_addralign != 0)
+				{
+					printf("La valeurs de l'adresse : %06x ne correspond pas à l'alignement de la section\nIl faut l'aligner à mod %i\n",tab_donnees.table_Addr[k],section_headers_mod.headers[i-nbRec].sh_addralign);
+					exit(1);
+				}
 				section_headers_mod.headers[i-nbRec].sh_addr = tab_donnees.table_Addr[k];
 			}
 		}
@@ -109,18 +114,23 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 			{
 				section_headers_mod.headers[i-nbSecVide] = section_headers_mod.headers[i];
 				section_headers_mod.headers[i-nbSecVide].sh_offset = section_headers_mod.headers[i-nbSecVide-1].sh_offset + section_headers_mod.headers[i-nbSecVide-1].sh_size; 
-
-				
 			}
 		}
 		else
 		{
 			section_headers_mod.headers[i].sh_offset = section_headers_mod.headers[i].sh_addr; 
+			if( section_headers_mod.headers[i].sh_offset <  section_headers_mod.headers[i-1].sh_offset + section_headers_mod.headers[i-1].sh_size )
+			{
+				printf("Erreur l'adresse (%06x) de la section numero %i est trop petite\nil faut quel soit superieur à %06x + %06x\n",section_headers_mod.headers[i].sh_offset,i,section_headers_mod.headers[i-1].sh_offset,section_headers_mod.headers[i-1].sh_size);
+				exit(1);
+			}
 		}
 	}
-	// on remet à jour la taille de la table des sections
+	// on remet à jour la taille de la table des sections en supprimant les section vide et les 2 derniers sections (table de symboles et nom qui sont inutile)
 	
-	elfHeaders_mod->e_shnum -= nbSecVide;
+	elfHeaders_mod->e_shnum -= (nbSecVide + 2);
+	
+	OctetSupp -= (section_headers_mod.headers[elfHeaders_mod->e_shnum].sh_size + section_headers_mod.headers[elfHeaders_mod->e_shnum+1].sh_size);
 	elfHeaders_mod->e_shoff -=  OctetSupp;
 
 
@@ -139,7 +149,6 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 	
 
 	fwrite(elfHeaders_mod,sizeof(Elf32_Ehdr),1,f_write);
-	//fwrite(section_headers_mod.headers,sizeof(Elf32_Shdr),elfHeaders_mod->e_shnum,f_write);
 
 	return section_headers_mod;
 }
