@@ -1,8 +1,8 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "debug.h"
-#include "arm_simulator_interface.h"
+#include "../elf_linker-1.0/debug.h"
+#include "../elf_linker-1.0/arm_simulator_interface.h"
 #include "lecture_headers.h"
 
 

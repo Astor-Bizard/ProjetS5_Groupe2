@@ -39,7 +39,6 @@ int main (int argc,char* argv[])
 	int opt;
 	char *hostname, *servicename;
 	FILE* f;
-
 	struct option longopts[] = {
 		{ "debug", required_argument, NULL, 'd' },
 		{ "host", required_argument, NULL, 'H' },
@@ -48,6 +47,12 @@ int main (int argc,char* argv[])
 		{ NULL, 0, NULL, 0 }
 	};
 
+	if(argc < 1)
+	{
+		printf("Erreur: pas de paramètre, il faut au moins un paramètre");
+		return 1;
+	}
+	
 	hostname = NULL;
 	servicename = NULL;
 	while ((opt = getopt_long(argc, argv, "S:H:d:h", longopts, NULL)) != -1) {
