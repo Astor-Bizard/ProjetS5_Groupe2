@@ -23,6 +23,8 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *oldF, FILE *newF, 
 	uint32_t tailleSection;
 	uint32_t offsetSection = 0;
 	
+	int machin;
+
 	for(i=0; i<tableDeDonnees.nbSecRel; i++)
 	{
 		offsetSection = 0;
@@ -47,7 +49,9 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *oldF, FILE *newF, 
 			switch(info)
 			{
 				case 2:
+
 				case 5:
+
 				case 8:
 					// R_ARM_ABS*
 					// (S + A) | T , addresse du symbole + relocation, T = 1 si symbole est du type STT_FUNC sinon 0
@@ -56,9 +60,12 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *oldF, FILE *newF, 
 					// T = 0
 					
 					fseek(oldF, addrDest+tableReloc.Rel[j].r_offset, SEEK_SET);
-					section[tableReloc.Rel[j].r_offset] = symbList.symboles[addrSymbole].st_value + (uint16_t)lire_octets(oldElfHeader.e_ident[EI_DATA],oldF,2);
 					fseek(newF, addrDest+tableReloc.Rel[j].r_offset, SEEK_SET);
-					fwrite(&section[tableReloc.Rel[j].r_offset], sizeof(unsigned char), 1, newF);
+
+					machin = (int)lire_octets(oldElfHeader.e_ident[EI_DATA],oldF,4);
+					sectionARecopier[tableReloc.Rel[j].r_offset] = symbList.symboles[addrSymbole].st_value + machin;
+					//fwrite(&section[tableReloc.Rel[j].r_offset], sizeof(unsigned char), 1, newF);
+					printf("Reloc a %x de %x + %x = %x mais j'ai %x\n",addrDest+tableReloc.Rel[j].r_offset, symbList.symboles[addrSymbole].st_value, machin, symbList.symboles[addrSymbole].st_value + machin, sectionARecopier[tableReloc.Rel[j].r_offset]);
 
 					break;					
 				case 28:
@@ -68,9 +75,13 @@ void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *oldF, FILE *newF, 
 					// P correspond au qqchose dérivé de r_offset du REL (en clair faut juste redécaler sur offset)
 					
 					fseek(oldF, addrDest+tableReloc.Rel[j].r_offset, SEEK_SET);
-					section[tableReloc.Rel[j].r_offset] = (symbList.symboles[addrSymbole].st_value + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],oldF,2)) - tableReloc.Rel[j].r_offset;
 					fseek(newF, addrDest+tableReloc.Rel[j].r_offset, SEEK_SET);
-					fwrite(&section[tableReloc.Rel[j].r_offset], sizeof(unsigned char), 1, newF);
+					machin = (int)lire_octets(oldElfHeader.e_ident[EI_DATA],oldF,3);
+					sectionARecopier[tableReloc.Rel[j].r_offset] = (symbList.symboles[addrSymbole].st_value + (uint16_t) lire_octets(oldElfHeader.e_ident[EI_DATA],oldF,4)) - (addrDest + tableReloc.Rel[j].r_offset);
+					
+					//fwrite(&section[tableReloc.Rel[j].r_offset], sizeof(unsigned char), 1, newF);
+					printf("Reloc a %x de %x + %x - %x = %x mais j'ai %x\n",addrDest+tableReloc.Rel[j].r_offset, symbList.symboles[addrSymbole].st_value, machin, (addrDest + tableReloc.Rel[j].r_offset), symbList.symboles[addrSymbole].st_value + machin - (addrDest + tableReloc.Rel[j].r_offset), sectionARecopier[tableReloc.Rel[j].r_offset]);
+
 
 					break;
 				default:
