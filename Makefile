@@ -24,6 +24,5 @@ $(BUILD)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) -c $<
 	mv `basename $@` $(BUILD)
 
-
 clean:
 	rm -f $(BUILD)/*.o $(EXEC) *~ $(SRC)/*~
