@@ -11,6 +11,9 @@ Affichage d'une section specifique
 #include <elf.h>
 #include "lectureSH.h"
 
+// Affiche la chaine (contenu de la section), de taille size.
+void afficher_string(unsigned char *section, int size);
+
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
 int index_Shdr(char str[], Elf32_Ehdr elfHeader, SectionsHeadersList shList);
 

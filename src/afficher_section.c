@@ -16,6 +16,41 @@ int is_number(char str[]){
 	return str[i]=='\0';
 }
 
+void afficher_string(unsigned char *section, int size){
+	int i,j;
+	unsigned char aff[17];
+	for(j=0;j<17;j++)aff[j]='\0';
+	printf("  0x%08x ",0);
+	i=0;
+	// On affiche le contenu de la section
+	while(i<size){
+		// Affichage de l'offset
+		if(i!=0){
+			if(i%16==0){
+				printf(" %s\n  0x%08x ",aff,i);	// Affichage non hexa
+				for(j=0;j<17;j++)aff[j]='\0';
+			}
+			else if(i%4==0) printf(" ");
+		}
+
+		// Affichage hexa
+		printf("%02x",section[i]);
+
+		// Memorisation du caractère pour écriture non hexa
+		aff[i%16]=section[i];
+		if(aff[i%16]<32 || aff[i%16]>126) aff[i%16]='.';
+		i++;
+	}
+
+	// Terminaison de l'affichage
+	while(i%16!=0){
+		if(i%4==0) printf(" ");
+		printf("  ");
+		i++;
+	}
+	printf(" %s\n\n",aff);
+}
+
 // Retourne le numéro de la section demandée, par son nom ou son numéro, -1 si invalide.
 int index_Shdr(char str[], Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
 	int i,num_sh;
@@ -57,12 +92,9 @@ int index_Shdr(char str[], Elf32_Ehdr elfHeader, SectionsHeadersList shList) {
 // Affiche le contenu d'une section désignée par nom ou numéro. Renvoie ce contenu, NULL si la section n'existe pas. La libération est à la charge de l'utilisateur.
 unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList, int renvoi, char* strOverride) {
 	char str[42];
-	int num_sh=0,i,j;
-	unsigned char c;
+	int num_sh=0,i;
 	unsigned char *section;
 	section=NULL;
-	unsigned char aff[17];
-	for(j=0;j<17;j++)aff[j]='\0';
 
 	// Si on a une entrée, on l'utilise au lieu de demander au clavier
 	if(strOverride==NULL)
@@ -90,8 +122,8 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLi
 		return NULL;
 	}
 	else{
-		if(renvoi) section=malloc(sizeof(unsigned char)*shList.headers[num_sh].sh_size);
-		if(section != NULL || !renvoi){
+		section=malloc(sizeof(unsigned char)*shList.headers[num_sh].sh_size);
+		if(section != NULL){
 			// On affiche le contenu de la section
 			if(shList.headers[num_sh].sh_size==0){
 				printf("\nSection '%s' has no data to dump.\n",str);
@@ -107,40 +139,17 @@ unsigned char *afficher_section(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLi
 
 				// On se place
 				fseek(f,shList.headers[num_sh].sh_offset,0);
-				printf("  0x%08x ",0);
-				i=0;
+
 				// On affiche le contenu de la section
-				while(i<shList.headers[num_sh].sh_size){
-
-					// Affichage de l'offset
-					if(i!=0){
-						if(i%16==0){
-							printf(" %s\n  0x%08x ",aff,i);	// Affichage non hexa
-							for(j=0;j<17;j++)aff[j]='\0';
-						}
-						else if(i%4==0) printf(" ");
-					}
-
-					// Affichage hexa
-					c=fgetc(f);
-					printf("%02x",c);
-					if(renvoi) section[i]=c;
-
-					// Memorisation du caractère pour écriture non hexa
-					if(c>=32 && c<=126) aff[i%16]=c;
-					else aff[i%16]='.';
-					i++;
+				for(i=0;i<shList.headers[num_sh].sh_size;i++){
+					section[i]=fgetc(f);
 				}
-
-				// Terminaison de l'affichage
-				while(i%16!=0){
-					if(i%4==0) printf(" ");
-					printf("  ");
-					i++;
-				}
-				printf(" %s",aff);
 			}
-			printf("\n\n");
+			afficher_string(section,shList.headers[num_sh].sh_size);
+			if(!renvoi){
+				free(section);
+				section=NULL;
+			}
 		}
 		else{
 			fprintf(stderr,"Erreur d'allocation !\n");
