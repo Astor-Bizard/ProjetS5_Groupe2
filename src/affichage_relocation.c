@@ -132,8 +132,11 @@ void type_relocation(int info)
         case 30:
             printf("R_ARM_THM_JUMP24  ");
             break;
+				case 40:
+						printf("R_ARM_V4BX       ");
+						break;
         default:
-            printf("Case: default     ");
+            printf("Non enregistré    ");
     }
 }
 
@@ -209,7 +212,7 @@ void afficher_sectionR(FILE *f,
         {
     		printf("%08llx  %08llx ", addr,info);
             type_relocation(type);
-            print_symbol(sym, table_symbol, header, liste_sections);
+            if(type != 40) print_symbol(sym, table_symbol, header, liste_sections);
             //print_section(addr, liste_sections, header); 
             
             //on affiche les infos.
