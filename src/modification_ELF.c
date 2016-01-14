@@ -17,7 +17,7 @@ Programme principal de la phase 2
 #define DATA 1
 
 
-Elf32_Addr recuper_donnees(char argv[], char nom[42])
+Elf32_Addr recuperer_donnees(char argv[], char nom[])
 {
 	int taille,i=0;
 	char nb[42];
@@ -29,26 +29,29 @@ Elf32_Addr recuper_donnees(char argv[], char nom[42])
 		nom[i]=argv[i];
 		i++;
 	}
+	nom[i]='\0';
 
 	i++;
 	taille=i;
 
-	nom[i]='\0';
 
 	if(argv[i] != '0' && argv[i+1] != 'x')
 	{
-		printf("Erreur d'argument, forme : .text=0x58 (par ex)\n");
+		printf("Erreur d'argument. Forme attendue : <section>=0x<addr>\n");
 		exit(1);
 	}
-	
+
+	i+=2;
 	while(argv[i]!='\0')
 	{
-		nb[i-taille] = argv[i];
+		nb[i-taille-2] = argv[i];
 		i++;
 	}
+	nb[i-taille-2]='\0';
+
 	addr = strtol(nb,NULL,16);
 	printf("Nom : %s\n",nom);
-	printf("Addr : %06x\n", addr);
+	printf("Addr : 0x%06x\n", addr);
 	return addr;
 }
 
@@ -58,8 +61,8 @@ Table_Donnees remplirDonnees(int argc,char *argv[],
 		Elf32_Ehdr Old_elfHeaders,SectionsHeadersList Old_section_headers)
 {
 
-	char nom[42];
 	int i;
+	char nom[42];
 	Elf32_Addr addr;
 	Table_Donnees tab_donnees;
 
@@ -73,16 +76,17 @@ Table_Donnees remplirDonnees(int argc,char *argv[],
 	tab_donnees.table_Num_Addr = malloc(sizeof(int)*tab_donnees.nbSecRel);
 	if (tab_donnees.table_Num_Addr==NULL) {
 		printf("\nErreur lors de l'allocation initiale de tab_donnees.table_Num_Addr.\n");
+		free(tab_donnees.table_Addr);
 		exit(1);
 	}
 
 	for(i=0;i<tab_donnees.nbSecRel;i++)
 	{
-		addr = recuper_donnees(argv[i+3],nom);
+		addr = recuperer_donnees(argv[i+3],nom);
 		
 		tab_donnees.table_Num_Addr[i]=index_Shdr(nom, Old_section_headers); 
 		tab_donnees.table_Addr[i]=addr;
-		printf("tab_donnees.table_Addr[i] : %06x\n", tab_donnees.table_Addr[i]);
+		//printf("tab_donnees.table_Addr[i] : %06x\n", tab_donnees.table_Addr[i]);
 
 	}
 //	tab_donnees.table_Num_Addr[TEXT]=index_Shdr(".text", Old_elfHeaders, Old_section_headers);
@@ -113,21 +117,23 @@ int main(int argc, char *argv[])
 	Table_Donnees tab_donnees;
 	FILE *f_read, *f_write;
 	
-	if(argc <= 3)
+	if(argc < 3)
 	{
-		printf("Erreur nombre d'argument :\n\tmodification_ELF fichier_Elf_lecture fichier_Elf_ecriture");
+		printf("Erreur nombre d'argument :\n\t./modification_ELF <fichier_Elf_lecture> <fichier_Elf_ecriture>\n");
+		return 1;
 	}
 
 	f_read = fopen(argv[1], "r");
 	if (f_read == NULL) {
 		printf("Fichier introuvable: %s\n", argv[1]);
-		return 0;
+		return 1;
 	}
 
 	f_write = fopen(argv[2], "w");
 	if (f_write == NULL) {
 		printf("Fichier introuvable: %s\n", argv[2]);
-		return 0;
+		fclose(f_read);
+		return 1;
 	}
 
 

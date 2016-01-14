@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
 	if(argc < 2) {
 		print_usage();
-		return 0;
+		return 1;
 	}
 
 	if(argv[1][0]=='-') {
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 	f = fopen(fileName, "r");
 	if (f == NULL) {
 		printf("Fichier introuvable: %s\n", fileName);
-		return 0;
+		return 1;
 	}
 
 	while (i < argc) 
@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
 				default:
 					printf("Unrecognized option: -%c\n\n", argv[i][1]);
 					print_usage();
-					return 0;
+					return 1;
 					break;
 			}
 		}
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
 			{
 				printf("Unrecognized option: %s\n\n", argv[i]);
 				print_usage();
-				return 0;
+				return 1;
 			}
 		}
 		i++;
