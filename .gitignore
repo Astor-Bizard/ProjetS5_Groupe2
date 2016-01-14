@@ -11,7 +11,7 @@ elf_linker-1.0/*
 !elf_linker-1.0/Makefile.am
 !elf_linker-1.0/ARM_runner_exec.c
 !elf_linker-1.0/ARM_runner_exec.h
-# !elf_linker-1.0/Makefile
+!elf_linker-1.0/Makefile
 
 lecture_ELF
 modification_ELF
