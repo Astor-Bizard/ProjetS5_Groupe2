@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
 	rewind(f_read);
 	newST = applySymbolsCorrections(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);
 
-	ecrire_nouvelles_sections(f_read, f_write, New_section_headers);
+	ecrire_nouvelles_sections(f_read, f_write, New_section_headers, Old_section_headers); 
 
 	reimplantation_R_ARM(f_read, f_write, Old_elfHeaders, Old_section_headers, New_section_headers, str_reloc, newST);
 
