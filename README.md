@@ -1,7 +1,5 @@
-<--!
-Ce README a ete cree pour communiquer facilement des informations via l'affichage sur github. Il n'est pas destine a aider a la comprehension de ce depot.
-Voir pour cela MODE_D_EMPLOI et STRUCTURE_DU_CODE
--->
+/* Ce README a ete cree pour communiquer facilement des informations via l'affichage sur github. Il n'est pas destine a aider a la comprehension de ce depot. Voir pour cela MODE_D_EMPLOI et STRUCTURE_DU_CODE */
+
 ##Taches  
 
 Etape 1 : Jonathan (lecture_headers)(Fini)  
