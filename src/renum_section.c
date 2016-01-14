@@ -173,24 +173,23 @@ int nbSecRel(Elf32_Ehdr elfHeaders, Elf32_Shdr *section_headers)
 
 }
 
-void ecrire_nouvelles_sections(FILE *f_read, FILE *f_write, SectionsHeadersList shList, SectionsHeadersList OldShList){
-	int i,num_sh;
+void ecrire_nouvelles_sections(FILE *f_read, FILE *f_write, SectionsHeadersList NewShList, SectionsHeadersList OldShList){
+	int i,num_sh_new,num_sh_old;
 	unsigned char *section;
 	printf("-----On écrit les nouvelles sections-----\n");
 	// pour chaque section
-	for(num_sh=1;num_sh<shList.size;num_sh++){
-		printf("Section %d :\n",num_sh);
+	for(num_sh_new=1; num_sh_new<NewShList.size; num_sh_new++){
+		printf("Section %d :\n",num_sh_new);
 		// on récupère son contenu
-		section=recuperer_section_num(f_read,OldShList,num_sh);
-		afficher_string(section, OldShList.headers[num_sh].sh_size);
+		num_sh_old=index_Shdr(NewShList.names+NewShList.headers[num_sh_new].sh_name,OldShList);
+		section=recuperer_section_num(f_read,OldShList,num_sh_old);
+		afficher_string(section, OldShList.headers[num_sh_old].sh_size);
 		// on se place au bon endroit pour l'écrire (on rajoute des 0 si c'est trop loin)
-		if(fseek(f_write,shList.headers[num_sh].sh_offset,0)){
-			printf("CA BUG\n");
-			for(i=ftell(f_write);i<shList.headers[num_sh].sh_offset;i++){
-				fputc('\0',f_write);
-			}
+		if(fseek(f_write,NewShList.headers[num_sh_new].sh_offset,0)){
+			printf("## Erreur d'écriture des sections ##\n");
+			return;
 		}
-		for(i=0;i<shList.headers[num_sh].sh_size;i++){
+		for(i=0;i<NewShList.headers[num_sh_new].sh_size;i++){
 			fputc(section[i],f_write);
 		}
 		free(section);
