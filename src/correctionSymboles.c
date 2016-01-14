@@ -27,7 +27,7 @@ size_t fwrite8(FILE* f, int mode, uint8_t value) {
 }
 
 ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, Elf32_Ehdr newElfHeader, SectionsHeadersList oldSHList, SectionsHeadersList newSHList, ListeSymboles oldSymbolsTable, int silent) {
-	int i, j, d;
+	int i, j;
 	char* originalName;
 	ListeSymboles newSymbolsTable;
 	
@@ -42,31 +42,31 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 	// Copie et correction de oldSymbolsTable vers newSymbolsTable
 	i = index_Shdr(".symtab", oldSHList);
 	newSymbolsTable.names = fetchSymbolNames(oldFile, oldSHList, i);
-	d = 0;
 	for(j=0; j<oldSymbolsTable.nbSymboles; j++)
 	{
-		newSymbolsTable.symboles[j-d].st_name = oldSymbolsTable.symboles[j].st_name;
-		newSymbolsTable.symboles[j-d].st_size = oldSymbolsTable.symboles[j].st_size;
-		newSymbolsTable.symboles[j-d].st_info = oldSymbolsTable.symboles[j].st_info;
-		newSymbolsTable.symboles[j-d].st_other = oldSymbolsTable.symboles[j].st_other;
+		newSymbolsTable.symboles[j].st_name = oldSymbolsTable.symboles[j].st_name;
+		newSymbolsTable.symboles[j].st_size = oldSymbolsTable.symboles[j].st_size;
+		newSymbolsTable.symboles[j].st_info = oldSymbolsTable.symboles[j].st_info;
+		newSymbolsTable.symboles[j].st_other = oldSymbolsTable.symboles[j].st_other;
 
 		// Recherche du nouvel id de la section du symbole courant
 		if (oldSymbolsTable.symboles[j].st_shndx==0) {
-			newSymbolsTable.symboles[j-d].st_shndx = 0;
+			newSymbolsTable.symboles[j].st_shndx = 0;
 		}
 		else {
 			originalName = getSectionNameBis(oldSHList.names, oldSHList.headers[oldSymbolsTable.symboles[j].st_shndx]); 
-			newSymbolsTable.symboles[j-d].st_shndx = index_Shdr(originalName, newSHList);
+			newSymbolsTable.symboles[j].st_shndx = index_Shdr(originalName, newSHList);
 			free(originalName);
 		}
-		if(newSymbolsTable.symboles[j-d].st_shndx==65535) {
-			d++;
+		if(newSymbolsTable.symboles[j].st_shndx==65535) {
+			newSymbolsTable.symboles[j].st_shndx = 0;
+			newSymbolsTable.symboles[j].st_value = 0;
 			continue;
 		}
 		// Nouvelle valeur du symbole = Ancienne valeur + Adresse de la section parente
-		newSymbolsTable.symboles[j-d].st_value = oldSymbolsTable.symboles[j].st_value + newSHList.headers[newSymbolsTable.symboles[j-d].st_shndx].sh_addr;
+		newSymbolsTable.symboles[j].st_value = oldSymbolsTable.symboles[j].st_value + newSHList.headers[newSymbolsTable.symboles[j].st_shndx].sh_addr;
 	}
-	newSymbolsTable.nbSymboles = j-d;
+	newSymbolsTable.nbSymboles = j;
 
 	// Affichage si necessaire
 	if (!silent)
