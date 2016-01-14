@@ -5,6 +5,13 @@ Lecture de la table des sections
 #ifndef _LECTURESH
 #define _LECTURESH
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <elf.h>
+#include <string.h>
+#include "lecture_headers.h"
+#include "correctionSymboles.h"
+
 #define SHT_ARM_DEBUGOVERLAY 0x70000004
 #define SHT_ARM_OVERLAYSECTION 0x70000005
 #define FLAG_STRING_LENGTH 4

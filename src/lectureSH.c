@@ -2,11 +2,6 @@
 Crée le 4 janvier 2016 par Loïc
 Lecture de la table des sections
 */
-#include <stdlib.h>
-#include <stdio.h>
-#include <elf.h>
-#include <string.h>
-#include "lecture_headers.h"
 #include "lectureSH.h"
 
 char* typeNameFromValue(uint32_t sh_type) {
