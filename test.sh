@@ -15,22 +15,22 @@ fi
 
 make -s lecture_ELF
 
-mkdir -p test/
-
 cd examples/
 for i in example*.c
 do
-	arm-eabi-gcc -mno-thumb-interwork -S $i
+	if [ ! -e $(basename "$i" .c).s ]
+	then
+		arm-eabi-gcc -mno-thumb-interwork -S $i
+	fi
 done
 
-for i in example*.s
-do
-	arm-eabi-as -o ../build/$(basename "$i" .s).o $i
-done
+cd ..
+make -s examples
 
-cd ../build
-
+mkdir -p test/
+cd build
 test=../test
+
 for i in example*.o
 do
 	arm-eabi-readelf -h $i >$test/readelf_$i.out

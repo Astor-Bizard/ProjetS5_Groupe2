@@ -1,0 +1,43 @@
+
+### Compilation :
+
+$ make clean
+$	make
+$ make examples
+
+
+### Lancement des programmes :
+
+Phase 1 :
+
+$ ./lecture_ELF [options] <fichier ELF>
+OU
+$ ./lecture_ELF <ficher ELF> [options]
+
+aide : option -H
+exemple :
+$ ./lecture_ELF -h -S -x .text build/example3.o
+Si le programme semble attendre une entrée au clavier, il s'agit du nom ou numéro de la section à afficher.
+
+
+Phase 2 :
+
+$ ./modification_ELF <fichier translatable> <fichier sortie> <adresses>
+
+<adresses> de la forme : <section>=0x<addr>
+
+exemple :
+$ ./modification_ELF build/example3.o exec3.o .text=0x58 .data=0x1000
+
+
+### Tests :
+
+Phase 1 (automatique)
+
+$ ./test.sh
+OU
+$ ./test.sh -v
+
+Ce script exécute pour chaque fichier exampleX.o, arm-eabi-readelf et lecture_ELF, puis affiche un diff des sorties.
+Si ce script n'affiche rien, alors les lectures d'headers sont conformes à readelf.
+L'exécution avec -v active valgrind (le test est alors assez long).
