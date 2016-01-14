@@ -156,6 +156,8 @@ int main(int argc, char *argv[])
 
 	ecrire_nouvelles_sections(f_read, f_write, New_section_headers, Old_section_headers); 
 
+	writeSectionsHeadersToFile(f_write, New_elfHeaders, New_section_headers);
+
 	reimplantation_R_ARM(f_read, f_write, Old_elfHeaders, Old_section_headers, New_section_headers, str_reloc, newST);
 
 	printf("-----Fin de l'ecriture dans %s-----\n", argv[2]);
