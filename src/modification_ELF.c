@@ -10,6 +10,7 @@ Programme principal de la phase 2
 #include "correctionSymboles.h"
 #include "liberation.h"
 #include "reimpl_R_ARM.h"
+#include "ecritureSH.h"
 
 #define SILENT 1 
 
