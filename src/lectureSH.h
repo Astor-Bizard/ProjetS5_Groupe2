@@ -76,12 +76,4 @@ void displaySectionsHeaders(Elf32_Ehdr elfHeader, SectionsHeadersList shList);
 */
 SectionsHeadersList readSectionsHeadersFromFile(FILE *f, Elf32_Ehdr elfHeader, int silent);
 
-/*
-* Ecrit une liste de section dans un fichier ELF
-* @param f Le fichier ouvert en écriture
-* @param elfHeader Le header du fichier
-* @param shList La liste à recopier
-*/
-void writeSectionsHeadersToFile(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersList shList);
-
 #endif
