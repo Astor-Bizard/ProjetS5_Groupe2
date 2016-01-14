@@ -94,19 +94,19 @@ void reimplantation_R_ARM(FILE *oldF, FILE *newF, Elf32_Ehdr oldElfHeader, Secti
 		switch(relType)
 		{
 			case R_ARM_ABS32:
-				r_arm_abs32(oldF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
+				r_arm_abs32(oldF, newF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
 				break;
 			case R_ARM_ABS16:
-				r_arm_abs16(oldF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
+				r_arm_abs16(oldF, newF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
 				break;
 			case R_ARM_ABS8:
-				r_arm_abs8(oldF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
+				r_arm_abs8(oldF, newF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
 				break;
 			case R_ARM_CALL:
-				r_arm_call(oldF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
+				r_arm_call(oldF, newF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
 				break;
 			case R_ARM_JUMP24:
-				r_arm_jump24(oldF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
+				r_arm_jump24(oldF, newF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
 				break;
 			default:
 				printf("ERREUR: Type de relocation inconnu !\n");
