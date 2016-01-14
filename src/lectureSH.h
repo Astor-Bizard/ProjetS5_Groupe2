@@ -10,7 +10,6 @@ Lecture de la table des sections
 #include <elf.h>
 #include <string.h>
 #include "lecture_headers.h"
-#include "correctionSymboles.h"
 
 #define SHT_ARM_DEBUGOVERLAY 0x70000004
 #define SHT_ARM_OVERLAYSECTION 0x70000005
