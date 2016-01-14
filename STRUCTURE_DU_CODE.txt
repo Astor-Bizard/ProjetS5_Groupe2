@@ -1,0 +1,34 @@
+
+### Fichiers "main" :
+lecture_ELF.c (phase 1)
+modification_ELF.c (phase 2)
+
+### Fichiers secondaires :
+Phase 1 :
+
+lecture_headers(.c/.h)					fonction(s) principale(s) : lecture_Headers (lit le header d'un fichier ELF)
+																														afficher_headers (affiche à l'écran le header ELF)
+lectureSH(.c/.h)								fonction(s) principale(s) : readSectionsHeadersFromFile (lit les headers de section dans un fichier)
+																														displaySectionsHeaders (affiche les headers de section à l'écran)
+																														+ fonctions de récupération des noms de sections
+																														+ type SectionsHeadersList
+afficher_section(.c/.h)					fonction(s) principale(s) : afficher_section (affiche à l'écran une section donnée)
+																														recuperer_section_num (renvoie le contenu d'une section)
+lectureST(.c/.h)								fonction(s) principale(s) : lectureSymbolTab (lit la table des symboles d'un fichier)
+																														afficherTableSymboles	(affiche à l'écran la table des symboles)
+																														+type ListeSymboles
+affichage_relocation(.c/.h)			fonction(s) principale(s) : affichage_relocation (affiche les tables de relocation à l'écran)
+
+Phase 2 :
+
+renum_section(.c/.h)						fonction(s) principale(s) : renumerote_section (affecte une nouvelle numerotation aux sections, en supprimant les inutiles)
+																														ecrire_nouvelles_sections (ecrit les sections renumérotées aux bonnes positions dans le nouveau fichier)
+correctionSymboles(.c/.h)				fonction(s) principale(s) : applySymbolsCorrections (corrige la table des symboles)
+																														writeSymbolsToFile (écrit dans un fichier une table de symboles)
+ecritureSH(.c/.h)								fonction(s) principale(s) : writeSectionsHeadersToFile (écrit dans un fichier la table des sections)
+reimpl_R_ARM(.c/.h)							fonction(s) principale(s) : reimplantation_R_ARM (effectue toutes les reimplantations (ABS, CALL et JUMP)
+
+Autres :
+liberation(.c/.h)								(fonctions de free des structures)
+
+Informations supplémentaires sur chaque fonction dans les fichiers .h correspondants
