@@ -7,6 +7,8 @@
 *.in
 *.out
 
+build/*
+
 elf_linker-1.0/*
 !elf_linker-1.0/Makefile.am
 !elf_linker-1.0/ARM_runner_exec.c
