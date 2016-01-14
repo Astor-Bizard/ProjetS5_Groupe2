@@ -20,8 +20,6 @@ void r_arm_abs32(FILE* oldF, FILE *newF, Elf32_Ehdr oldElfHeader, ListeSymboles 
 	uint32_t valeurSymb = (uint32_t) symbList.symboles[addrSymbole].st_value;
 	uint32_t res = valeurSymb + addend;
 	fwrite32(newF, oldElfHeader.e_ident[EI_DATA], ByteSwap32(res));
-	printf("addresse Symbole : %8x\n", addrSymbole);
-	printf("Reloc a %8x de %8x + %8x = %8x\n", addrDest+tableReloc.Rel[index].r_offset, valeurSymb, addend, valeurSymb + addend);
 }
 
 void r_arm_abs16(FILE* oldF, FILE *newF, Elf32_Ehdr oldElfHeader, ListeSymboles symbList, Str_Reloc tableReloc, int index, Elf32_Addr addrDest, unsigned char *sectionARecopier) {
@@ -30,8 +28,6 @@ void r_arm_abs16(FILE* oldF, FILE *newF, Elf32_Ehdr oldElfHeader, ListeSymboles 
 	uint16_t valeurSymb = (uint16_t) symbList.symboles[addrSymbole].st_value;
 	uint16_t res = valeurSymb + addend;
 	fwrite16(newF, oldElfHeader.e_ident[EI_DATA], ByteSwap16(res));
-	printf("addresse Symbole : %8x\n", addrSymbole);
-	printf("Reloc a %8x de %8x + %8x = %8x\n", addrDest+tableReloc.Rel[index].r_offset, valeurSymb, addend, valeurSymb + addend);
 }
 
 void r_arm_abs8(FILE* oldF, FILE *newF, Elf32_Ehdr oldElfHeader, ListeSymboles symbList, Str_Reloc tableReloc, int index, Elf32_Addr addrDest, unsigned char *sectionARecopier) {
@@ -40,8 +36,6 @@ void r_arm_abs8(FILE* oldF, FILE *newF, Elf32_Ehdr oldElfHeader, ListeSymboles s
 	uint8_t valeurSymb = (uint8_t) symbList.symboles[addrSymbole].st_value;
 	uint8_t res = valeurSymb + addend;
 	fwrite8(newF, oldElfHeader.e_ident[EI_DATA], res);
-	printf("addresse Symbole : %8x\n", addrSymbole);
-	printf("Reloc a %8x de %8x + %8x = %8x\n", addrDest+tableReloc.Rel[index].r_offset, valeurSymb, addend, valeurSymb + addend);
 }
 
 void r_arm_jump24(FILE* oldF, FILE *newF, Elf32_Ehdr oldElfHeader, ListeSymboles symbList, Str_Reloc tableReloc, int index, Elf32_Addr addrDest, unsigned char *sectionARecopier) {
@@ -55,8 +49,6 @@ void r_arm_jump24(FILE* oldF, FILE *newF, Elf32_Ehdr oldElfHeader, ListeSymboles
 	uint32_t p = (uint32_t) addrDest + (uint32_t) tableReloc.Rel[index].r_offset; 
 	uint32_t res = ((((((valeurSymb + addend) - p) & 0x0FFFFFFE) >> 2) & 0x00FFFFFF) | keep);
 	fwrite32(newF, oldElfHeader.e_ident[EI_DATA], ByteSwap32(res));
-	printf("addresse Symbole : %8x\n", addrSymbole);
-	printf("Reloc a %8x de %8x + %8x - %8x = %8x\n", addrDest+tableReloc.Rel[index].r_offset, valeurSymb, addend, p, ((((((valeurSymb + addend) - p) & 0x03FFFFFE) >> 2) & 0x00FFFFFF) | keep));
 }
 
 void r_arm_call(FILE* oldF, FILE *newF, Elf32_Ehdr oldElfHeader, ListeSymboles symbList, Str_Reloc tableReloc, int index, Elf32_Addr addrDest, unsigned char *sectionARecopier) {
