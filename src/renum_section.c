@@ -173,12 +173,19 @@ int nbSecRel(Elf32_Ehdr elfHeaders, Elf32_Shdr *section_headers)
 
 }
 
-void ecrire_nouvelles_sections(FILE *f_read, FILE *f_write, SectionsHeadersList shList){
+void ecrire_nouvelles_sections(FILE *f_read, FILE *f_write, SectionsHeadersList shList, SectionsHeadersList OldShList){
 	int i,num_sh;
 	unsigned char *section;
+	printf("-----On écrit les nouvelles sections-----\n");
+	// pour chaque section
 	for(num_sh=1;num_sh<shList.size;num_sh++){
-		section=recuperer_section_num(f_read,shList,num_sh);
+		printf("Section %d :\n",num_sh);
+		// on récupère son contenu
+		section=recuperer_section_num(f_read,OldShList,num_sh);
+		afficher_string(section, OldShList.headers[num_sh].sh_size);
+		// on se place au bon endroit pour l'écrire (on rajoute des 0 si c'est trop loin)
 		if(fseek(f_write,shList.headers[num_sh].sh_offset,0)){
+			printf("CA BUG\n");
 			for(i=ftell(f_write);i<shList.headers[num_sh].sh_offset;i++){
 				fputc('\0',f_write);
 			}

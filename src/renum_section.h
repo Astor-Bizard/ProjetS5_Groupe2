@@ -50,7 +50,7 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 
 // Ecrit dans le fichier le contenu des sections, à leur offset, et remplit de zéros le reste.
 // TODO : remplacer les 0 par des 42
-void ecrire_nouvelles_sections(FILE *f_read, FILE *f_write, SectionsHeadersList shList);
+void ecrire_nouvelles_sections(FILE *f_read, FILE *f_write, SectionsHeadersList shList, SectionsHeadersList OldShList);
 
 
 #endif
