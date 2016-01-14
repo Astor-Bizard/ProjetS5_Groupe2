@@ -101,15 +101,8 @@ Table_Donnees remplirDonnees(int argc,char *argv[],
 	return tab_donnees;
 }
 
-
-
-
-
-
-
 int main(int argc, char *argv[])
 {
-	
 	Elf32_Ehdr Old_elfHeaders, New_elfHeaders;;
 	SectionsHeadersList Old_section_headers, New_section_headers;
 	ListeSymboles sym_tab,newST;
@@ -136,7 +129,6 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-
 	Old_elfHeaders = lecture_Headers(f_read, SILENT);
 	
 	rewind(f_read);
@@ -162,12 +154,9 @@ int main(int argc, char *argv[])
 	rewind(f_read);
 	newST = applySymbolsCorrections(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);
 
-	//rewind(f_read);
-	//rewind(f_write);
-	//writeSymbolsToFile(f_write, New_elfHeaders, New_section_headers, newST);
 	ecrire_nouvelles_sections(f_write, New_section_headers);
 
-	reimplantation_R_ARM(tab_donnees, f_read, f_write, Old_elfHeaders, Old_section_headers, str_reloc, newST);
+	reimplantation_R_ARM(f_read, f_write, Old_elfHeaders, Old_section_headers, New_section_headers, str_reloc, newST);
 
 	printf("-----Fin de l'ecriture dans %s-----\n", argv[2]);
 

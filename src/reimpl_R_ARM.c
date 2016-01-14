@@ -63,71 +63,57 @@ void r_arm_call(FILE* oldF, FILE *newF, Elf32_Ehdr oldElfHeader, ListeSymboles s
 	r_arm_jump24(oldF, newF, oldElfHeader, symbList, tableReloc, index, addrDest, sectionARecopier);
 }
 
-void reimplantation_R_ARM(Table_Donnees tableDeDonnees, FILE *oldF, FILE *newF, Elf32_Ehdr oldElfHeader, SectionsHeadersList tabSH, Str_Reloc tableReloc, ListeSymboles symbList)
+void reimplantation_R_ARM(FILE *oldF, FILE *newF, Elf32_Ehdr oldElfHeader, SectionsHeadersList oldSH, SectionsHeadersList newSH, Str_Reloc tableReloc, ListeSymboles symbList)
 {
-	unsigned char *sectionARecopier;
-	uint16_t info;
-	int i;
-	int j = 0;
-	int valeurSecRel;
-	Elf32_Addr addrDest;
-	uint32_t tailleSection;
-	uint32_t offsetSection = 0;
+	unsigned char *section = NULL;
+	Elf32_Shdr sectionHeader;
+	int sectionID = -1;
+	int i, newID;
+	uint16_t relType;
 
-
-	for(i=0; i<symbList.nbSymboles; i++)
+	for(i=0; i<tableReloc.nb_Rel; i++)
 	{
-		printf("Pour i = %d -> %8x\n", i, symbList.symboles[i].st_value);
-	}	
-
-	for(i=0; i<tableDeDonnees.nbSecRel; i++)
-	{
-		offsetSection = 0;
-		addrDest = tableDeDonnees.table_Addr[i];
-		valeurSecRel = tableReloc.Sec_Rel[j];
-		sectionARecopier = recuperer_section_num(oldF, tabSH, valeurSecRel-1);
-		//ecriture de la section 
-		tailleSection = tabSH.headers[valeurSecRel].sh_size;
-		fseek(newF, addrDest, SEEK_SET);
-		printf("Ecriture de la section : %d a l'addresse %x\n", valeurSecRel, addrDest);
-		while(offsetSection<tailleSection)
+		if(oldSH.headers[tableReloc.Sec_Rel[i]].sh_info != sectionID) 
 		{
-			fwrite(&sectionARecopier[offsetSection], sizeof(unsigned char),1 ,newF);
-			offsetSection = offsetSection + 1;
+			sectionID = oldSH.headers[tableReloc.Sec_Rel[i]].sh_info;
+
+			if(section!=NULL)
+				free(section);
+			sectionHeader = oldSH.headers[sectionID];
+			section = recuperer_section_num(oldF, oldSH, sectionID);
+
+			newID = index_Shdr(oldSH.names+sectionHeader.sh_name, newSH);
+			fseek(newF, newSH.headers[newID].sh_addr, SEEK_SET);
+			fwrite(section, sectionHeader.sh_size, 1, newF);
 		}
 
-		while(j<tableReloc.nb_Rel && valeurSecRel==tableReloc.Sec_Rel[j])
+		fseek(oldF, sectionHeader.sh_offset + tableReloc.Rel[i].r_offset, SEEK_SET);
+		fseek(newF, newSH.headers[newID].sh_addr + tableReloc.Rel[i].r_offset, SEEK_SET);
+
+		relType = 0xFF & tableReloc.Rel[i].r_info;
+		switch(relType)
 		{
-			info = 255 & tableReloc.Rel[j].r_info;
-
-			printf("Deplacement vers %x + %x = %x\n", tabSH.headers[valeurSecRel-1].sh_offset, tableReloc.Rel[j].r_offset, tabSH.headers[valeurSecRel-1].sh_offset+tableReloc.Rel[j].r_offset);
-			fseek(oldF, tabSH.headers[valeurSecRel-1].sh_offset + tableReloc.Rel[j].r_offset, SEEK_SET);
-			fseek(newF, addrDest + tableReloc.Rel[j].r_offset, SEEK_SET);
-
-			switch(info)
-			{
-				case R_ARM_ABS32:
-					r_arm_abs32(oldF, newF, oldElfHeader, symbList, tableReloc, j, addrDest, sectionARecopier);
-					break;		
-				case R_ARM_ABS16:
-					r_arm_abs16(oldF, newF, oldElfHeader, symbList, tableReloc, j, addrDest, sectionARecopier);
-					break;		
-				case R_ARM_ABS8:
-					r_arm_abs8(oldF, newF, oldElfHeader, symbList, tableReloc, j, addrDest, sectionARecopier);
-					break;					
-				case R_ARM_CALL:
-					r_arm_call(oldF, newF, oldElfHeader, symbList, tableReloc, j, addrDest, sectionARecopier);
-					break;
-				case R_ARM_JUMP24:
-					r_arm_jump24(oldF, newF, oldElfHeader, symbList, tableReloc, j, addrDest, sectionARecopier);
-					break;
-				default:
-					printf("Ce n'est pas du type R_ARM_ABS*, ni R_ARM_JUMP24, ou ni R_ARM_CALL\n");
-					break;
-			}
-			j++;
+			case R_ARM_ABS32:
+				r_arm_abs32(oldF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
+				break;
+			case R_ARM_ABS16:
+				r_arm_abs16(oldF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
+				break;
+			case R_ARM_ABS8:
+				r_arm_abs8(oldF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
+				break;
+			case R_ARM_CALL:
+				r_arm_call(oldF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
+				break;
+			case R_ARM_JUMP24:
+				r_arm_jump24(oldF, oldElfHeader, symbList, tableReloc, i, newSH.headers[newID].sh_addr, section);
+				break;
+			default:
+				printf("ERREUR: Type de relocation inconnu !\n");
+				break;
 		}
-		// Ecriture sur le fichier
-		free(sectionARecopier);
 	}
+	if(section!=NULL)
+		free(section);
+	printf("%d reimplantations effectuées\n", i);
 }
