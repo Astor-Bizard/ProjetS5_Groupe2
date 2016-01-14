@@ -29,3 +29,8 @@ Creation des premier fichier C pour lire le headers et afficher les differents i
 		Les étapes 6 et 7 sont presque terminées.
 		Création d'un type, petite séance débug de ce que ça a cassé.
 		Tout va bien.
+
+	-13/01/16 : Huitieme jour de projet
+		Les étapes 6 et 7 sont terminées
+		Les étapes 8 et 9 sont en cours de débogage.
+		On commence la partie 10
