@@ -72,7 +72,7 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 		else nbRec++;
 	}
 
-	//Application des modifications de relocation et
+	//Application des modifications de relocation
 	nbRec=0;
 	for(i=0;i<elfHeaders.e_shnum;i++)
 	{
@@ -93,7 +93,7 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 			{
 				if(tab_donnees.table_Addr[k]%section_headers_mod.headers[i-nbRec].sh_addralign != 0)
 				{
-					printf("La valeurs de l'adresse : %06x ne correspond pas à l'alignement de la section\nIl faut l'aligner à mod %i\n",tab_donnees.table_Addr[k],section_headers_mod.headers[i-nbRec].sh_addralign);
+					printf("La valeurs de l'adresse : %06x ne correspond pas à l'alignement de la section\nIl faut l'aligner à mod[%i]\n",tab_donnees.table_Addr[k],section_headers_mod.headers[i-nbRec].sh_addralign);
 					exit(1);
 				}
 				section_headers_mod.headers[i-nbRec].sh_addr = tab_donnees.table_Addr[k];
@@ -106,7 +106,7 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 	{
 		if(section_headers_mod.headers[i].sh_addr == 0)
 		{
-			if(section_headers_mod.headers[i].sh_type == SHT_NOBITS)
+			if(section_headers_mod.headers[i].sh_size == 0)
 			{
 				nbSecVide ++;
 				if(i<elfHeaders_mod->e_shstrndx)
@@ -173,11 +173,11 @@ int nbSecRel(Elf32_Ehdr elfHeaders, Elf32_Shdr *section_headers)
 
 }
 
-void ecrire_nouvelles_sections(FILE *f_write, SectionsHeadersList shList){
+void ecrire_nouvelles_sections(FILE *f_read, FILE *f_write, SectionsHeadersList shList){
 	int i,num_sh;
 	unsigned char *section;
 	for(num_sh=1;num_sh<shList.size;num_sh++){
-		section=recuperer_section_num(f_write,shList,num_sh);
+		section=recuperer_section_num(f_read,shList,num_sh);
 		if(fseek(f_write,shList.headers[num_sh].sh_offset,0)){
 			for(i=ftell(f_write);i<shList.headers[num_sh].sh_offset;i++){
 				fputc('\0',f_write);
@@ -186,5 +186,6 @@ void ecrire_nouvelles_sections(FILE *f_write, SectionsHeadersList shList){
 		for(i=0;i<shList.headers[num_sh].sh_size;i++){
 			fputc(section[i],f_write);
 		}
+		free(section);
 	}
 }
