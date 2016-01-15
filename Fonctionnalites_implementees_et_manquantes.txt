@@ -20,7 +20,7 @@ Fonctionnalités manquantes :
 
 
 Fonctionalites de ModificationELF : 
-Lit le contenu d'un fichier ELF, le stocke et creer un executable en realouant en foncion des adresses données en argument
+Lit le contenu d'un fichier ELF, le stocke et creer un executable en realouant en foncion des adresses données en argument. Cela respect les conditions décrite dans les parties 6 à 9 du projet.
 Renvoi une erreur si 0 ou 1 fichier est fournie
 
 Fonctionnalités manquantes : 
@@ -29,5 +29,5 @@ Fonctionnalités manquantes :
 
 
 
-
-
+La partie 10 a été commencée, seulement le simulateur semble exécuter toujours le même programme(celui Hardcode dans l'exemple) et non le programme qu'on lui fournie
+La partie 11 n'a pas été traité.
