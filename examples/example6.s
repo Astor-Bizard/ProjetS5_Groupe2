@@ -34,14 +34,6 @@ truc:
 	ldmfd	sp!, {fp}
 	bx	lr
 	.size	truc, .-truc
-	.section	.rodata
-	.align	2
-.LC0:
-	.ascii	"%d %d cou%ccou\000"
-	.align	2
-.LC1:
-	.ascii	"%d\000"
-	.text
 	.align	2
 	.global	main
 	.type	main, %function
@@ -59,27 +51,15 @@ main:
 	mov	r3, r3, asl #1
 	str	r3, [fp, #-16]
 	ldrb	r3, [fp, #-5]	@ zero_extendqisi2
-	ldr	r0, .L3
-	ldr	r1, [fp, #-12]
-	ldr	r2, [fp, #-16]
-	bl	printf
-	ldrb	r3, [fp, #-5]	@ zero_extendqisi2
 	ldr	r0, [fp, #-12]
 	mov	r1, r3
 	ldr	r2, [fp, #-16]
 	bl	truc
 	mov	r3, r0
-	ldr	r0, .L3+4
-	mov	r1, r3
-	bl	printf
+	strb	r3, [fp, #-5]
 	mov	r3, #0
 	mov	r0, r3
 	sub	sp, fp, #4
 	ldmfd	sp!, {fp, pc}
-.L4:
-	.align	2
-.L3:
-	.word	.LC0
-	.word	.LC1
 	.size	main, .-main
 	.ident	"GCC: (GNU) 4.5.3"

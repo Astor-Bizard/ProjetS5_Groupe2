@@ -9,10 +9,13 @@
 	.eabi_attribute 30, 6
 	.eabi_attribute 18, 4
 	.file	"example5.c"
-	.section	.rodata
+	.global	coucou
+	.data
 	.align	2
-.LC0:
-	.ascii	"%d %d coucou\000"
+	.type	coucou, %object
+	.size	coucou, 4
+coucou:
+	.word	1
 	.text
 	.align	2
 	.global	main
@@ -20,25 +23,26 @@
 main:
 	@ args = 0, pretend = 0, frame = 8
 	@ frame_needed = 1, uses_anonymous_args = 0
-	stmfd	sp!, {fp, lr}
-	add	fp, sp, #4
-	sub	sp, sp, #8
+	@ link register save eliminated.
+	str	fp, [sp, #-4]!
+	add	fp, sp, #0
+	sub	sp, sp, #12
 	mov	r3, #9
 	str	r3, [fp, #-8]
 	ldr	r3, [fp, #-8]
 	mov	r3, r3, asl #1
 	str	r3, [fp, #-12]
-	ldr	r0, .L2
-	ldr	r1, [fp, #-8]
-	ldr	r2, [fp, #-12]
-	bl	printf
+	ldr	r3, .L2
+	mov	r2, #2
+	str	r2, [r3, #0]
 	mov	r3, #0
 	mov	r0, r3
-	sub	sp, fp, #4
-	ldmfd	sp!, {fp, pc}
+	add	sp, fp, #0
+	ldmfd	sp!, {fp}
+	bx	lr
 .L3:
 	.align	2
 .L2:
-	.word	.LC0
+	.word	coucou
 	.size	main, .-main
 	.ident	"GCC: (GNU) 4.5.3"

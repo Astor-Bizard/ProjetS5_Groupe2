@@ -1,4 +1,3 @@
-#include <stdio.h>
 
 int truc(int weee, char whee, int whhe)
 {
@@ -10,7 +9,6 @@ int main(){
 	char c='O';
 	a=9;
 	b=a*2;
-	printf("%d %d cou%ccou",a,b,c);
-	printf("%d",truc(a,c,b));
+	c=truc(a,c,b);
 	return 0;
 }
