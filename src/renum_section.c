@@ -86,7 +86,8 @@ SectionsHeadersList renumerote_section(FILE *f_read,
 			}
 			if(k == tab_donnees.nbSecRel)
 			{
-				printf("Table (%i) non trouvée , erreur d'argument\n",section_headers.headers[i].sh_info);
+				printf("Entete de section %i non trouvée , erreur d'argument\nIl faut fournir une adresse pour cette table de la forme : <section>=0x<addr>\n",section_headers.headers[i].sh_info);
+				displaySectionsHeaders(elfHeaders, section_headers);
 				exit(1);
 			}
 			else

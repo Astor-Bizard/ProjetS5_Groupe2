@@ -51,8 +51,6 @@ Elf32_Addr recuperer_donnees(char argv[], char nom[])
 	nb[i-taille-2]='\0';
 
 	addr = strtol(nb,NULL,16);
-	printf("Nom : %s\n",nom);
-	printf("Addr : 0x%06x\n", addr);
 	return addr;
 }
 
@@ -87,17 +85,7 @@ Table_Donnees remplirDonnees(int argc,char *argv[],
 		
 		tab_donnees.table_Num_Addr[i]=index_Shdr(nom, Old_section_headers); 
 		tab_donnees.table_Addr[i]=addr;
-		//printf("tab_donnees.table_Addr[i] : %06x\n", tab_donnees.table_Addr[i]);
-
 	}
-//	tab_donnees.table_Num_Addr[TEXT]=index_Shdr(".text", Old_elfHeaders, Old_section_headers);
-//	tab_donnees.table_Num_Addr[DATA]=index_Shdr(".data", Old_elfHeaders, Old_section_headers);
-
-	//.text = 0x58
-	//.data = 0x1000
-
-//	tab_donnees.table_Addr[TEXT]=0x58;
-//	tab_donnees.table_Addr[DATA]=0x1000;
 
 	return tab_donnees;
 }
@@ -146,14 +134,12 @@ int main(int argc, char *argv[])
 	tab_donnees = remplirDonnees(argc,argv,Old_elfHeaders, Old_section_headers);
 	rewind(f_read);
 	New_section_headers = renumerote_section(f_read, f_write, Old_elfHeaders, Old_section_headers, &New_elfHeaders, tab_donnees);
-	afficher_headers(Old_elfHeaders);
 	printf("New ");
 	afficher_headers(New_elfHeaders);
-	displaySectionsHeaders(Old_elfHeaders, Old_section_headers);
 	displaySectionsHeaders(New_elfHeaders, New_section_headers);
-
+	
 	rewind(f_read);
-	newST = applySymbolsCorrections(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, 0);
+	newST = applySymbolsCorrections(f_read, Old_elfHeaders, New_elfHeaders, Old_section_headers, New_section_headers, sym_tab, SILENT);
 
 	ecrire_nouvelles_sections(f_read, f_write, New_section_headers, Old_section_headers); 
 

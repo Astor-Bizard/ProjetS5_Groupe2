@@ -1,0 +1,33 @@
+Fonctionnalités de LectureELF : 
+
+lit et affiche le contenu d'un fichier ELF sous la forme de différentes tables. L'affichage est identique à l'affichage de la commande arm-eabi-readelf
+Des options sont disponibles : 
+	-h                 Affiche l'entête 
+	-S                 Affiche la table des sections
+	-e                 Affiche l'entête et la table des sections
+	-s                 Affiche la table des symboles
+	-r                 Affiche la table des relocation (si elle est presentes)
+	-x <numero|nom>    Affiche le contenue d'une section <numero|nom> en octets. Si aucune nom ou nombre est spécifié, cela sera demandé durant l'execution
+	-H                 Affiche les options disponibles
+	-a                 equivalent à -h -S -s -x -r
+
+A noter qu'il est possible de fournir plusieurs options en même temps
+Renvoi une erreur si aucun fichier n'est fournie 
+
+Fonctionnalités manquantes : 
+-Le readelf affiche plus d'information que nous.
+
+
+
+Fonctionalites de ModificationELF : 
+Lit le contenu d'un fichier ELF, le stocke et creer un executable en realouant en foncion des adresses données en argument
+Renvoi une erreur si 0 ou 1 fichier est fournie
+
+Fonctionnalités manquantes : 
+-Si il manque une adresse, le programme renvoi une erreur. On pourrai cependant alouer automatiquement en fonction de l'offset et de la taille de la section precedante.
+-Pas de programme header creer dans l'executable.
+
+
+
+
+
