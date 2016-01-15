@@ -1,0 +1,12 @@
+Tests effectués :
+
+-Exemples fournis (1 à 4) : ils ont permis de vérifier "en gros" que le code fonctionnait.
+-Exemples créés (5 à 7) : code c simple, sans affichage, avec multiples appels de fonctions, traduit en assembleur. Permettent de compléter les tests sur des symboles de différentes sortes et appels de fonctions.
+-Exemple 8 : traduit de arbrebin.c : il comporte des affichages et mallocs, donc ce test est utile uniquement pour la phase 1 (il n'est pas supporté par la phase 2).
+
+
+Scripts :
+test_phase1.sh : compile et lance lecture_ELF et arm-eabi-readelf pour tous les exemples ci-dessus, et affiche les différences de retour. Les retours sont stockés dans le dossier test.
+test_phase2.sh : compile et lance modification_ELF et arm-eabi-ld pour les exemples 3 à 7 (les exemples 1 et 2 ne contenant pas de reimplantations), et stocke les sorties de hd pour ces fichiers dans le dossier test.
+
+Ces deux scripts peuvent prendre l'option -v pour activer valgrind à l'exécution.

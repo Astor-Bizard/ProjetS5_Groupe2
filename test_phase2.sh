@@ -32,17 +32,22 @@ cd build/
 test=../test
 
 arm-eabi-ld --section-start .text=0x58 --section-start .data=0x1000 -o example3_ld example3.o >/dev/null
-../modification_ELF example3.o example3_mod .text=0x58 .data=0x1000 >/dev/null
+$valgrind../modification_ELF example3.o example3_mod .text=0x58 .data=0x1000 >/dev/null
+
 arm-eabi-ld --section-start .text=0x100 -o example4_ld example4.o >/dev/null
-../modification_ELF example4.o example4_mod .text=0x100 >/dev/null
+$valgrind../modification_ELF example4.o example4_mod .text=0x100 >/dev/null
+
 arm-eabi-ld --section-start .text=0x120 -o example5_ld example5.o >/dev/null
-../modification_ELF example5.o example5_mod .text=0x120 >/dev/null
+$valgrind../modification_ELF example5.o example5_mod .text=0x120 >/dev/null
+
 arm-eabi-ld --section-start .text=0x400 -o example6_ld example6.o >/dev/null
-../modification_ELF example6.o example6_mod .text=0x400 >/dev/null
+$valgrind../modification_ELF example6.o example6_mod .text=0x400 >/dev/null
+
 arm-eabi-ld --section-start .text=0x142 -o example7_ld example7.o >/dev/null
-../modification_ELF example7.o example7_mod .text=0x142 >/dev/null
+$valgrind../modification_ELF example7.o example7_mod .text=0x142 >/dev/null
+
 #arm-eabi-ld --section-start .text=0x150 -o example8_ld example8.o >/dev/null
-#../modification_ELF example8.o example8_mod .text=0x150 >/dev/null
+#$valgrind../modification_ELF example8.o example8_mod .text=0x150 >/dev/null
 
 for i in example*_ld
 do

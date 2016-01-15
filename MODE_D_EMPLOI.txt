@@ -34,10 +34,18 @@ $ ./modification_ELF build/example3.o exec3.o .text=0x58 .data=0x1000
 
 Phase 1 (automatique)
 
-$ ./test.sh
+$ ./test_phase1.sh
 OU
-$ ./test.sh -v
+$ ./test.phase1.sh -v
 
-Ce script exécute pour chaque fichier exampleX.o, arm-eabi-readelf et lecture_ELF, puis affiche un diff des sorties.
-Si ce script n'affiche rien, alors les lectures d'headers sont conformes à readelf.
+Ce script exécute pour chaque fichier exampleX.o, arm-eabi-readelf et lecture_ELF, puis affiche un diff des sorties (sorties stockées dans le dossier test).
 L'exécution avec -v active valgrind (le test est alors assez long).
+
+Phase 2 (semi-automatique)
+
+$ ./test_phase2.sh
+OU
+$ ./test.phase2.sh -v
+
+Ce script exécute pour chaque fichier example<3-7>.o, arm-eabi-ld et modification_ELF et stocke les retours de hd des fichiers sortie dans le dossier test.
+L'exécution avec -v active valgrind.

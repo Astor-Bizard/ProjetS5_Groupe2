@@ -1,0 +1,3 @@
+Bugs connus et non résolus :
+
+Si on éxécute lecture_ELF ou modification_ELF avec un fichier ELF ne contenant pas de table de symboles ou de table de section, le programme plante (Erreur de segmentation).
