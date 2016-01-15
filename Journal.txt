@@ -37,3 +37,10 @@ Creation des premier fichier C pour lire le headers et afficher les differents i
 
 	-14/01/16 : Neuvième jour de projet
 		Les étapes 8 et 9 sont terminées, on essaye de faire la partie 10.
+
+	-15/01/16 : Dixième et dernier jour de projet
+		Ecriture du script de test de la 2e phase, préparation de la présentation.
+		Ceci est sans doute notre dernier journal.
+		On espère que ça va bien se passer.
+		L'heure approche...
+		Ce fut un beau projet.
