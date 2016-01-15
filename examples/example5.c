@@ -1,8 +1,9 @@
-#include <stdio.h>
+int coucou=1;
+
 int main(){
 	int a,b;
 	a=9;
 	b=a*2;
-	printf("%d %d coucou",a,b);
+	coucou=2;
 	return 0;
 }

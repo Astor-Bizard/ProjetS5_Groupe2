@@ -53,6 +53,11 @@ ListeSymboles applySymbolsCorrections(FILE* oldFile, Elf32_Ehdr oldElfHeader, El
 		if (oldSymbolsTable.symboles[j].st_shndx==0) {
 			newSymbolsTable.symboles[j].st_shndx = 0;
 		}
+		else if(oldSymbolsTable.symboles[j].st_shndx>65520){
+			newSymbolsTable.symboles[j].st_shndx = oldSymbolsTable.symboles[j].st_shndx;
+			newSymbolsTable.symboles[j].st_value = 0;
+			continue;
+		}
 		else {
 			originalName = getSectionNameBis(oldSHList.names, oldSHList.headers[oldSymbolsTable.symboles[j].st_shndx]); 
 			newSymbolsTable.symboles[j].st_shndx = index_Shdr(originalName, newSHList);
