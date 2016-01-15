@@ -433,9 +433,9 @@ ARM_runner_example$(EXEEXT): $(ARM_runner_example_OBJECTS) $(ARM_runner_example_
 	@rm -f ARM_runner_example$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(ARM_runner_example_OBJECTS) $(ARM_runner_example_LDADD) $(LIBS)
 
-ARM_runner_exec$(EXEEXT): $(ARM_runner_example_OBJECTS) $(ARM_runner_example_DEPENDENCIES) $(EXTRA_ARM_runner_example_DEPENDENCIES) 
-	@rm -f ARM_runner_example$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(ARM_runner_example_OBJECTS) $(ARM_runner_example_LDADD) $(LIBS)
+ARM_runner_exec$(EXEEXT): $(ARM_runner_exec_OBJECTS) $(ARM_runner_exec_DEPENDENCIES) $(EXTRA_ARM_runner_exec_DEPENDENCIES) 
+	@rm -f ARM_runner_exec$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ARM_runner_exec_OBJECTS) $(ARM_runner_exec_LDADD) $(LIBS)
 
 
 mostlyclean-compile:
