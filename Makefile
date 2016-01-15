@@ -28,4 +28,8 @@ $(EX)%.o: examples/example%.s
 	arm-eabi-as -o $@ $<
 
 clean:
-	rm -f $(BUILD)/*.o $(EXEC) *~ $(SRC)/*~
+	rm -f $(BUILD)/* $(EXEC) *~ $(SRC)/*~
+
+clean_all: clean
+	rm -rf test/
+	rm -df $(BUILD)
