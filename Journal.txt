@@ -34,3 +34,6 @@ Creation des premier fichier C pour lire le headers et afficher les differents i
 		Les étapes 6 et 7 sont terminées
 		Les étapes 8 et 9 sont en cours de débogage.
 		On commence la partie 10
+
+	-14/01/16 : Neuvième jour de projet
+		Les étapes 8 et 9 sont terminées, on essaye de faire la partie 10.
