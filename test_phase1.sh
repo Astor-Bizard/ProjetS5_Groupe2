@@ -31,6 +31,8 @@ mkdir -p test/
 cd build
 test=../test
 
+ok=0
+
 for i in example*.o
 do
 	arm-eabi-readelf -h $i >$test/readelf_$i.out
@@ -53,6 +55,15 @@ do
 	$valgrind../lecture_ELF -s $i >>$test/lectureELF_$i.out
 	arm-eabi-readelf -r $i >>$test/readelf_$i.out
 	$valgrind../lecture_ELF -r $i >>$test/lectureELF_$i.out
-
 	diff $test/lectureELF_$i.out $test/readelf_$i.out
+	if [ $? -ne 0 ]
+	then
+		ok=1
+		echo "(Erreur ci-dessus : fichier $i)"
+	fi
 done
+if [ $ok -eq 0 ]
+then
+	echo "lecture_ELF produit le meme resultat que readelf pour tous les fichiers test !"
+fi
+exit $ok

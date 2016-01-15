@@ -54,8 +54,8 @@ do
 	hd $i >$test/hd_$i.out
 done
 
-cd $test
-for i in hd_*_mod.out
-do
-	diff $i $(basename "$i" _mod.out)_ld.out
-done
+#cd $test
+#for i in hd_*_mod.out
+#do
+#	diff $i $(basename "$i" _mod.out)_ld.out
+#done
