@@ -24,7 +24,7 @@ Phase 2 :
 
 $ ./modification_ELF <fichier translatable> <fichier sortie> <adresses>
 
-<adresses> de la forme : <section>=0x<addr>
+<adresses> de la forme : <Nom_section>=0x<addr>
 
 exemple :
 $ ./modification_ELF build/example3.o exec3.o .text=0x58 .data=0x1000
