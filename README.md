@@ -26,6 +26,10 @@ R_ARM_ABS* = 32,16,8 uniquement
 Etape 9 :  
 R_ARM_CALL <=> R_ARM_JUMP24  
 
+call/Jump 3 !!! endian  
+abs32 4  
+
+
 ##Questions :
 - Comment faire fonctionner le simulatueur?!(Solved: Export Path ci dessus)  
 
@@ -64,8 +68,6 @@ A quoi doit ressembler la nouvelle table des symboles. Pourquoi est-elle plus gr
 
 > $ source ~/.envarm/setenvarm.sh  
 
-call/Jump 3 !!! endian  
-abs32 4  
 
 
 arm-eabi-strip fichier exécutable (enleve tout ce qui est inutile pour l'execution : resultat à obtenir)
