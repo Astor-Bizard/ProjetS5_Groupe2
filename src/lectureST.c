@@ -13,11 +13,18 @@ ListeSymboles lectureSymbolTab(FILE *f, Elf32_Ehdr elfHeader, SectionsHeadersLis
 	ListeSymboles listeSymboles;
 
 	char* nomSection = getSectionNameBis(shList.names, shList.headers[i]);
-	while(strcmp(nomSection, ".symtab"))
+	while(i<shList.size && strcmp(nomSection, ".symtab"))
 	{
 		free(nomSection);
 		i++;
 		nomSection = getSectionNameBis(shList.names, shList.headers[i]);
+	}
+	if(i==shList.size){
+		listeSymboles.symboles=NULL;
+		listeSymboles.names=NULL;
+		listeSymboles.nbSymboles=0;
+		printf("Pas de table de symboles\n");
+		return listeSymboles;
 	}
 	free(nomSection);
 	sectionSymbolTabSize = shList.headers[i].sh_size;
