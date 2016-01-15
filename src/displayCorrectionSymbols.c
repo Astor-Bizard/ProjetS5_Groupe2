@@ -1,5 +1,5 @@
-/* Cree le 8/01/2015 par Jonathan
-Programme principal de la phase 2
+/* Cree le 15/01/2015 par Loïc
+Démo correction des symboles
 */
 #include "lecture_headers.h"
 #include "afficher_section.h"
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 	
 	if(argc < 3)
 	{
-		printf("Erreur nombre d'argument :\n\t./modification_ELF <fichier_Elf_lecture> <fichier_Elf_ecriture>\n");
+		printf("Erreur nombre d'argument :\n\t./displayCorrectionSymbols <fichier_Elf_lecture> <fichier_Elf_ecriture>\n");
 		return 1;
 	}
 
