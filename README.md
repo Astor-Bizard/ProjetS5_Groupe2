@@ -1,5 +1,8 @@
 /* Ce README a ete cree pour communiquer facilement des informations via l'affichage sur github. Il n'est pas destine a aider a la comprehension de ce depot. Voir pour cela MODE_D_EMPLOI et STRUCTURE_DU_CODE */
 
+ON A FINI OUAAAAAIS
+===================
+
 ##Taches  
 
 Etape 1 : Jonathan (lecture_headers)(Fini)  
@@ -11,8 +14,8 @@ Etape 5 : Gabriel (affichage_relocation)(Fini)
 PHASE 1 TERMINEE - Tests example compris  
 
 Etape 6 : Jonathan (renum_section)(Fini)  
-Etape 7 : Loic (correctionSymboles)(Fini ?)  
-Etape 8-9 : Thai Binh (reimpl_R_ARM)(Fini en théorie)  
+Etape 7 : Loic (correctionSymboles)(Fini)  
+Etape 8-9 : Thai Binh (reimpl_R_ARM)(Fini)  
 Etape 10 : Gabriel  
 
 #A savoir :  

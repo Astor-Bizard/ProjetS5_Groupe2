@@ -6,7 +6,7 @@ int truc(int weee, char whee, int whhe)
 
 int main(){
 	int a,b;
-	char c='O';
+	char c=(char) &a;
 	a=9;
 	b=a*2;
 	c=truc(a,c,b);
