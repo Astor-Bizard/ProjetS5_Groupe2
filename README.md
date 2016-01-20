@@ -16,7 +16,7 @@ PHASE 1 TERMINEE - Tests example compris
 Etape 6 : Jonathan (renum_section)(Fini)  
 Etape 7 : Loic (correctionSymboles)(Fini)  
 Etape 8-9 : Thai Binh (reimpl_R_ARM)(Fini)  
-Etape 10 : Gabriel  
+Etape 10 : Gabriel(Pas fini mais osef)  
 
 #A savoir :  
 Ajoutez ces lignes dans votre .bashrc :  
